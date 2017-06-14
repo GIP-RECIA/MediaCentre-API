@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.ReadOnlyException;
+import javax.validation.constraints.NotNull;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -64,12 +65,12 @@ public class PortletServiceImpl implements IPortletService {
 
 
     @Override
-    public List<String> getUserLinkedEtablissements(PortletRequest portletRequest) {
+    public List<String> getUserLinkedEtablissements(@NotNull PortletRequest portletRequest) {
         return userResource.getUserInfo(portletRequest, etabCodesInfoKey);
     }
 
     @Override
-    public String getUserCurrentEtablissement(PortletRequest portletRequest) {
+    public String getUserCurrentEtablissement(@NotNull PortletRequest portletRequest) {
         List<String> userInfos = userResource.getUserInfo(portletRequest, currentEtabCodeInfoKey);
         if (userInfos.size() > 1) {
             // should not happen
@@ -79,22 +80,22 @@ public class PortletServiceImpl implements IPortletService {
     }
 
     @Override
-    public List<String> getUserGroups(PortletRequest portletRequest) {
+    public List<String> getUserGroups(@NotNull PortletRequest portletRequest) {
         return userResource.getUserInfo(portletRequest, userGroupsInfokey);
     }
 
     @Override
-    public String getCurrentUserId(PortletRequest portletRequest) {
+    public String getCurrentUserId(@NotNull PortletRequest portletRequest) {
         return portletRequest.getRemoteUser();
     }
 
     @Override
-    public List<String> getUserFavorites(PortletRequest portletRequest) {
+    public List<String> getUserFavorites(@NotNull PortletRequest portletRequest) {
         return preferenceResource.getUserFavorites(portletRequest);
     }
 
     @Override
-    public void setAndSaveUserFavorites(PortletRequest portletRequest, List<String> favorites) {
+    public void setAndSaveUserFavorites(@NotNull PortletRequest portletRequest, @NotNull List<String> favorites) {
         try {
             preferenceResource.setUserFavorites(portletRequest,favorites);
         } catch (ReadOnlyException e) {
@@ -103,18 +104,26 @@ public class PortletServiceImpl implements IPortletService {
     }
 
     @Override
-    public void addToUserFavorites(PortletRequest portletRequest, String favorite) {
+    public void addToUserFavorites(@NotNull PortletRequest portletRequest, @NotNull String favorite) {
         try {
-            preferenceResource.addToUserFavorites(portletRequest, favorite);
+            if (!favorite.isEmpty()) {
+                preferenceResource.addToUserFavorites(portletRequest, favorite);
+            } else {
+                log.warn("Tried to add an empty string passed as favorite !");
+            }
         } catch (ReadOnlyException e) {
             log.error("Can't modify Favorites, please watch the portlet definition");
         }
     }
 
     @Override
-    public void removeToUserFavorites(PortletRequest portletRequest, String favorite) {
+    public void removeToUserFavorites(@NotNull PortletRequest portletRequest, @NotNull String favorite) {
         try {
-            preferenceResource.removeToUserFavorites(portletRequest, favorite);
+            if (!favorite.isEmpty()) {
+                preferenceResource.removeToUserFavorites(portletRequest, favorite);
+            } else {
+                log.warn("Tried to remove an empty string passed as favorite !");
+            }
         } catch (ReadOnlyException e) {
             log.error("Can't modify Favorites, please watch the portlet definition");
         }

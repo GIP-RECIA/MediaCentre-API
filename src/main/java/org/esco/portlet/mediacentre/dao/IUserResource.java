@@ -16,10 +16,12 @@
 package org.esco.portlet.mediacentre.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
+import javax.validation.constraints.NotNull;
 
 public interface IUserResource {
 
-	List<String> getUserInfo(final PortletRequest request, final String attributeName);
+	List<String> getUserInfo(@NotNull final PortletRequest request, @NotNull final String attributeName);
 }

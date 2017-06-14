@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
+import javax.validation.constraints.NotNull;
 
 import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.slf4j.Logger;
@@ -41,14 +42,19 @@ public class UserResourceImpl implements IUserResource{
      * @return the user info attribute values
      */
     @SuppressWarnings("unchecked")
-    public List<String> getUserInfo(final PortletRequest request, final String attributeName) {
+    public List<String> getUserInfo(@NotNull final PortletRequest request, @NotNull final String attributeName) {
+        if (attributeName.isEmpty()) return Collections.EMPTY_LIST;
         Map<String, List<String>> userInfo =
                 (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
 
         List<String> attributeValues = null;
 
         if (userInfo != null) {
-            attributeValues = userInfo.get(attributeName);
+            if (userInfo.containsKey(attributeValues)) {
+                attributeValues = userInfo.get(attributeName);
+            } else {
+                log.warn("User attribute '{}' wasn't retrieved, check if the file portlet.xml contains the attribute shared by the portal !!", attributeName);
+            }
         } else {
             log.error("Unable to retrieve Portal UserInfo !");
             //throw new IllegalStateException("Unable to retrieve Portal UserInfo !");

@@ -18,26 +18,31 @@ package org.esco.portlet.mediacentre.service;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by jgribonvald on 06/06/17.
  */
 public interface IPortletService {
 
-    List<String> getUserLinkedEtablissements(final PortletRequest portletRequest);
+    List<String> getUserLinkedEtablissements(@NotNull final PortletRequest portletRequest);
 
-    String getUserCurrentEtablissement(final PortletRequest portletRequest);
+    String getUserCurrentEtablissement(@NotNull final PortletRequest portletRequest);
 
-    List<String> getUserGroups(final PortletRequest portletRequest);
+    List<String> getUserGroups(@NotNull final PortletRequest portletRequest);
 
-    String getCurrentUserId (final PortletRequest portletRequest);
+    String getCurrentUserId (@NotNull final PortletRequest portletRequest);
 
-    List<String> getUserFavorites(final PortletRequest portletRequest);
+    List<String> getUserFavorites(@NotNull final PortletRequest portletRequest);
 
     void setAndSaveUserFavorites(final PortletRequest portletRequest, final List<String> favorites);
 
     void addToUserFavorites(final PortletRequest portletRequest, final String favorite);
 
-    void removeToUserFavorites(final PortletRequest portletRequest, final String favorite);
+    void setAndSaveUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites);
+
+    void addToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite);
+
+    void removeToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite);
 
 }

@@ -18,6 +18,7 @@ package org.esco.portlet.mediacentre.dao.impl;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
+import javax.validation.constraints.NotNull;
 
 import com.google.common.collect.Lists;
 import org.esco.portlet.mediacentre.dao.IPreferenceResource;
@@ -32,19 +33,19 @@ import org.springframework.stereotype.Service;
 public class MockPreferenceResourceImpl implements IPreferenceResource {
 
     @Override
-    public List<String> getUserFavorites(PortletRequest portletRequest) {
+    public List<String> getUserFavorites(@NotNull final PortletRequest portletRequest) {
         return Lists.newArrayList();
     }
 
     @Override
-    public void setUserFavorites(PortletRequest portletRequest, List<String> favorites) {
+    public void setUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites) {
     }
 
     @Override
-    public void addToUserFavorites(PortletRequest portletRequest, String favorite) {
+    public void addToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) {
     }
 
     @Override
-    public void removeToUserFavorites(PortletRequest portletRequest, String favorite) {
+    public void removeToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) {
     }
 }

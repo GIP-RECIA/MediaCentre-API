@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
+import javax.validation.constraints.NotNull;
 
 import lombok.NonNull;
 import lombok.Setter;
@@ -63,16 +64,21 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
      * @return the user info attribute values
      */
     @SuppressWarnings("unchecked")
-    public List<String> getUserInfo(final PortletRequest request, final String attributeName) {
-        Map<String, List<String>> userInfo = userInfoMap;
+    public List<String> getUserInfo(@NotNull final PortletRequest request, @NotNull final String attributeName) {
+        if (attributeName.isEmpty()) return Collections.EMPTY_LIST;
+
+        final Map<String, List<String>> userInfo = userInfoMap;
 
         List<String> attributeValues = null;
-
         if (userInfo != null) {
-            attributeValues = userInfo.get(attributeName);
+            if (userInfo.containsKey(attributeValues)) {
+                attributeValues = userInfo.get(attributeName);
+            } else {
+                log.warn("User attribute '{}' wasn't retrieved, check if the file portlet.xml contains the attribute shared by the portal !!", attributeName);
+            }
         } else {
             log.error("Unable to retrieve Portal UserInfo !");
-            throw new IllegalStateException("Unable to retrieve Portal UserInfo !");
+            //throw new IllegalStateException("Unable to retrieve Portal UserInfo !");
         }
 
         if (attributeValues == null) {
@@ -82,7 +88,7 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
         return attributeValues;
     }
     
-    public Map<String, List<String>> getUserInfoMap() {
+    public Map<String, List<String>> getUserInfoMap(@NotNull final PortletRequest request) {
         return userInfoMap;
     }
 

@@ -23,6 +23,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ValidatorException;
+import javax.validation.constraints.NotNull;
 
 import org.esco.portlet.mediacentre.dao.IPreferenceResource;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class PreferenceResourceImpl implements IPreferenceResource {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public List<String> getUserFavorites(PortletRequest portletRequest) {
+    public List<String> getUserFavorites(@NotNull final PortletRequest portletRequest) {
         final List<String> favorites = Arrays.asList(portletRequest.getPreferences().getValues(FAVORITES_PREF, new String[0]));
 
         if (log.isDebugEnabled()) {
@@ -53,10 +54,10 @@ public class PreferenceResourceImpl implements IPreferenceResource {
     }
 
     @Override
-    public void setUserFavorites(PortletRequest portletRequest, List<String> favorites) throws ReadOnlyException {
+    public void setUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites) throws ReadOnlyException {
         PortletPreferences pp = portletRequest.getPreferences();
 
-        if (favorites == null || favorites.isEmpty()) {
+        if (favorites.isEmpty()) {
             pp.reset(FAVORITES_PREF);
         } else {
             pp.setValues(FAVORITES_PREF, favorites.toArray(new String[favorites.size()]));
@@ -65,7 +66,7 @@ public class PreferenceResourceImpl implements IPreferenceResource {
         try {
             pp.store();
             if (log.isDebugEnabled()) {
-              log.debug("PortletPreferences {} were stored", favorites);
+                log.debug("PortletPreferences {} were stored", favorites);
             }
         } catch (ValidatorException | IOException e) {
             log.error("PortletPreferences {} were not store", favorites, e.getMessage());
@@ -73,10 +74,10 @@ public class PreferenceResourceImpl implements IPreferenceResource {
     }
 
     @Override
-    public void addToUserFavorites(PortletRequest portletRequest, String favorite) throws ReadOnlyException  {
+    public void addToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) throws ReadOnlyException  {
         PortletPreferences pp = portletRequest.getPreferences();
 
-        if (favorite != null && !favorite.isEmpty()) {
+        if (!favorite.isEmpty()) {
             List<String> favorites = Arrays.asList(pp.getValues(FAVORITES_PREF, new String[0]));
             favorites.add(favorite);
 
@@ -94,27 +95,25 @@ public class PreferenceResourceImpl implements IPreferenceResource {
     }
 
     @Override
-    public void removeToUserFavorites(PortletRequest portletRequest, String favorite) throws ReadOnlyException  {
+    public void removeToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) throws ReadOnlyException  {
         PortletPreferences pp = portletRequest.getPreferences();
 
-        if (favorite != null && !favorite.isEmpty()) {
-            List<String> favorites = Arrays.asList(pp.getValues(FAVORITES_PREF, new String[0]));
-            favorites.remove(favorite);
+        List<String> favorites = Arrays.asList(pp.getValues(FAVORITES_PREF, new String[0]));
+        favorites.remove(favorite);
 
-            if (favorites == null || favorites.isEmpty()) {
-                pp.reset(FAVORITES_PREF);
-            } else {
-                pp.setValues(FAVORITES_PREF, favorites.toArray(new String[favorites.size()]));
-            }
+        if (favorites.isEmpty()) {
+            pp.reset(FAVORITES_PREF);
+        } else {
+            pp.setValues(FAVORITES_PREF, favorites.toArray(new String[favorites.size()]));
+        }
 
-            try {
-                pp.store();
-                if (log.isDebugEnabled()) {
-                    log.debug("Favorite {} was removed from PortletPreferences {} that were stored", favorite, favorites);
-                }
-            } catch (ValidatorException | IOException e) {
-                log.error("PortletPreferences {} were not store", favorites, e.getMessage());
+        try {
+            pp.store();
+            if (log.isDebugEnabled()) {
+                log.debug("Favorite {} was removed from PortletPreferences {} that were stored", favorite, favorites);
             }
+        } catch (ValidatorException | IOException e) {
+            log.error("PortletPreferences {} were not store", favorites, e.getMessage());
         }
     }
 }
