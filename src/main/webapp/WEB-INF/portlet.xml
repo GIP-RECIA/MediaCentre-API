@@ -77,4 +77,9 @@
     <name>isMemberOf</name>
   </user-attribute>
 
+  <user-attribute>
+    <description>User profile</description>
+    <name>ENTPersonProfils</name>
+  </user-attribute>
+
 </portlet-app>

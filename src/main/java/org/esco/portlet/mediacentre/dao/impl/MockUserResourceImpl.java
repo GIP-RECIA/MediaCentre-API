@@ -39,6 +39,7 @@ import org.springframework.util.Assert;
 @Profile("mock")
 public class MockUserResourceImpl implements IUserResource, InitializingBean {
 
+    private static final String SPLIT_SEP = ",";
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @NonNull
@@ -99,16 +100,19 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
         Assert.hasText(this.userGroupsInfokey, "No Group user info key configured !");
 
         final String[] etabs = System.getProperty("mediacentre.userEtabs", "0450822X,0333333Y,0377777U")
-                .split(",");
-        final String[] current = System.getProperty("mediacentre.userCurrentEtab", "0450822X").split(",");
+                .split(SPLIT_SEP);
+        final String[] current = System.getProperty("mediacentre.userCurrentEtab", "0450822X").split(SPLIT_SEP);
 
-        final String[] groups = System.getProperty("mediacentre.userMerberOf",
+        final String[] groups = System.getProperty("mediacentre.userMemberOf",
                 "esco:Applications:MediaCentre:GAR:RespAff:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0333333Y"
-        + ",esco:Etablissements:Etab_0450822X:Profs,esco:Etablissements:Etab_0333333Y:Profs,esco:Etablissements:Etab_0377777U:Profs").split(",");
+        + ",esco:Etablissements:Etab_0450822X:Profs,esco:Etablissements:Etab_0333333Y:Profs,esco:Etablissements:Etab_0377777U:Profs").split(SPLIT_SEP);
+
+        final String[] profiles =   System.getProperty("mediacentre.userProfiles", "National_ENS,National_EVS").split(SPLIT_SEP);
 
         this.userInfoMap.put(this.etabCodesInfoKey, Arrays.asList(etabs));
         this.userInfoMap.put(this.currentEtabCodeInfoKey, Arrays.asList(current));
         this.userInfoMap.put(this.userGroupsInfokey, Arrays.asList(groups));
+        this.userInfoMap.put("ENTPersonProfiles", Arrays.asList(profiles));
 
         log.debug("userInfoMap : {}", this.userInfoMap);
 
