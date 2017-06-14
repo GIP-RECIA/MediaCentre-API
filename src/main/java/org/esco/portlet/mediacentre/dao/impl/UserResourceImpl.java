@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.portlet.PortletRequest;
 import javax.validation.constraints.NotNull;
 
+import com.google.common.collect.Maps;
 import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,29 @@ public class UserResourceImpl implements IUserResource{
         }
 
         return attributeValues;
+    }
+
+    /**
+     * Retrieve the user info Map from portlet context, or the Mocked user info
+     *
+     * @param request the portlet request
+     * @return  the user info map with association attribute values
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, List<String>> getUserInfoMap(@NotNull final PortletRequest request) {
+
+        Map<String, List<String>> userInfo =
+                (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
+
+        if (userInfo != null) {
+            return userInfo;
+        } else {
+            log.error("Unable to retrieve Portal UserInfo !");
+            //throw new IllegalStateException("Unable to retrieve Portal UserInfo !");
+        }
+
+        return Maps.newLinkedHashMap();
+
     }
 
 }

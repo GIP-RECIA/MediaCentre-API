@@ -16,11 +16,13 @@
 package org.esco.portlet.mediacentre.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.ReadOnlyException;
 import javax.validation.constraints.NotNull;
 
+import com.google.common.collect.Lists;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
@@ -92,6 +94,19 @@ public class PortletServiceImpl implements IPortletService {
     @Override
     public List<String> getUserFavorites(@NotNull PortletRequest portletRequest) {
         return preferenceResource.getUserFavorites(portletRequest);
+    }
+
+    @Override
+    public List<String> getUserInfoOnAttribute(@NotNull PortletRequest portletRequest, @NotNull String attributeKey) {
+        if (!attributeKey.isEmpty()) {
+            return userResource.getUserInfo(portletRequest,attributeKey);
+        }
+        return Lists.newArrayList();
+    }
+
+    @Override
+    public Map<String, List<String>> getUserInfos(@NotNull PortletRequest portletRequest) {
+        return userResource.getUserInfoMap(portletRequest);
     }
 
     @Override

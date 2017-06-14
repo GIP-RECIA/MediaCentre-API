@@ -24,4 +24,6 @@ import javax.validation.constraints.NotNull;
 public interface IUserResource {
 
 	List<String> getUserInfo(@NotNull final PortletRequest request, @NotNull final String attributeName);
+
+	Map<String, List<String>> getUserInfoMap(@NotNull final PortletRequest request);
 }

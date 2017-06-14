@@ -16,6 +16,7 @@
 package org.esco.portlet.mediacentre.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.validation.constraints.NotNull;
@@ -35,9 +36,11 @@ public interface IPortletService {
 
     List<String> getUserFavorites(@NotNull final PortletRequest portletRequest);
 
-    void setAndSaveUserFavorites(final PortletRequest portletRequest, final List<String> favorites);
+    /** Best method call to obtain a user attribute value. */
+    List<String> getUserInfoOnAttribute(@NotNull final PortletRequest portletRequest, @NotNull final String attributeKey);
 
-    void addToUserFavorites(final PortletRequest portletRequest, final String favorite);
+    /** Should be used to share user info. */
+    Map<String, List<String>> getUserInfos(@NotNull final PortletRequest portletRequest);
 
     void setAndSaveUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites);
 
