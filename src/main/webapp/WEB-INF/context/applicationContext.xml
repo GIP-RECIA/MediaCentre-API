@@ -44,45 +44,80 @@
 	<context:component-scan base-package="org.esco.portlet.mediacentre.dao" />
 
 
-	<!--<bean id="jsonHttpMessageConverter"-->
-				<!--class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">-->
-		<!--<property name="supportedMediaTypes">-->
-			<!--<list>-->
-				<!--<value>application/json</value>-->
-				<!--<value>application/octet-stream</value>-->
-			<!--</list>-->
-		<!--</property>-->
-	<!--</bean>-->
+	<bean id="userResource" class="org.esco.portlet.mediacentre.dao.impl.UserResourceImpl">
+		<!--<property name="currentEtabCodeInfoKey" value="${userInfo.key.currentEtabId}" />-->
+		<property name="mockedUserResource" ref="userResourceMock"/>
+	</bean>
+	<!--<bean id="mediaCentreResource" class="org.esco.portlet.mediacentre.dao.impl.MediaCentreResourceGsonImpl" />-->
+	<bean id="mediaCentreResource" class="org.esco.portlet.mediacentre.dao.impl.MediaCentreResourceJacksonImpl" />
 
-	<!-- based on org.apache.http.impl.client.HttpClients.createSystem -->
-	<!--<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder"-->
-				<!--factory-method="create">-->
-	<!--</bean>-->
+	<bean id="userResourceMock" class="org.esco.portlet.mediacentre.dao.impl.MockUserResourceImpl">
+	</bean>
+<!-- 	<bean id="mediaCentreResourceMock" class="org.esco.portlet.mediacentre.dao.impl.MockHelpInfoResourceImpl" /> -->
 
-	<!--<bean name="httpClient" factory-bean="httpClientBuilder" factory-method="build" />-->
+	<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.MockPreferenceResourceImpl" />
+<!-- 	<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.PreferenceResourceImpl" /> -->
 
-	<!--<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">-->
-		<!--<constructor-arg>-->
-			<!--<bean class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory"-->
-						<!--p:readTimeout="15000"-->
-						<!--p:connectTimeout="5000"-->
-					  <!--p:connectionRequestTimeout="5000">-->
-				<!--<property name="httpClient" ref="httpClient" />-->
-			<!--</bean>-->
-		<!--</constructor-arg>-->
-		<!--<property name="messageConverters">-->
-			<!--<list><ref bean="jsonHttpMessageConverter"/></list>-->
-		<!--</property>-->
-	<!--</bean>-->
 
-	<!--<bean id="cacheManager"-->
-				<!--class="org.springframework.cache.ehcache.EhCacheCacheManager">-->
-		<!--<property name="cacheManager" ref="ehcache"/>-->
-	<!--</bean>-->
+<!-- 	<bean id="filtreEtablissement" class="org.esco.portlet.mediacentre.model.FiltreEtablissement" > -->
+<!-- 		<property name="niveauRubrique" value="" /> -->
+<!-- 	</bean> -->
 
-	<!--<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">-->
-		<!--<property name="configLocation" value="classpath:ehcache.xml"/>-->
-		<!--<property name="shared" value="true"/>-->
-	<!--</bean>-->
+<!-- 	<bean id="filtreDiscipline" class="org.esco.portlet.mediacentre.model.FiltreDiscipline" > -->
+<!-- 		<property name="niveauRubrique" value="" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="filtreNiveau" class="org.esco.portlet.mediacentre.model.FiltreNiveau" > -->
+<!-- 		<property name="niveauRubrique" value="" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="filtreDiffuseur" class="org.esco.portlet.mediacentre.model.FiltreDiffuseur" > -->
+<!-- 		<property name="niveauRubrique" value="" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="filtreTypeMedia" class="org.esco.portlet.mediacentre.model.FiltreTypeMedia" > -->
+<!-- 		<property name="niveauRubrique" value="" /> -->
+<!-- 	</bean> -->
+
+	<bean id="jsonHttpMessageConverter"
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json</value>
+				<value>application/octet-stream</value>
+			</list>
+		</property>
+	</bean>
+
+<!-- 	based on org.apache.http.impl.client.HttpClients.createSystem -->
+	<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder"
+				factory-method="create">
+	</bean>
+
+	<bean name="httpClient" factory-bean="httpClientBuilder" factory-method="build" />
+
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<constructor-arg>
+			<bean class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory"
+						p:readTimeout="15000"
+						p:connectTimeout="5000"
+					  p:connectionRequestTimeout="5000">
+				<property name="httpClient" ref="httpClient" />
+			</bean>
+		</constructor-arg>
+		<property name="messageConverters">
+			<list><ref bean="jsonHttpMessageConverter"/></list>
+		</property>
+	</bean>
+
+	<bean id="cacheManager"
+				class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache"/>
+	</bean>
+
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml"/>
+		<property name="shared" value="true"/>
+	</bean>
 
 </beans>

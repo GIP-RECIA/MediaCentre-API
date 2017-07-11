@@ -30,11 +30,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("!mock")
+//@Profile("!mock")
 public class UserResourceImpl implements IUserResource{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private IUserResource mockedUserResource;
+    
     /**
      * Retrieve the user info attribute from portlet context, or the Mocked user info
      *
@@ -89,6 +91,14 @@ public class UserResourceImpl implements IUserResource{
 
         return Maps.newLinkedHashMap();
 
+    }
+
+    public IUserResource getMockedUserResource() {
+        return mockedUserResource;
+    }
+
+    public void setMockedUserResource(IUserResource mockedUserResource) {
+        this.mockedUserResource = mockedUserResource;
     }
 
 }

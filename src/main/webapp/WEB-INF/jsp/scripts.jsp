@@ -39,6 +39,6 @@
 	 */
 	(function($, namespace, portletId) {
 		mediacentre.init($, namespace, portletId);
-	})(${n}.jQuery, '#flashInfoPortlet_${n}', '${n}');
+	})(${n}.jQuery, '#mediaCentrePortlet_${n}', '${n}');
 
 </rs:compressJs></script>
