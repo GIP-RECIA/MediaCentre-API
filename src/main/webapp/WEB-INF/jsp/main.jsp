@@ -46,10 +46,9 @@
  
 <br/><br/>
  
-<a href="<%=renderURL.toString()%>">Go to Form Page</a> --%>
+<a href="${renderURL}">Go to Form Page</a>   --%>
 
-			
-		
+				
 <div class="container-fluid">
     <!-- copy from here -->
     <div class="row">
@@ -57,7 +56,7 @@
             <div class="filters-group">
                 <div class="filters-heading">
                     <a data-toggle="collapse" href="#collapse-full">
-                        <span>Filtres</span>
+                        <span><spring:message code="filter.title" /></span>
                         <i class="mdi mdi-24px mdi-menu-down pull-right"></i>
                         <i class="mdi mdi-close pull-right"></i>
                     </a>
@@ -67,7 +66,7 @@
 					<c:forEach var="categorie" items="${categoriesFiltre}" >
 	                    <ul class="form-group filter ${categorie.id}">
 	                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title">
-	                        <span>${categorie.libelle} </span>
+	                        <span>${categorie.libelle}</span>
 	                        <i class="mdi mdi-24px mdi-menu-down pull-right"></i></a>
 	                        <div id="collapse-${categorie.id}" class="filter-options collapse">
 	                        	
@@ -75,13 +74,13 @@
 	                        	
 	                        		<c:if test="${not categorie.valeursMultiples}">
 			                            <li class="radio withripple">
-			                                <label><input type="radio" name="options_${categorie.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''}>${filtre.libelle}</label>
+			                                <label><input type="radio" name="options_${categorie.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''}><spring:message code="${filtre.libelle}" /></label>
 			                            </li>
 		                            </c:if>
 		                            
 		                            <c:if test="${categorie.valeursMultiples}">
 										<li class="checkbox withripple">
-	                                		<label><input type="checkbox" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''}>${filtre.libelle}</label>
+	                                		<label><input type="checkbox" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''}><spring:message code="${filtre.libelle}" /></label>
 	                                	</li>		      
                                 	</c:if>                      
 	                            </c:forEach>
@@ -108,23 +107,29 @@
 	                                <a href="${ressource.urlAccesRessource}" target="_blank" title="<spring:message code="resource.view" />" class="btn btn-primary launch-res">
 	                                    <i class="mdi mdi-launch"></i>
 	                                </a>
-	                                <a href="javascript:void(0);" title="<spring:message code="resource.view.derscription" />" class="btn btn-primary show-more">
+	                                <a href="javascript:void(0);" title="<spring:message code="resource.view.description" />" class="btn btn-primary show-more">
 	                                    <i class="mdi mdi-eye"></i>
 	                                </a>
 	                            </div>
 	                        </div>
 	                        <div class="res-block-infos">
 	                            <span class="res-title">${ressource.nomRessource}</span>
-	                            <span class="res-txt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut efficitur ligula fermentum arcu sollicitudin, sed porta nulla condimentum. Praesent scelerisque, nisi non maximus viverra, magna velit tempor dolor, non tincidunt leo ligula ac ex. Quisque in magna id lectus accumsan imperdiet. Fusce at laoreet sem. Pellentesque convallis vestibulum metus.</span>
+	                            <span class="res-txt">
+	                            	<c:forEach var="typePresentation" items="${ressource.typePresentation}" >
+	                            		<span class="sautLigne">${typePresentation.nom}</span>
+	                            	</c:forEach>
+	                            	<span class="sautLigne">${ressource.nomEditeur}</span>
+	                            </span>
 	                            <div class="res-tags">
-	                                <span class="label label-danger">curiosité</span>
-	                                <span class="label label-success">ressource collectivité</span>
-	                                <span class="label label-fav">favoris</span>
+	                                <span class="label label-danger"><spring:message code="resource.label.curiosity" /></span>
+	                                <span class="label label-success"><spring:message code="resource.label.community" /></span>
+	                                <span class="label label-fav"><spring:message code="resource.label.favorite" /></span>
 	                            </div>
 	                        </div>
 	                        <div class="res-img img-placeholder">
 	                            <i class="mdi ${ressource.urlVignette=='' ? 'mdi-file-outline' : ''}"><c:if test="${ressource.urlVignette!=''}"><img src="${ressource.urlVignette}"></c:if></i>
 	                        </div>
+	                        
 	                    </div>
 	                </div>
             	</c:forEach>
