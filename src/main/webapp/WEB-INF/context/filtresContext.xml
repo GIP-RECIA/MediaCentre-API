@@ -34,8 +34,8 @@
 			<property name="filtres">
 				<list>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
-						<property name="id" value="ressources"/>
-						<property name="libelle" value="Toutes les ressource"/>
+						<property name="id" value="filter.resources"/>
+						<property name="libelle" value="filter.resources.all"/>
 						<property name="nomAttribut" value="idRessource"/>
 						<property name="regexpAttribut" value=".*"/>
 						<property name="population" value=""/>
@@ -43,7 +43,7 @@
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="favoris"/>
-						<property name="libelle" value="Mes favoris"/>
+						<property name="libelle" value="filter.resources.favoris"/>
 						<property name="actif" value="false"/>
 						<property name="nomAttribut" value=""/>
 						<property name="regexpAttribut" value=""/>
@@ -57,11 +57,23 @@
 			<property name="id" value="discipline"/>
 			<property name="libelle" value="Discipline"/>
 			<property name="valeursMultiples" value="true"/>
+<!-- 			<property name="libelleActionCategorie" value="filter.subject.all"/> -->
 			<property name="filtres">
 				<list>
+				
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="discipline"/>
+						<property name="libelle" value="filter.subject.all"/>
+						<property name="nomAttribut" value=""/>
+						<property name="regexpAttribut" value=""/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+						<property name="caseSelectAll" value="true"/>
+					</bean>
+				
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="francais"/>
-						<property name="libelle" value="Français"/>
+						<property name="libelle" value="filter.subject.french"/>
 						<property name="nomAttribut" value="domaineEnseignement.nom"/>
 						<property name="regexpAttribut" value="FRANÇAIS"/>
 						<property name="population" value=""/>
@@ -69,7 +81,7 @@
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="mathematiques"/>
-						<property name="libelle" value="Mathématiques"/>
+						<property name="libelle" value="filter.subject.mathematics"/>
 						<property name="nomAttribut" value="domaineEnseignement.nom"/>
 						<property name="regexpAttribut" value="MATHÉMATIQUES"/>
 						<property name="population" value=""/>
@@ -77,7 +89,7 @@
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="physique"/>
-						<property name="libelle" value="Physique"/>
+						<property name="libelle" value="filter.subject.physics"/>
 						<property name="nomAttribut" value="domaineEnseignement.nom"/>
 						<property name="regexpAttribut" value="PHYSIQUE-CHIMIE"/>
 						<property name="population" value=""/>
@@ -85,7 +97,7 @@
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="histoire"/>
-						<property name="libelle" value="Histoire"/>
+						<property name="libelle" value="filter.subject.history"/>
 						<property name="nomAttribut" value="domaineEnseignement.nom"/>
 						<property name="regexpAttribut" value="HISTOIRE"/>
 						<property name="population" value=""/>
@@ -93,7 +105,7 @@
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="geographie"/>
-						<property name="libelle" value="Géographie"/>
+						<property name="libelle" value="filter.subject.geography"/>
 						<property name="nomAttribut" value="domaineEnseignement.nom"/>
 						<property name="regexpAttribut" value="GÉOGRAPHIE"/>
 						<property name="population" value=""/>
@@ -102,7 +114,56 @@
 				</list>
 			</property>
 		</bean>
-	    
+	    <bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltres">
+			<property name="id" value="niveauEducatif"/>
+			<property name="libelle" value="Niveau Educatif"/>
+			<property name="valeursMultiples" value="true"/>
+			<property name="filtres">
+				<list>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="niveauEducatif"/>
+						<property name="libelle" value="filter.level.all"/>
+						<property name="nomAttribut" value=""/>
+						<property name="regexpAttribut" value=""/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+						<property name="caseSelectAll" value="true"/>
+					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="francais"/>
+						<property name="libelle" value="filter.level.primary"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="enseignement scolaire"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="mathematiques"/>
+						<property name="libelle" value="filter.level.secondary"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="enseignement secondaire"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="physique"/>
+						<property name="libelle" value="filter.level.professional"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="formation professionnelle"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="physique"/>
+						<property name="libelle" value="filter.level.masters"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="mastère spécialisé"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+					</bean>
+	    		</list>
+	    	</property>
+	    </bean>
 	</util:list>
 
 </beans>

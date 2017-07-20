@@ -2,7 +2,6 @@
 package org.esco.portlet.mediacentre.model.ressource;
 
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -12,8 +11,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "distributeurTech",
     "domaineEnseignement",
     "idEditeur",
-    "idEtablissement",
     "idRessource",
+    "idEtablissement",
     "idType",
     "niveauEducatif",
     "nomEditeur",
@@ -25,7 +24,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "urlAccesRessource",
     "urlSourceEtiquette",
     "urlVignette",
-    "validateurTech"
+    "validateurTech",
+    "description"
 })
 public class Ressource extends AbstractJson {
 
@@ -35,10 +35,10 @@ public class Ressource extends AbstractJson {
     private List<DomaineEnseignement> domaineEnseignement = null;
     @JsonProperty("idEditeur")
     private String idEditeur;
-    @JsonProperty("idEtablissement")
-    private List<IdEtablissement> idEtablissement = null;
     @JsonProperty("idRessource")
     private String idRessource;
+    @JsonProperty("idEtablissement")
+    private List<IdEtablissement> idEtablissement = null;
     @JsonProperty("idType")
     private String idType;
     @JsonProperty("niveauEducatif")
@@ -63,6 +63,8 @@ public class Ressource extends AbstractJson {
     private String urlVignette;
     @JsonProperty("validateurTech")
     private String validateurTech;
+    @JsonProperty("description")
+    private String description;
 
     @JsonProperty("distributeurTech")
     public String getDistributeurTech() {
@@ -94,16 +96,6 @@ public class Ressource extends AbstractJson {
         this.idEditeur = idEditeur;
     }
 
-    @JsonProperty("idEtablissement")
-    public List<IdEtablissement> getIdEtablissement() {
-        return idEtablissement;
-    }
-
-    @JsonProperty("idEtablissement")
-    public void setIdEtablissement(List<IdEtablissement> idEtablissement) {
-        this.idEtablissement = idEtablissement;
-    }
-
     @JsonProperty("idRessource")
     public String getIdRessource() {
         return idRessource;
@@ -112,6 +104,16 @@ public class Ressource extends AbstractJson {
     @JsonProperty("idRessource")
     public void setIdRessource(String idRessource) {
         this.idRessource = idRessource;
+    }
+
+    @JsonProperty("idEtablissement")
+    public List<IdEtablissement> getIdEtablissement() {
+        return idEtablissement;
+    }
+
+    @JsonProperty("idEtablissement")
+    public void setIdEtablissement(List<IdEtablissement> idEtablissement) {
+        this.idEtablissement = idEtablissement;
     }
 
     @JsonProperty("idType")
@@ -232,6 +234,16 @@ public class Ressource extends AbstractJson {
     @JsonProperty("validateurTech")
     public void setValidateurTech(String validateurTech) {
         this.validateurTech = validateurTech;
+    }
+
+    @JsonProperty("description")
+    public String getDescription() {
+        return description;
+    }
+
+    @JsonProperty("description")
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

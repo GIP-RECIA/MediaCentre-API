@@ -1,7 +1,7 @@
-.mediacentrePortletMessages {
+.mediacentre .mediacentrePortletMessages {
 	display: none;
 }
 
-.sautLigne {
+.mediacentre .sautLigne {
 	display:block;
 }

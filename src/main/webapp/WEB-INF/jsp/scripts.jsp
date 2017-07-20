@@ -38,7 +38,8 @@
 	 * Use an anonymous function to initialize all JavaScript for this portlet.
 	 */
 	(function($, namespace, portletId) {
+		adaptiveBackgroundApp.init($);
 		mediacentre.init($, namespace, portletId);
-	})(${n}.jQuery, '#mediaCentrePortlet_${n}', '${n}');
+	})(${n}.jQuery, '#mediacentre_${n}', '${n}');
 
 </rs:compressJs></script>

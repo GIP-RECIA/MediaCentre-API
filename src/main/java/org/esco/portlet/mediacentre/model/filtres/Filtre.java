@@ -32,6 +32,8 @@ public class Filtre {
 	
 	private boolean actif = true;
 	
+	private boolean caseSelectAll = false;
+	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	/* 
@@ -78,6 +80,19 @@ public class Filtre {
 		this.actif = actif;
 	}
 
+	/**
+	 * @return the caseSelectAll
+	 */
+	public boolean isCaseSelectAll() {
+		return caseSelectAll;
+	}
+
+	/**
+	 * @param caseSelectAll the caseSelectAll to set
+	 */
+	public void setCaseSelectAll(boolean caseSelectAll) {
+		this.caseSelectAll = caseSelectAll;
+	}
 
 	/**
 	 * Getter de la propriété id

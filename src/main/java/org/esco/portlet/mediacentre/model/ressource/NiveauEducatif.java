@@ -14,7 +14,6 @@ public class NiveauEducatif extends AbstractJson {
 
     @JsonProperty("nom")
     private String nom;
-    
     @JsonProperty("uri")
     private String uri;
 

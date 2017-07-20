@@ -40,6 +40,12 @@
     <servlet-class>org.springframework.web.servlet.ViewRendererServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewRendererServlet</servlet-name>
+    <url-pattern>/WEB-INF/servlet/view</url-pattern>
+  </servlet-mapping>
+  
+  <!-- A UTILISER EN DEV AVEC PLUTO -->
   <servlet>
     <servlet-name>mediacentre</servlet-name>
     <servlet-class>org.apache.pluto.container.driver.PortletServlet</servlet-class>
@@ -53,8 +59,5 @@
     <servlet-name>mediacentre</servlet-name>
     <url-pattern>/PlutoInvoker/mediacentre</url-pattern>
   </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ViewRendererServlet</servlet-name>
-    <url-pattern>/WEB-INF/servlet/view</url-pattern>
-  </servlet-mapping>
+  
 </web-app>
