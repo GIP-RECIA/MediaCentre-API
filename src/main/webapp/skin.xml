@@ -22,11 +22,14 @@
 	<css>css/styles.css</css>
 	<css>css/mediacentre.css</css>
 
-<!-- 	<js included="plain" resource="true">/rs/jquery/1.10.2/jquery-1.10.2.js</js> -->
-<!-- 	<js included="aggregated" resource="true">/rs/jquery/1.10.2/jquery-1.10.2.min.js</js> -->
+	<js included="plain" resource="true">/rs/jquery/1.10.2/jquery-1.10.2.js</js>
+	<js included="aggregated" resource="true">/rs/jquery/1.10.2/jquery-1.10.2.min.js</js>
 	
-<!-- 	<js included="plain" >rs/jquery/adaptive-backgrounds/1.0.4-BETA/jquery.adaptive-backgrounds.js</js> -->
-<!-- 	<js included="aggregated" >rs/jquery/adaptive-backgrounds/1.0.4-BETA/jquery.adaptive-backgrounds.min.js</js> -->
+	<js included="plain" resource="true">/rs/jquery/adaptive-backgrounds/1.0.4-BETA/jquery.adaptive-backgrounds.js</js>
+	<js included="aggregated" resource="true">rs/jquery/adaptive-backgrounds/1.0.4-BETA/jquery.adaptive-backgrounds.min.js</js>
+	
+	<js included="plain" resource="true">/rs/bootstrap/3.3.5/bootstrap.js</js>
+	<js included="aggregated" resource="true">rs/bootstrap/3.3.5/bootstrap.min.js</js>
 	
 	<!-- Order is important here, the log script needs to be the first thing
 		followed by the debug toggle -->

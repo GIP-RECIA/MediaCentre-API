@@ -9545,14 +9545,16 @@ label.checkbox-inline {
 /* line 16, ../sass/_checkboxes.scss */
 .checkbox input[type=checkbox],
 label.checkbox-inline input[type=checkbox] {
-  opacity: 0;
+  opacity: 1;
   position: absolute;
   margin: 0;
-  z-index: -1;
-  width: 0;
-  height: 0;
+  z-index: 0;
+  width: 18px;
+  height: 18px;
   overflow: hidden;
-  left: 0;
+  left: 24px;
+  top: 50%;
+  margin-top: -9px;
   pointer-events: none;
 }
 /* line 28, ../sass/_checkboxes.scss */
@@ -9891,10 +9893,9 @@ fieldset[disabled] .form-group.is-focused .radio label, fieldset[disabled] .form
 }
 /* line 70, ../sass/_radios.scss */
 .radio input[type=radio], label.radio-inline input[type=radio] {
-  opacity: 0;
-  height: 0;
-  width: 0;
-  overflow: hidden;
+  opacity: 1;
+  height: 18px;
+  width: 18px;
 }
 /* line 4, ../sass/_radios.scss */
 .radio input[type=radio]:checked ~ .check, .radio input[type=radio]:checked ~ .circle, label.radio-inline input[type=radio]:checked ~ .check, label.radio-inline input[type=radio]:checked ~ .circle {
@@ -22590,8 +22591,11 @@ body {
 }
 /* line 170, ../sass/styles.scss */
 .filters .filters-group .filters-list ul.form-group.filter li.radio label input[type=radio] {
-  right: 0;
-  margin-left: 0;
+    right: initial;
+    left: 24px;
+    margin-top: -9px;
+    top: 50%;
+    margin-left: 0;
 }
 /* line 174, ../sass/styles.scss */
 .filters .filters-group .filters-list ul.form-group.filter li.radio label span {
@@ -23163,7 +23167,7 @@ body {
   }
   /* line 537, ../sass/styles.scss */
   .filters .filters-group .filters-list ul.form-group.filter li.checkbox label {
-    padding-left: 0;
+    /*padding-left: 0;*/
   }
   /* line 541, ../sass/styles.scss */
   .filters .filters-group .filters-list ul.form-group.filter li:hover {

@@ -22,7 +22,8 @@ mediacentre.init = function($, namespace, portletId) {
     (function initContainer($, namespace, portletId) {
         $(window).bind('load', function () {
                alert($,namespace,portletId);
-               //checkAllFiltre();
+               checkAllChild();
+               checkParent();
         });
 
     })($, namespace, portletId);
@@ -32,21 +33,47 @@ mediacentre.init = function($, namespace, portletId) {
             alert("click on " + cssNamespace + ' #mydiv_' + idPortlet)
         });
     }
+    
+	function checkAllChild(){
+		$('.caseSelectAll').click(function(e){
+			var nameGroup = this.name;
+	        var caseFilterACocher = $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre');
+			if(this.checked){
+				caseFilterACocher.prop('checked', true); 
+			}else{
+				caseFilterACocher.prop('checked', false);
+			}
+	    });
+	};
 
-    /**function checkAllFiltre(){
-    	$('.caseSelectAll').click(function(e){
-            var caseFilterACocher = $('input:checkbox[name="' + this.name + '"].caseAutreFiltre');
-    		if(this.checked){
-    			caseFilterACocher.prop('checked', true); 
-    		}else{
-    			caseFilterACocher.prop('checked', false);
-    		}
-        });
-    };*/
-	
+	function checkParent(){
+		// en cochant une case enfant on coche ou décoche la Checkbox parent
+		$('.caseAutreFiltre').click(function(e) {
+			var nameGroup = this.name;
+			//var caseFilterParent = $('input:checkbox[name="' + nameGroup + '"].caseSelectAll');
+			// si la case parent est cochée mais que celle que nous venons de cocher ne l'est pas (plus) : on décoche la case parent
+			if( ($('input:checkbox[name="' + nameGroup + '"].caseSelectAll').is(':checked') == true ) && ($(this).is(':checked') == false) ){
+				$('input:checkbox[name="' + nameGroup + '"].caseSelectAll').prop('checked', false);
+			}
+			// l'attribut checked est true si on vient de cliquer sur une case à cocher enfant
+			if (this.checked == true){// on définit notre valeur à true
+			      var val = true;
+			      // on boucle pour vérifier si une case à cocher n'est pas décochée : checked renvoie false
+			      $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre').each(
+			    	function(){ // si renvoie false on attribue notre nouvelle valeur à false
+			    		if (this.checked == false)
+			    			val = false;
+			    	 }
+			      );
+			      // on assigne au checkbox parent la bonne valeur : true si toutes sont cochées, false si au moins une checkbox est décochée
+			      $('input:checkbox[name="' + nameGroup + '"].caseSelectAll').prop('checked', val);
+		      }	
+		});
+	};
+
 };
 
-jQuery(document).ready(function($)
+/**jQuery(document).ready(function($)
 {
 	$(function(){
 		$('.caseSelectAll').click(function(e){
@@ -84,5 +111,5 @@ jQuery(document).ready(function($)
 		      }	
 		});
 	});
-	
-});
+});*/
+

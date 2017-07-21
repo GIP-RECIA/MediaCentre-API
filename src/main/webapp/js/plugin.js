@@ -24,7 +24,7 @@
 
 $(function() {
     // init material design
-    $.material.init();
+    //$.material.init();
 
     // add-to-fav
     $('.add-to-fav').on('click',function (e) {

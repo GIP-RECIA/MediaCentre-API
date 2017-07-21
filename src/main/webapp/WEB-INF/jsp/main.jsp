@@ -19,6 +19,25 @@
 <jsp:directive.include file="/WEB-INF/jsp/include.jsp" />
 <rs:aggregatedResources path="skin.xml" />
 
+<script type="text/javascript">
+	// Bootstrap javascript fails if included multiple times on a page.
+	// uPortal Bootstrap best practice: include bootstrap if and only if it is not present and save it to
+	// portlets object. Bootstrap functions could be manually invoked via portlets.bootstrapjQuery variable.
+	// All portlets using Bootstrap Javascript must use this approach.  Portlet's jQuery should be included
+	// prior to this code block.
+	var portlets = portlets || {};
+	// If bootstrap is not present at uPortal jQuery nor a community bootstrap, dynamically load it.
+	<c:choose>
+		<c:when test="${usePortalJsLibs}">
+		portlets.bootstrapjQuery;
+		</c:when>
+		<c:otherwise>
+		portlets.bootstrapjQuery || document.write('<script src="rs/bootstrap/3.3.5/bootstrap.min.js"><\/script>');
+		</c:otherwise>
+	</c:choose>
+
+</script>
+
 <%-- <div id="mediacentre_${n}" class="mediacentre"> --%>
 
 <%-- 	<portlet:renderURL var="viewUrl" portletMode="view"/> --%>
