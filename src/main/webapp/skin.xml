@@ -28,9 +28,6 @@
 	<js included="plain" resource="true">/rs/jquery/adaptive-backgrounds/1.0.4-BETA/jquery.adaptive-backgrounds.js</js>
 	<js included="aggregated" resource="true">rs/jquery/adaptive-backgrounds/1.0.4-BETA/jquery.adaptive-backgrounds.min.js</js>
 	
-	<js included="plain" resource="true">/rs/bootstrap/3.3.5/bootstrap.js</js>
-	<js included="aggregated" resource="true">rs/bootstrap/3.3.5/bootstrap.min.js</js>
-	
 	<!-- Order is important here, the log script needs to be the first thing
 		followed by the debug toggle -->
 	<js>js/jquery.dotdotdot.min.js</js>
