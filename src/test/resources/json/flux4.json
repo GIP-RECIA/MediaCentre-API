@@ -257,10 +257,7 @@
    {  
       "distributeurTech":"819056409_0000000073624720",
       "domaineEnseignement":[  
-		{  
-            "nom":"sociologie",
-            "uri":"http://data.education.fr/voc/scolomfr/concept/scolomfr-voc-015-num-369"
-         }
+
       ],
       "idEditeur":"819056409_0000000073624720",
       "idRessource":"http://n2t.net/ark:/99999/RSF000002",

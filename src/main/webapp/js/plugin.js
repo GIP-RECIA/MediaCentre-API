@@ -68,6 +68,24 @@ $(function() {
     //     });
     // });
 
+    // show modal on fab click
+    var modalAffect = $('.modal.affectations');
+    var modalAffectationsHeight = modalAffect.height();
+    var openModalAffect = function () {
+        modalAffect.addClass('opened');
+        $('.overlay').addClass('is-visible');
+        modalAffect.css('moz-transform', 'translateY(0)').css('ms-transform', 'translateY(0)').css('-webkit-transform', 'translateY(0)').css('transform', 'translateY(0)');
+    };
+    var closeModalAffect = function () {
+        modalAffect.removeClass('opened');
+        $('.overlay').removeClass('is-visible');
+        modalAffect.css('moz-transform', 'translateY('+ modalAffectationsHeight +'px)').css('ms-transform', 'translateY('+ modalAffectationsHeight +'px)').css('-webkit-transform', 'translateY('+ modalAffectationsHeight +'px)').css('transform', 'translateY('+ modalAffectationsHeight +'px)');
+    };
+
+    modalAffect.css('moz-transform', 'translateY('+ modalAffectationsHeight +'px)').css('ms-transform', 'translateY('+ modalAffectationsHeight +'px)').css('-webkit-transform', 'translateY('+ modalAffectationsHeight +'px)').css('transform', 'translateY('+ modalAffectationsHeight +'px)');
+    $('.fab-affectations').on('click', openModalAffect);
+    $('.modal .mdi-close, .overlay, .modal-footer .btn-primary').on('click', closeModalAffect);
+
     var isMobile = {
         Android: function() {
             return navigator.userAgent.match(/Android/i);

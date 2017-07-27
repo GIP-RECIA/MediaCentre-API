@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
@@ -53,6 +54,9 @@ public class MainController {
     @Resource 
     List<CategorieFiltres> categoriesFiltres;
     
+    @Resource
+    List<GestionAffectation> affectation;
+    
     @RenderMapping 
     public ModelAndView showMainView(final RenderRequest request, final RenderResponse response) throws Exception {
         final String viewName = "main";        
@@ -67,6 +71,7 @@ public class MainController {
         List<Ressource> ressources = filtrageService.filtrerRessources(categoriesFiltres, listeRessourceMediaCenter); 
         mav.addObject("ressources", ressources);
         mav.addObject("categoriesFiltre", categoriesFiltres);
+        mav.addObject("affectation", affectation);
         
         if(log.isDebugEnabled()) {
             log.debug("Rendering main view");

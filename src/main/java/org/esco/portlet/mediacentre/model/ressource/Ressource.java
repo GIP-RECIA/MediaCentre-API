@@ -2,6 +2,7 @@
 package org.esco.portlet.mediacentre.model.ressource;
 
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -22,10 +23,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "typePresentation",
     "typologieDocument",
     "urlAccesRessource",
-    "urlSourceEtiquette",
     "urlVignette",
-    "validateurTech",
-    "description"
+    "validateurTech"
 })
 public class Ressource extends AbstractJson {
 
@@ -50,21 +49,17 @@ public class Ressource extends AbstractJson {
     @JsonProperty("sourceEtiquette")
     private String sourceEtiquette;
     @JsonProperty("typePedagogique")
-    private List<TypePedagogique> typePedagogique = null;
+    private List<Object> typePedagogique = null;
     @JsonProperty("typePresentation")
-    private List<TypePresentation> typePresentation = null;
+    private TypePresentation typePresentation;
     @JsonProperty("typologieDocument")
     private List<TypologieDocument> typologieDocument = null;
     @JsonProperty("urlAccesRessource")
     private String urlAccesRessource;
-    @JsonProperty("urlSourceEtiquette")
-    private String urlSourceEtiquette;
     @JsonProperty("urlVignette")
     private String urlVignette;
     @JsonProperty("validateurTech")
     private String validateurTech;
-    @JsonProperty("description")
-    private String description;
 
     @JsonProperty("distributeurTech")
     public String getDistributeurTech() {
@@ -167,22 +162,22 @@ public class Ressource extends AbstractJson {
     }
 
     @JsonProperty("typePedagogique")
-    public List<TypePedagogique> getTypePedagogique() {
+    public List<Object> getTypePedagogique() {
         return typePedagogique;
     }
 
     @JsonProperty("typePedagogique")
-    public void setTypePedagogique(List<TypePedagogique> typePedagogique) {
+    public void setTypePedagogique(List<Object> typePedagogique) {
         this.typePedagogique = typePedagogique;
     }
 
     @JsonProperty("typePresentation")
-    public List<TypePresentation> getTypePresentation() {
+    public TypePresentation getTypePresentation() {
         return typePresentation;
     }
 
     @JsonProperty("typePresentation")
-    public void setTypePresentation(List<TypePresentation> typePresentation) {
+    public void setTypePresentation(TypePresentation typePresentation) {
         this.typePresentation = typePresentation;
     }
 
@@ -206,16 +201,6 @@ public class Ressource extends AbstractJson {
         this.urlAccesRessource = urlAccesRessource;
     }
 
-    @JsonProperty("urlSourceEtiquette")
-    public String getUrlSourceEtiquette() {
-        return urlSourceEtiquette;
-    }
-
-    @JsonProperty("urlSourceEtiquette")
-    public void setUrlSourceEtiquette(String urlSourceEtiquette) {
-        this.urlSourceEtiquette = urlSourceEtiquette;
-    }
-
     @JsonProperty("urlVignette")
     public String getUrlVignette() {
         return urlVignette;
@@ -234,16 +219,6 @@ public class Ressource extends AbstractJson {
     @JsonProperty("validateurTech")
     public void setValidateurTech(String validateurTech) {
         this.validateurTech = validateurTech;
-    }
-
-    @JsonProperty("description")
-    public String getDescription() {
-        return description;
-    }
-
-    @JsonProperty("description")
-    public void setDescription(String description) {
-        this.description = description;
     }
 
 }

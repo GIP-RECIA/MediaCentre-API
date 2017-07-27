@@ -15,14 +15,24 @@
  */
 package org.esco.portlet.mediacentre.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
+import javax.validation.constraints.NotNull;
 
 import com.google.common.collect.Lists;
+
+import lombok.NonNull;
+import lombok.Setter;
+
 import org.esco.portlet.mediacentre.dao.IPreferenceResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  * Created by jgribonvald on 06/06/17.
@@ -30,21 +40,30 @@ import org.springframework.stereotype.Service;
 @Service
 @Profile("mock")
 public class MockPreferenceResourceImpl implements IPreferenceResource {
-
-    @Override
-    public List<String> getUserFavorites(PortletRequest portletRequest) {
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	private static final String SPLIT_SEP = ",";
+	
+    @NonNull
+    @Value("${userInfo.mediacentre.favorites}")
+    @Setter
+    private String mediacentreFavorites;
+	
+	@Override
+    public List<String> getUserFavorites(@NotNull final PortletRequest portletRequest) {
         return Lists.newArrayList();
     }
 
     @Override
-    public void setUserFavorites(PortletRequest portletRequest, List<String> favorites) {
+    public void setUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites) {
     }
 
     @Override
-    public void addToUserFavorites(PortletRequest portletRequest, String favorite) {
+    public void addToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) {
     }
 
     @Override
-    public void removeToUserFavorites(PortletRequest portletRequest, String favorite) {
+    public void removeToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) {
     }
 }

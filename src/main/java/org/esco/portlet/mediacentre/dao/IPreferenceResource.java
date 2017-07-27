@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
  */
 public interface IPreferenceResource {
 
-    List<String> getUserFavorites(@NotNull final PortletRequest portletRequest);
+	List<String> getUserFavorites(@NotNull final PortletRequest portletRequest);
 
     void setUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites) throws ReadOnlyException;
 

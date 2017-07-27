@@ -111,6 +111,14 @@
 						<property name="population" value=""/>
 						<property name="regexpPopulation" value=""/>
 					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="sociologie"/>
+						<property name="libelle" value="filter.subject.sociology"/>
+						<property name="nomAttribut" value="domaineEnseignement.nom"/>
+						<property name="regexpAttribut" value="sociologie"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+					</bean>
 				</list>
 			</property>
 		</bean>
@@ -130,7 +138,7 @@
 						<property name="caseSelectAll" value="true"/>
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
-						<property name="id" value="francais"/>
+						<property name="id" value="scolaire"/>
 						<property name="libelle" value="filter.level.primary"/>
 						<property name="nomAttribut" value="niveauEducatif.nom"/>
 						<property name="regexpAttribut" value="enseignement scolaire"/>
@@ -138,7 +146,7 @@
 						<property name="regexpPopulation" value=""/>
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
-						<property name="id" value="mathematiques"/>
+						<property name="id" value="secondaire"/>
 						<property name="libelle" value="filter.level.secondary"/>
 						<property name="nomAttribut" value="niveauEducatif.nom"/>
 						<property name="regexpAttribut" value="enseignement secondaire"/>
@@ -146,7 +154,7 @@
 						<property name="regexpPopulation" value=""/>
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
-						<property name="id" value="physique"/>
+						<property name="id" value="formationprofessionnelle"/>
 						<property name="libelle" value="filter.level.professional"/>
 						<property name="nomAttribut" value="niveauEducatif.nom"/>
 						<property name="regexpAttribut" value="formation professionnelle"/>
@@ -154,10 +162,18 @@
 						<property name="regexpPopulation" value=""/>
 					</bean>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
-						<property name="id" value="physique"/>
+						<property name="id" value="mastere"/>
 						<property name="libelle" value="filter.level.masters"/>
 						<property name="nomAttribut" value="niveauEducatif.nom"/>
 						<property name="regexpAttribut" value="mastère spécialisé"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="3e"/>
+						<property name="libelle" value="filter.level.3e"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="3e"/>
 						<property name="population" value=""/>
 						<property name="regexpPopulation" value=""/>
 					</bean>

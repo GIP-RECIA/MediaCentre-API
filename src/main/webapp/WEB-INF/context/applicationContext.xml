@@ -59,26 +59,6 @@
 <!-- 	<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.PreferenceResourceImpl" /> -->
 
 
-<!-- 	<bean id="filtreEtablissement" class="org.esco.portlet.mediacentre.model.FiltreEtablissement" > -->
-<!-- 		<property name="niveauRubrique" value="" /> -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="filtreDiscipline" class="org.esco.portlet.mediacentre.model.FiltreDiscipline" > -->
-<!-- 		<property name="niveauRubrique" value="" /> -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="filtreNiveau" class="org.esco.portlet.mediacentre.model.FiltreNiveau" > -->
-<!-- 		<property name="niveauRubrique" value="" /> -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="filtreDiffuseur" class="org.esco.portlet.mediacentre.model.FiltreDiffuseur" > -->
-<!-- 		<property name="niveauRubrique" value="" /> -->
-<!-- 	</bean> -->
-
-<!-- 	<bean id="filtreTypeMedia" class="org.esco.portlet.mediacentre.model.FiltreTypeMedia" > -->
-<!-- 		<property name="niveauRubrique" value="" /> -->
-<!-- 	</bean> -->
-
 	<bean id="jsonHttpMessageConverter"
 				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 		<property name="supportedMediaTypes">
@@ -88,6 +68,8 @@
 			</list>
 		</property>
 	</bean>
+
+	<!--<bean id="hostnameVerifier" class="org.esco.portlet.mediacentre.dao.util.EscoHostnameVerifier" p:trustedDomains="${hostnames.trusted}" />-->
 
 <!-- 	based on org.apache.http.impl.client.HttpClients.createSystem -->
 	<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder"

@@ -45,6 +45,11 @@ public class PortletServiceImpl implements IPortletService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @NonNull
+    @Value("${userInfo.key.uid}")
+    @Setter
+    private String uidInfoKey;
+
+    @NonNull
     @Value("${userInfo.key.etabIds}")
     @Setter
     private String etabCodesInfoKey;
@@ -52,6 +57,12 @@ public class PortletServiceImpl implements IPortletService {
     @Value("${userInfo.key.currentEtabId}")
     @Setter
     private String currentEtabCodeInfoKey;
+    
+    @NonNull
+    @Value("${userInfo.key.profils}")
+    @Setter
+    private String profilsInfoKey;
+    
     @NonNull
     @Value("${userInfo.key.groups}")
     @Setter

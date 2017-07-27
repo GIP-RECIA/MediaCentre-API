@@ -5,3 +5,7 @@
 .mediacentre .sautLigne {
 	display:block;
 }
+
+.mediacentre .actionCache {
+	display: none;
+}

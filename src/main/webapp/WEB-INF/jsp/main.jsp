@@ -59,6 +59,13 @@
 
 <div id="mediacentre_${n}" class="mediacentre">
 
+<jsp:directive.include file="/WEB-INF/jsp/modalGestionAffectation.jsp" />
+
+	<!--FAB-->
+	<a href="javascript:void(0)" class="btn btn-primary btn-fab fab-affectations">
+	    <i class="mdi mdi-settings"></i>
+	</a>	
+
 	<!-- i18n messages -->
 	<spring:message code="resource.action.favorite" var="msgResourceActionFavorite" />
 	<spring:message code="resource.action.view" var="msgResourceActionView" />
@@ -133,6 +140,22 @@
 	        </div>
 	
 	        <div class="col-xs-12 col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10 grid">
+<!-- 	            <div style="align:right;"> -->
+<%-- 					<form method="post" name="editform" action="<portlet:actionURL/>"></form> --%>
+					
+<%-- 					<portlet:renderURL var="renderURL"> --%>
+<%-- 					    <portlet:param name="action" value="showForm"/> --%>
+<%-- 					    <portlet:param name="hello" value="world"/> --%>
+<%-- 					</portlet:renderURL> --%>
+					 
+<!-- 					<h3> Spring Form Submission Demo</h3> -->
+					 
+<!-- 					<br/><br/> -->
+					 
+<%-- 					<a id="reload" class="" href="${renderURL}">Go to Form Page</a> --%>
+<!-- 				</div> -->
+	            
+	            
 	            <div class="container-fluid">
 	               	<c:forEach var="ressource" items="${ressources}" >
 		                <div class="col-xs-12 col-sm-6 col-lg-4">
@@ -154,9 +177,9 @@
 		                        <div class="res-block-infos">
 		                            <span class="res-title">${ressource.nomRessource}</span>
 		                            <span class="res-txt">
-		                            	<c:forEach var="typePresentation" items="${ressource.typePresentation}" >
-		                            		<span class="sautLigne">${typePresentation.nom}</span>
-		                            	</c:forEach>
+		                            	<c:if test="${not empty ressource.typePresentation}" >
+		                            		<span class="sautLigne">${ressource.typePresentation.nom}</span>
+		                            	</c:if>
 		                            	<span class="sautLigne">${ressource.nomEditeur}</span>
 		                            </span>
 		                            <div class="res-tags">

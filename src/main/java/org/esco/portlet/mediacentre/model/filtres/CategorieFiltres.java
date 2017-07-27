@@ -18,6 +18,8 @@ public class CategorieFiltres {
 	private String libelle;
 
 	private boolean valeursMultiples;
+	
+	private String libelleActionCategorie;
 
 	private List<Filtre> filtres;
 	
@@ -83,6 +85,14 @@ public class CategorieFiltres {
 		this.valeursMultiples = valeursMultiples;
 	}
 
+	public String getLibelleActionCategorie() {
+		return libelleActionCategorie;
+	}
+
+	public void setLibelleActionCategorie(String libelleActionCategorie) {
+		this.libelleActionCategorie = libelleActionCategorie;
+	}
+
 	/**
 	 * Getter de la propriété filtre
 	 * @return la propriété filtre
@@ -101,12 +111,6 @@ public class CategorieFiltres {
 
 	/* 
 	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
 	 * Méthodes publiques de la classe 
 	 * =============================================== 
 	 */
@@ -116,7 +120,7 @@ public class CategorieFiltres {
 	@Override
 	public String toString() {
 		return "CategorieFiltres [id=" + id + ", libelle=" + libelle + ", valeursMultiples=" + valeursMultiples
-				+ ", filtres=" + filtres + "]";
+				+ ", libelleActionCategorie=" + libelleActionCategorie + ", filtres=" + filtres + "]";
 	}
 	
 }

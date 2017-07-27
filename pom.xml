@@ -580,7 +580,7 @@
       </activation>
       <properties>
         <logback.loglevel>DEBUG</logback.loglevel>
-        <portlet.usePortalJsLibs>false</portlet.usePortalJsLibs>
+        <portlet.usePortalJsLibs>true</portlet.usePortalJsLibs>
       </properties>
     </profile>
   </profiles>
