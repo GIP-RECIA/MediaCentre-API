@@ -102,7 +102,7 @@
 		                        	
 		                        		<c:if test="${not categorie.valeursMultiples}">
 				                            <li class="radio withripple">
-				                                <label><input type="radio" name="options_${categorie.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre"><spring:message code="${filtre.libelle}" /></label>
+				                                <label><input type="radio" name="options_${categorie.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''}><spring:message code="${filtre.libelle}" /></label>
 				                            </li>
 			                            </c:if>
 			                            
@@ -123,7 +123,7 @@
 											
 											<li class="checkbox withripple">
 		                                		<label>
-		                                			<input type="checkbox" name="options_${categorie.id}" id="select_${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre ${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" >
+		                                			<input type="checkbox" name="options_${categorie.id}" id="select_${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" >
 		                                			<spring:message code="${filtre.libelle}" />
 		                                		</label>
 		                                	</li>

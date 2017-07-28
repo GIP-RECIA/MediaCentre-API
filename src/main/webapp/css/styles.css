@@ -23920,6 +23920,18 @@ body {
 	padding-right: inherit;
 }  
 
+/*****************************************/
+/*	 SURCHARGE A SUPPRIMER QUAND BS OK 	 */
+/*****************************************/
+.mediacentre {
+    padding-left: 0;
+    padding-right: 0;
+}
+.portal .up-portlet-content-wrapper{
+	padding: 0;
+}
+
+/* fin suppression */
 
 @media (min-width: 992px) {
   /* line 683, ../sass/styles.scss */
@@ -23941,6 +23953,7 @@ body {
     height: 100%;
     background: none;
     margin: 0 0 0 -15px;
+  }
   /* line 705, ../sass/styles.scss */
   .mediacentre .filters .filters-group .filters-heading {
     display: none;
@@ -24085,36 +24098,22 @@ body {
 		left: initial;
 		margin-left: initial;
 		margin-right: initial;
-	} 
-	.portal .up-portlet-content-wrapper{
-		padding: 0;
 	}
 	.mediacentre .filters {
-	    width: 20%;
-	    left: 10%;
-		padding-right: inherit;
+		width: 18px;
+	    padding-right: inherit;
+	    margin-left: 8.33333333%;
 	}
 	.col-md-offset-3 {
-		margin-left: 27%;
+		margin-left: 22%;
 	}
 	.col-md-9 {
-		width: 72%;
+		width: 78%;
 	}
 }
 
 @media (min-width: 1200px) {
-  	/*****************************************/
-	/*	 SURCHARGE A SUPPRIMER QUAND BS OK 	 */
-	/*****************************************/
-	 .mediacentre .filters {
-	   width: 13.33333333%;
-	 }
-	 .col-lg-offset-2 {
-		margin-left: 25%;
-	}
-	.col-lg-10{
-		width: 75%;
-	}
+    
 }
 
 	
