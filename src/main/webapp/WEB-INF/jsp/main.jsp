@@ -57,7 +57,7 @@
 <a href="${renderURL}">Go to Form Page</a>   --%>
 
 
-<div id="mediacentre_${n}" class="mediacentre">
+<div id="mediacentre_${n}" class="col-md-10 col-md-offset-1 mediacentre">
 
 <jsp:directive.include file="/WEB-INF/jsp/modalGestionAffectation.jsp" />
 
@@ -102,7 +102,7 @@
 		                        	
 		                        		<c:if test="${not categorie.valeursMultiples}">
 				                            <li class="radio withripple">
-				                                <label><input type="radio" name="options_${categorie.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''}><spring:message code="${filtre.libelle}" /></label>
+				                                <label><input type="radio" name="options_${categorie.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre"><spring:message code="${filtre.libelle}" /></label>
 				                            </li>
 			                            </c:if>
 			                            
@@ -123,7 +123,7 @@
 											
 											<li class="checkbox withripple">
 		                                		<label>
-		                                			<input type="checkbox" name="options_${categorie.id}" id="select_${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" >
+		                                			<input type="checkbox" name="options_${categorie.id}" id="select_${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre ${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" >
 		                                			<spring:message code="${filtre.libelle}" />
 		                                		</label>
 		                                	</li>

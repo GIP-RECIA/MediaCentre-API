@@ -70,7 +70,6 @@ mediacentre.init = function($, namespace, portletId) {
 		      }	
 		});
 	};
-
 };
 
 /**jQuery(document).ready(function($)
@@ -110,6 +109,10 @@ mediacentre.init = function($, namespace, portletId) {
 			      $('input:checkbox[name="' + nameGroup + '"].caseSelectAll').prop('checked', val);
 		      }	
 		});
+	});*/
+	
+/**	$('.refreshMediacentre').on('click', function() {
+	    location.reload();
 	});
 });*/
 

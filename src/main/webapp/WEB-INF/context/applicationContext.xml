@@ -71,9 +71,10 @@
 
 	<!--<bean id="hostnameVerifier" class="org.esco.portlet.mediacentre.dao.util.EscoHostnameVerifier" p:trustedDomains="${hostnames.trusted}" />-->
 
-<!-- 	based on org.apache.http.impl.client.HttpClients.createSystem -->
+	<!-- 	based on org.apache.http.impl.client.HttpClients.createSystem -->
 	<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder"
 				factory-method="create">
+		<!--<property name="SSLHostnameVerifier" ref="hostnameVerifier" />-->
 	</bean>
 
 	<bean name="httpClient" factory-bean="httpClientBuilder" factory-method="build" />
