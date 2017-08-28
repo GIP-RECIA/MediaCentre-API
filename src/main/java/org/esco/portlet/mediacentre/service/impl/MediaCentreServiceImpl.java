@@ -27,6 +27,7 @@ import org.esco.portlet.mediacentre.dao.IPreferenceResource;
 import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IMediaCentreService;
+import org.esco.portlet.mediacentre.service.bean.IMediaUrlBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,11 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
     private static final String PREF_MEDIA_URL = "mediaUrl";
     
     @NonNull
+    @Value("${userInfo.key.uid}")
+    @Setter
+    private String uidInfoKey;
+
+    @NonNull
     @Value("${userInfo.key.etabIds}")
     @Setter
     private String etabCodesInfoKey;
@@ -60,6 +66,11 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
     @Setter
     private String currentEtabCodeInfoKey;
     
+    @NonNull
+    @Value("${userInfo.key.profils}")
+    @Setter
+    private String profilsInfoKey;
+
     @NonNull
     @Value("${userInfo.key.groups}")
     @Setter
@@ -77,8 +88,8 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
     @Autowired
     private IPreferenceResource preferenceResource;
 
-    /**@Autowired
-    private IMediaUrlBuilder mediaUrlBuilder;*/
+    @Autowired
+    private IMediaUrlBuilder mediaUrlBuilder;
     
     @Autowired
     private IMediaCentreResource mediaCentreResource;    
@@ -89,13 +100,14 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
     }
 
     @Override
-    public String getUserCurrentEtablissement(@NotNull PortletRequest portletRequest) {
+    public List<String> getUserCurrentEtablissement(@NotNull PortletRequest portletRequest) {
         List<String> userInfos = userResource.getUserInfo(portletRequest, currentEtabCodeInfoKey);
-        if (userInfos.size() > 1) {
+        /**if (userInfos.size() > 1) {
             // should not happen
             log.warn("User info has more than one value, the service will return only the first one !");
         }
-        return userInfos.get(0);
+        return userInfos.get(0);*/
+        return userInfos;
     }
 
     @Override
@@ -161,12 +173,45 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
         }
     }
     
-    public static String getPrefMediaUrl() {
+    /**
+	 * @return the mediaUrlBuilder
+	 */
+	/**public IMediaUrlBuilder getMediaUrlBuilder() {
+		return mediaUrlBuilder;
+	}*/
+
+	/**
+	 * @param mediaUrlBuilder the mediaUrlBuilder to set
+	 */
+	/**public void setMediaUrlBuilder(IMediaUrlBuilder mediaUrlBuilder) {
+		this.mediaUrlBuilder = mediaUrlBuilder;
+	}*/
+
+	public static String getPrefMediaUrl() {
     	return PREF_MEDIA_URL;
     }
 
     @Override
     public List<Ressource> retrieveListRessource(final PortletRequest request) {
-        return mediaCentreResource.retrieveListRessource(urlRessources);
+        
+        if (log.isDebugEnabled()) {
+            log.debug("Preference mediacentre url is {}", urlRessources);
+        }
+
+        if (urlRessources == null || urlRessources.trim().isEmpty() ) {
+            return Lists.newArrayList();
+        }
+
+        // case of url is relative
+        /**String rewroteUrl = mediaUrlBuilder.transform(request, urlRessources);
+        if (rewroteUrl == null || rewroteUrl.trim().isEmpty()) {
+            return Lists.newArrayList();
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("After url completion mediacentreUrl is {}", urlRessources);
+        }*/
+
+        return mediaCentreResource.retrieveListRessource(urlRessources, request, getUserInfos(request));
     }
 }

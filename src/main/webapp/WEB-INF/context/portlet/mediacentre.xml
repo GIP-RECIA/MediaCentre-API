@@ -47,6 +47,7 @@
         <value>messages</value>
       </list>
     </property>
+    <property name="useCodeAsDefaultMessage" value="true" />
   </bean>
 
 

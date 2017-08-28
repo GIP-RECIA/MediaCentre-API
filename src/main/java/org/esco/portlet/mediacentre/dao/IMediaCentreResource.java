@@ -16,6 +16,9 @@
 package org.esco.portlet.mediacentre.dao;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.portlet.PortletRequest;
 
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 
@@ -24,5 +27,5 @@ import org.esco.portlet.mediacentre.model.ressource.Ressource;
  */
 public interface IMediaCentreResource {
 
-	List<Ressource> retrieveListRessource(final String mediaCentreUrl) ;
+	List<Ressource> retrieveListRessource(final String mediaCentreUrl, PortletRequest request, Map<String, List<String>> userInfos) ;
 }

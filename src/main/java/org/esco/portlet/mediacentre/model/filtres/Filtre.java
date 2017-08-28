@@ -203,9 +203,11 @@ public class Filtre {
     		if (valeur == null) {
     			continue;
     		}
-    		String valeurStr = valeur.toString();
-    		if (valeurStr.matches(getRegexpAttribut())) {
-    			return true;
+    		if(!caseSelectAll && actif){
+	    		String valeurStr = valeur.toString();
+	    		if (valeurStr.matches(getRegexpAttribut())) {
+	    			return true;
+	    		}
     		}
     	}
     	

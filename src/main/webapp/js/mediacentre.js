@@ -37,12 +37,15 @@ mediacentre.init = function($, namespace, portletId) {
 	function checkAllChild(){
 		$('.caseSelectAll').click(function(e){
 			var nameGroup = this.name;
-	        var caseFilterACocher = $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre');
+			var index = nameGroup.indexOf('.', 0);
+			var firstElement = nameGroup.substring(0,index);
+	        var caseFilterACocher = $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre');
 			if(this.checked){
 				caseFilterACocher.prop('checked', true); 
 			}else{
 				caseFilterACocher.prop('checked', false);
 			}
+			submitForm();
 	    });
 	};
 
@@ -50,26 +53,34 @@ mediacentre.init = function($, namespace, portletId) {
 		// en cochant une case enfant on coche ou décoche la Checkbox parent
 		$('.caseAutreFiltre').click(function(e) {
 			var nameGroup = this.name;
-			//var caseFilterParent = $('input:checkbox[name="' + nameGroup + '"].caseSelectAll');
+			var index = nameGroup.indexOf('.', 0);
+			var firstElement = nameGroup.substring(0,index);
+			
 			// si la case parent est cochée mais que celle que nous venons de cocher ne l'est pas (plus) : on décoche la case parent
-			if( ($('input:checkbox[name="' + nameGroup + '"].caseSelectAll').is(':checked') == true ) && ($(this).is(':checked') == false) ){
-				$('input:checkbox[name="' + nameGroup + '"].caseSelectAll').prop('checked', false);
+			if( ($('input:checkbox[name^="' + firstElement + '"].caseSelectAll').is(':checked') == true ) && ($(this).is(':checked') == false) ){
+				$('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', false);
 			}
 			// l'attribut checked est true si on vient de cliquer sur une case à cocher enfant
 			if (this.checked == true){// on définit notre valeur à true
 			      var val = true;
 			      // on boucle pour vérifier si une case à cocher n'est pas décochée : checked renvoie false
-			      $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre').each(
+			      $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre').each(
 			    	function(){ // si renvoie false on attribue notre nouvelle valeur à false
 			    		if (this.checked == false)
 			    			val = false;
 			    	 }
 			      );
 			      // on assigne au checkbox parent la bonne valeur : true si toutes sont cochées, false si au moins une checkbox est décochée
-			      $('input:checkbox[name="' + nameGroup + '"].caseSelectAll').prop('checked', val);
-		      }	
+			      $('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', val);
+		      }
+			submitForm();
 		});
 	};
+	
+	function submitForm(){
+		$("#categorieFiltreModel").submit();
+	};
+
 };
 
 /**jQuery(document).ready(function($)
@@ -77,12 +88,16 @@ mediacentre.init = function($, namespace, portletId) {
 	$(function(){
 		$('.caseSelectAll').click(function(e){
 			var nameGroup = this.name;
-	        var caseFilterACocher = $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre');
+			var index = nameGroup.indexOf('.', 0);
+			var firstElement = nameGroup.substring(0,index);
+	        //var caseFilterACocher = $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre');
+			var caseFilterACocher = $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre');
 			if(this.checked){
 				caseFilterACocher.prop('checked', true); 
 			}else{
 				caseFilterACocher.prop('checked', false);
 			}
+			submitForm();
 	    });
 	});
 
@@ -90,29 +105,32 @@ mediacentre.init = function($, namespace, portletId) {
 		// en cochant une case enfant on coche ou décoche la Checkbox parent
 		$('.caseAutreFiltre').click(function(e) {
 			var nameGroup = this.name;
-			//var caseFilterParent = $('input:checkbox[name="' + nameGroup + '"].caseSelectAll');
+			var index = nameGroup.indexOf('.', 0);
+			var firstElement = nameGroup.substring(0,index);
+			
 			// si la case parent est cochée mais que celle que nous venons de cocher ne l'est pas (plus) : on décoche la case parent
-			if( ($('input:checkbox[name="' + nameGroup + '"].caseSelectAll').is(':checked') == true ) && ($(this).is(':checked') == false) ){
-				$('input:checkbox[name="' + nameGroup + '"].caseSelectAll').prop('checked', false);
+			if( ($('input:checkbox[name^="' + firstElement + '"].caseSelectAll').is(':checked') == true ) && ($(this).is(':checked') == false) ){
+				$('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', false);
 			}
 			// l'attribut checked est true si on vient de cliquer sur une case à cocher enfant
 			if (this.checked == true){// on définit notre valeur à true
 			      var val = true;
 			      // on boucle pour vérifier si une case à cocher n'est pas décochée : checked renvoie false
-			      $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre').each(
+			      $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre').each(
 			    	function(){ // si renvoie false on attribue notre nouvelle valeur à false
 			    		if (this.checked == false)
 			    			val = false;
 			    	 }
 			      );
 			      // on assigne au checkbox parent la bonne valeur : true si toutes sont cochées, false si au moins une checkbox est décochée
-			      $('input:checkbox[name="' + nameGroup + '"].caseSelectAll').prop('checked', val);
-		      }	
+			      $('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', val);
+		      }
+			submitForm();
 		});
-	});*/
-	
-/**	$('.refreshMediacentre').on('click', function() {
-	    location.reload();
 	});
+	
+	function submitForm(){
+		$("#categorieFiltreModel").submit();
+	};
 });*/
 

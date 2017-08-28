@@ -17,7 +17,9 @@ package org.esco.portlet.mediacentre.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.portlet.PortletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -38,7 +40,7 @@ public class MediaCentreResourceGsonImpl implements IMediaCentreResource {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private List<Ressource> getServiceMedias(String urlWS) {
+    private List<Ressource> getServiceMedias(String urlWS, PortletRequest request, Map<String, List<String>> userInfos) {
         if (log.isDebugEnabled()) {
             log.debug("Requesting MediaCentre on URL {}", urlWS );
         }
@@ -61,7 +63,7 @@ public class MediaCentreResourceGsonImpl implements IMediaCentreResource {
         return listRessourceMediaCentre;
     }
 
-    public List<Ressource> retrieveListRessource(String mediaCentreUrl) {
-        return this.getServiceMedias(mediaCentreUrl);
+    public List<Ressource> retrieveListRessource(String mediaCentreUrl, PortletRequest request, Map<String, List<String>> userInfos) {
+        return this.getServiceMedias(mediaCentreUrl, request, userInfos);
     }
 }

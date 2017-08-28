@@ -28,9 +28,9 @@ import org.esco.portlet.mediacentre.model.ressource.Ressource;
  */
 public interface IMediaCentreService {
 
-    List<String> getUserLinkedEtablissements(@NotNull final PortletRequest portletRequest);
+	List<String> getUserLinkedEtablissements(@NotNull final PortletRequest portletRequest);
 
-    String getUserCurrentEtablissement(@NotNull final PortletRequest portletRequest);
+	List<String> getUserCurrentEtablissement(@NotNull final PortletRequest portletRequest);
 
     List<String> getUserGroups(@NotNull final PortletRequest portletRequest);
 

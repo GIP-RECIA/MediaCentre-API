@@ -30,12 +30,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-//@Profile("!mock")
+@Profile("!mock")
 public class UserResourceImpl implements IUserResource{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private IUserResource mockedUserResource;
+    //private IUserResource mockedUserResource;
     
     /**
      * Retrieve the user info attribute from portlet context, or the Mocked user info
@@ -53,7 +53,7 @@ public class UserResourceImpl implements IUserResource{
         List<String> attributeValues = null;
 
         if (userInfo != null) {
-            if (userInfo.containsKey(attributeValues)) {
+            if (userInfo.containsKey(attributeName)) {
                 attributeValues = userInfo.get(attributeName);
             } else {
                 log.warn("User attribute '{}' wasn't retrieved, check if the file portlet.xml contains the attribute shared by the portal !!", attributeName);
@@ -93,12 +93,11 @@ public class UserResourceImpl implements IUserResource{
 
     }
 
-    public IUserResource getMockedUserResource() {
+    /**public IUserResource getMockedUserResource() {
         return mockedUserResource;
     }
 
     public void setMockedUserResource(IUserResource mockedUserResource) {
         this.mockedUserResource = mockedUserResource;
-    }
-
+    }*/
 }

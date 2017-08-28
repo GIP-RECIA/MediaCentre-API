@@ -176,6 +176,8 @@
 						<property name="regexpAttribut" value="3e"/>
 						<property name="population" value=""/>
 						<property name="regexpPopulation" value=""/>
+<!-- 						<property name="population" value="isMemberOf"/> -->
+<!-- 						<property name="regexpPopulation" value="((esco)|(agri)|(clg37)):Applications:Ressources_Editoriales:GAR:.*"/> -->
 					</bean>
 	    		</list>
 	    	</property>

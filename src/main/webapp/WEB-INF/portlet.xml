@@ -63,6 +63,11 @@
   </portlet>
 
   <user-attribute>
+	<description>User id</description>
+	<name>uid</name>
+  </user-attribute>
+
+  <user-attribute>
     <description>User UAI</description>
     <name>ESCOUAI</name>
   </user-attribute>

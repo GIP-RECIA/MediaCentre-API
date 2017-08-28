@@ -38,24 +38,9 @@
 
 </script>
 
-<%-- <div id="mediacentre_${n}" class="mediacentre"> --%>
-
-<%-- 	<portlet:renderURL var="viewUrl" portletMode="view"/> --%>
-
-<%-- 	 <c:if test="not empty msg" ><c:out value="msg"/></c:if> --%>
-<%-- <portlet:defineObjects />
- 
-<portlet:renderURL var="renderURL">
-    <portlet:param name="action" value="showForm"/>
-    <portlet:param name="hello" value="world"/>
-</portlet:renderURL>
- 
-<h3> Spring Form Submission Demo</h3>
- 
-<br/><br/>
- 
-<a href="${renderURL}">Go to Form Page</a>   --%>
-
+<portlet:actionURL var="filterAllRessources">
+  <portlet:param name="action" value="filterAllRessources" />
+</portlet:actionURL>
 
 <div id="mediacentre_${n}" class="col-md-10 col-md-offset-1 mediacentre">
 
@@ -91,70 +76,54 @@
 	                </div>
 	                <div id="collapse-full" class="filters-list collapse">
 	                
-						<c:forEach var="categorie" items="${categoriesFiltre}" >
-		                    <ul class="form-group filter ${categorie.id}">
-		                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title">
-		                        <span>${categorie.libelle}</span>
-		                        <i class="mdi mdi-24px mdi-menu-down pull-right"></i></a>
-		                        <div id="collapse-${categorie.id}" class="filter-options collapse">
-		                        	
-		                        	<c:forEach var="filtre" items="${categorie.filtres}" >
-		                        	
-		                        		<c:if test="${not categorie.valeursMultiples}">
-				                            <li class="radio withripple">
-				                                <label><input type="radio" name="options_${categorie.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''}><spring:message code="${filtre.libelle}" /></label>
-				                            </li>
-			                            </c:if>
+	                	<form:form method="POST" commandName="categorieFiltreModel" action="${filterAllRessources}">
+	                
+							<c:forEach var="categorie" items="${categorieFiltreModel.listCategorieFiltre}" varStatus="cat">
+			                    <ul class="form-group filter ${categorie.id}">
+			                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title">
+			                        <span>${categorie.libelle}</span>
+			                        <i class="mdi mdi-24px mdi-menu-down pull-right"></i></a>
+			                        <div id="collapse-${categorie.id}" class="filter-options collapse">
+			                        	
+			                        	<c:forEach var="filtre" items="${categorie.filtres}" varStatus="loop">
+			                        	
+			                        		<c:if test="${not categorie.valeursMultiples}">
+					                            <li class="radio withripple">
+					                                <label>
+<%-- 					                                	<input type="checkbox" name="categoriesFiltre[${cat.index}].filtres[${loop.index}].actif" id="${filtre.id}" value="" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre"> --%>
+														<form:radiobutton path="listCategorieFiltre[${cat.index}].filtres[${loop.index}].actif"/>
+			                        					<spring:message code="${filtre.libelle}" />
+					                                </label>
+					                            </li>
+				                            </c:if>
+				                            
+				                            <c:if test="${categorie.valeursMultiples}">
+												
+												<li class="checkbox withripple">
+			                                		<label>
+<%-- 			                                			<input type="checkbox" name="options_${categorie.id}" id="select_${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre ${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" > --%>
+														<form:checkbox path="listCategorieFiltre[${cat.index}].filtres[${loop.index}].actif" class="refreshMediacentre ${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" />
+			                        					<spring:message code="${filtre.libelle}" />
+
+			                                		</label>
+			                                	</li>
+			                                			      
+		                                	</c:if>                      
+			                            </c:forEach>
 			                            
-			                            <c:if test="${categorie.valeursMultiples}">
-											
-	<%-- 										<c:choose> --%>
-	<%-- 											<c:when test="${filtre.caseSelectAll}"> --%>
-	<!-- 												<li class="checkbox withripple"> -->
-	<%-- 			                                		<label><input type="checkbox" class="options_discipline" name="options_${categorie.id}_${filtre.id}" id="${filtre.id}" value="${filtre.id}" onclick="alert('OK');selectAllFiltre(this);" ${filtre.actif ? 'checked' : ''} ><spring:message code="${filtre.libelle}" /></label> --%>
-	<!-- 			                                	</li> -->
-	<%-- 		                                	</c:when> --%>
-	<%-- 		                                	<c:otherwise> --%>
-	<!-- 		                                		<li class="checkbox withripple"> -->
-	<%-- 			                                		<label><input type="checkbox" class="options_discipline" name="options_${categorie.id}_${filtre.id}" id="${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} ><spring:message code="${filtre.libelle}" /></label> --%>
-	<!-- 			                                	</li> -->
-	<%-- 		                                	</c:otherwise> --%>
-	<%-- 	                                	</c:choose>   --%>
-											
-											<li class="checkbox withripple">
-		                                		<label>
-		                                			<input type="checkbox" name="options_${categorie.id}" id="select_${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" >
-		                                			<spring:message code="${filtre.libelle}" />
-		                                		</label>
-		                                	</li>
-		                                			      
-	                                	</c:if>                      
-		                            </c:forEach>
-		                        </div>
-		                    </ul>
-			
-						</c:forEach>
-	
+			                        </div>
+			                    </ul>
+				
+							</c:forEach>
+							
+							<input type="submit" name="Save" value="OK" hidden="hidden"/>
+							
+						</form:form>
 	                </div>
 	            </div>
 	        </div>
 	
 	        <div class="col-xs-12 col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10 grid">
-<!-- 	            <div style="align:right;"> -->
-<%-- 					<form method="post" name="editform" action="<portlet:actionURL/>"></form> --%>
-					
-<%-- 					<portlet:renderURL var="renderURL"> --%>
-<%-- 					    <portlet:param name="action" value="showForm"/> --%>
-<%-- 					    <portlet:param name="hello" value="world"/> --%>
-<%-- 					</portlet:renderURL> --%>
-					 
-<!-- 					<h3> Spring Form Submission Demo</h3> -->
-					 
-<!-- 					<br/><br/> -->
-					 
-<%-- 					<a id="reload" class="" href="${renderURL}">Go to Form Page</a> --%>
-<!-- 				</div> -->
-	            
 	            
 	            <div class="container-fluid">
 	               	<c:forEach var="ressource" items="${ressources}" >
