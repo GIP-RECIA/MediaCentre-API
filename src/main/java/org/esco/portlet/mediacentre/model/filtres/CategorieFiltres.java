@@ -19,7 +19,7 @@ public class CategorieFiltres {
 
 	private boolean valeursMultiples;
 	
-	private String libelleActionCategorie;
+	private boolean categorieExpended = false;
 
 	private List<Filtre> filtres;
 	
@@ -85,12 +85,18 @@ public class CategorieFiltres {
 		this.valeursMultiples = valeursMultiples;
 	}
 
-	public String getLibelleActionCategorie() {
-		return libelleActionCategorie;
+	/**
+	 * @return the categorieExpended
+	 */
+	public boolean isCategorieExpended() {
+		return categorieExpended;
 	}
 
-	public void setLibelleActionCategorie(String libelleActionCategorie) {
-		this.libelleActionCategorie = libelleActionCategorie;
+	/**
+	 * @param categorieExpended the categorieExpended to set
+	 */
+	public void setCategorieExpended(boolean categorieExpended) {
+		this.categorieExpended = categorieExpended;
 	}
 
 	/**
@@ -120,7 +126,7 @@ public class CategorieFiltres {
 	@Override
 	public String toString() {
 		return "CategorieFiltres [id=" + id + ", libelle=" + libelle + ", valeursMultiples=" + valeursMultiples
-				+ ", libelleActionCategorie=" + libelleActionCategorie + ", filtres=" + filtres + "]";
+				+ ", categorieExpended=" + categorieExpended + ", filtres=" + filtres + "]";
 	}
 	
 }

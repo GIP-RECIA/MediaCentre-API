@@ -24,6 +24,7 @@ mediacentre.init = function($, namespace, portletId) {
                alert($,namespace,portletId);
                checkAllChild();
                checkParent();
+               collapseAuto();
         });
 
     })($, namespace, portletId);
@@ -80,10 +81,24 @@ mediacentre.init = function($, namespace, portletId) {
 	function submitForm(){
 		$("#categorieFiltreModel").submit();
 	};
+	
+	function collapseAuto(){
+		$('.filter-title').click(function(e) {
+			var nameGroup = this.name;
+			var index = nameGroup.indexOf('-', 0);
+			var nameCategorie = nameGroup.substring(index + 1);
+			var caseHiddenCheckbox = $('input:checkbox[name="' + nameCategorie + '.categorieExpended"]');
+			if($('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').is(':checked') == true ){
+				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', false);
+			}else{
+				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', true);
+			}
+		});
+	};
 
 };
 
-/**jQuery(document).ready(function($)
+jQuery(document).ready(function($)
 {
 	$(function(){
 		$('.caseSelectAll').click(function(e){
@@ -132,5 +147,23 @@ mediacentre.init = function($, namespace, portletId) {
 	function submitForm(){
 		$("#categorieFiltreModel").submit();
 	};
-});*/
+	
+	
+	$(function(){
+		// en cochant une case enfant on coche ou décoche la Checkbox parent
+		$('.filter-title').click(function(e) {
+			var nameGroup = this.name;
+			var index = nameGroup.indexOf('-', 0);
+			var nameCategorie = nameGroup.substring(index + 1);
+			var caseHiddenCheckbox = $('input:checkbox[name="' + nameCategorie + '.categorieExpended"]');
+			if($('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').is(':checked') == true ){
+				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', false);
+			}else{
+				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', true);
+			}
+		});
+	});
+	
+	
+});
 

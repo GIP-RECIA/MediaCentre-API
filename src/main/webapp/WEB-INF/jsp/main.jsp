@@ -80,10 +80,11 @@
 	                
 							<c:forEach var="categorie" items="${categorieFiltreModel.listCategorieFiltre}" varStatus="cat">
 			                    <ul class="form-group filter ${categorie.id}">
-			                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title">
+			                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title" name="name-listCategorieFiltre[${cat.index}]" >
+			                        <form:checkbox path="listCategorieFiltre[${cat.index}].categorieExpended" class="actionCache" />
 			                        <span>${categorie.libelle}</span>
 			                        <i class="mdi mdi-24px mdi-menu-down pull-right"></i></a>
-			                        <div id="collapse-${categorie.id}" class="filter-options collapse">
+			                        <div id="collapse-${categorie.id}" class="filter-options collapse ${categorie.categorieExpended ? 'in' : ''}" on>
 			                        	
 			                        	<c:forEach var="filtre" items="${categorie.filtres}" varStatus="loop">
 			                        	
@@ -126,11 +127,16 @@
 	        <div class="col-xs-12 col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10 grid">
 	            
 	            <div class="container-fluid">
+	            
+	            	<c:if test="${empty ressources}" >
+	               		<spring:message code="resource.error.empty" />
+	               	</c:if>
+	            	
 	               	<c:forEach var="ressource" items="${ressources}" >
 		                <div class="col-xs-12 col-sm-6 col-lg-4">
 		                    <div class="res-card">
 		                        <div class="action-zone">
-		                            <a href="javascript:void(0);" title="<spring:message code="resource.add.favorite" />" class="btn btn-primary add-to-fav">
+		                            <a href="javascript:void(0);" title="<spring:message code="resource.add.favorite" />" class="btn btn-primary add-to-fav ${ressource.favorite ? 'added' : ''}">
 		                                <i class="mdi mdi-star-outline"></i>
 		                                <i class="mdi mdi-star"></i>
 		                            </a>

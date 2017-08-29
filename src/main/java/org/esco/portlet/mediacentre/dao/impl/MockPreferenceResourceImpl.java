@@ -15,6 +15,7 @@
  */
 package org.esco.portlet.mediacentre.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.google.common.collect.Lists;
 
@@ -41,6 +43,8 @@ public class MockPreferenceResourceImpl implements IPreferenceResource {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
+	private static final String SPLIT_SEP = ",";
+	
 	@NonNull
     @Value("${userInfo.mediacentre.favorites}")
     @Setter
@@ -48,7 +52,11 @@ public class MockPreferenceResourceImpl implements IPreferenceResource {
 	
 	@Override
     public List<String> getUserFavorites(@NotNull final PortletRequest portletRequest) {
-        return Lists.newArrayList();
+		Assert.hasText(this.mediacentreFavorites, "No Favorite Codes user info key configured !");
+		
+		final String[] favorite = System.getProperty("mediacentre.userFavorite", "http://n2t.net/ark:/99999/RSF000001").split(SPLIT_SEP);
+		
+		return Lists.newArrayList(favorite);
     }
 
     @Override

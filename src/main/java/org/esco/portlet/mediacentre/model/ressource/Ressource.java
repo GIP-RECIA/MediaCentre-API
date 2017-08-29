@@ -3,6 +3,7 @@ package org.esco.portlet.mediacentre.model.ressource;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -61,6 +62,9 @@ public class Ressource extends AbstractJson {
     @JsonProperty("validateurTech")
     private String validateurTech;
 
+    @JsonIgnore
+    private boolean favorite;
+    
     @JsonProperty("distributeurTech")
     public String getDistributeurTech() {
         return distributeurTech;
@@ -220,5 +224,21 @@ public class Ressource extends AbstractJson {
     public void setValidateurTech(String validateurTech) {
         this.validateurTech = validateurTech;
     }
+
+	/**
+	 * @return the favorite
+	 */
+    @JsonIgnore
+	public boolean isFavorite() {
+		return favorite;
+	}
+
+	/**
+	 * @param favorite the favorite to set
+	 */
+    @JsonIgnore
+	public void setFavorite(boolean favorite) {
+		this.favorite = favorite;
+	}
 
 }

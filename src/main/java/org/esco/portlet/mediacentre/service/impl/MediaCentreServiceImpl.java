@@ -22,6 +22,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.ReadOnlyException;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang.StringUtils;
 import org.esco.portlet.mediacentre.dao.IMediaCentreResource;
 import org.esco.portlet.mediacentre.dao.IPreferenceResource;
 import org.esco.portlet.mediacentre.dao.IUserResource;
@@ -211,7 +212,22 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
         if (log.isDebugEnabled()) {
             log.debug("After url completion mediacentreUrl is {}", urlRessources);
         }*/
-
-        return mediaCentreResource.retrieveListRessource(urlRessources, request, getUserInfos(request));
+        List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, request, getUserInfos(request));
+        List<String> listeFavoris = this.getUserFavorites(request);
+        
+        
+        // on alimente l'attribut des favoris
+        for(Ressource ressource : listRessources){
+        	String idRessource = ressource.getIdRessource();
+        	if(StringUtils.isNotBlank(idRessource)){
+        		if(listeFavoris.contains(idRessource)){
+        			ressource.setFavorite(true);
+        		}
+        		else{
+        			ressource.setFavorite(false);
+        		}
+        	}
+        }
+        return listRessources;
     }
 }
