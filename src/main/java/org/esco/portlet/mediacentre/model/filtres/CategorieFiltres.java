@@ -1,12 +1,13 @@
 package org.esco.portlet.mediacentre.model.filtres;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author elecaude
  *
  */
-public class CategorieFiltres {
+public class CategorieFiltres implements Cloneable {
 	/* 
 	 * ===============================================
 	 * Propriétés de la classe 
@@ -129,4 +130,26 @@ public class CategorieFiltres {
 				+ ", categorieExpended=" + categorieExpended + ", filtres=" + filtres + "]";
 	}
 	
+	@Override
+	public Object clone(){
+		CategorieFiltres categorieFiltres = null;
+		try {
+			categorieFiltres = (CategorieFiltres) super.clone();
+			categorieFiltres.setId(this.getId());
+			categorieFiltres.setLibelle(this.getLibelle());
+			categorieFiltres.setValeursMultiples(this.isValeursMultiples());
+			categorieFiltres.setCategorieExpended(this.isCategorieExpended());
+			List<Filtre> listFiltre = new ArrayList<Filtre>();
+			
+			for(Filtre filtre : this.getFiltres()){
+					Filtre filtreCopy = ((Filtre) filtre.clone());
+					listFiltre.add(filtreCopy);
+			}
+			categorieFiltres.setFiltres(listFiltre);
+			
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return categorieFiltres;
+	}
 }

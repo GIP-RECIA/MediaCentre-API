@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author elecaude
  *
  */
-public class Filtre {
+public class Filtre implements Cloneable{
 	/* 
 	 * ===============================================
 	 * Propriétés de la classe 
@@ -193,7 +193,7 @@ public class Filtre {
      */
     public boolean estPassante(Ressource ressource) throws Exception {
     	if (StringUtils.isEmpty(getRegexpAttribut())) {
-    		log.error("L'expression regulière du filtre " + getId() + " n'est pas renseignée pour l'attribut");
+    		log.info("L'expression regulière du filtre " + getId() + " n'est pas renseignée pour l'attribut");
     		return false;
     	}
     	
@@ -224,4 +224,24 @@ public class Filtre {
 				+ actif + "]";
 	}
 	
+	@Override
+	public Object clone(){
+		Filtre filtre = null;
+		try {
+			filtre = (Filtre) super.clone();
+			filtre.setId(this.getId());
+			filtre.setLibelle(this.getLibelle());
+			filtre.setNomAttribut(this.getNomAttribut());
+			filtre.setRegexpAttribut(this.getRegexpAttribut());
+			filtre.setPopulation(this.getPopulation());
+			filtre.setRegexpPopulation(this.getRegexpPopulation());
+			filtre.setActif(this.isActif());
+			filtre.setCaseSelectAll(this.isCaseSelectAll());
+			
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return filtre;
+	}
+
 }

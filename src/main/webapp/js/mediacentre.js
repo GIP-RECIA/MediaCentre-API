@@ -150,7 +150,6 @@ jQuery(document).ready(function($)
 	
 	
 	$(function(){
-		// en cochant une case enfant on coche ou décoche la Checkbox parent
 		$('.filter-title').click(function(e) {
 			var nameGroup = this.name;
 			var index = nameGroup.indexOf('-', 0);

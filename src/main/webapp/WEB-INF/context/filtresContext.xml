@@ -36,6 +36,7 @@
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="filter.resources"/>
 						<property name="libelle" value="filter.resources.all"/>
+						<property name="actif" value="true"/>
 						<property name="nomAttribut" value="idRessource"/>
 						<property name="regexpAttribut" value=".*"/>
 						<property name="population" value=""/>
@@ -119,6 +120,15 @@
 						<property name="population" value=""/>
 						<property name="regexpPopulation" value=""/>
 					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="informatique"/>
+						<property name="libelle" value="filter.subject.informatics"/>
+						<property name="nomAttribut" value="domaineEnseignement.nom"/>
+						<property name="regexpAttribut" value="informatique"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+					</bean>
+
 				</list>
 			</property>
 		</bean>
@@ -179,6 +189,37 @@
 <!-- 						<property name="population" value="isMemberOf"/> -->
 <!-- 						<property name="regexpPopulation" value="((esco)|(agri)|(clg37)):Applications:Ressources_Editoriales:GAR:.*"/> -->
 					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="4e"/>
+						<property name="libelle" value="filter.level.4e"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="4e"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+<!-- 						<property name="population" value="isMemberOf"/> -->
+<!-- 						<property name="regexpPopulation" value="((esco)|(agri)|(clg37)):Applications:Ressources_Editoriales:GAR:.*"/> -->
+					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="5e"/>
+						<property name="libelle" value="filter.level.5e"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="5e"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+<!-- 						<property name="population" value="isMemberOf"/> -->
+<!-- 						<property name="regexpPopulation" value="((esco)|(agri)|(clg37)):Applications:Ressources_Editoriales:GAR:.*"/> -->
+					</bean>
+					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
+						<property name="id" value="6e"/>
+						<property name="libelle" value="filter.level.6e"/>
+						<property name="nomAttribut" value="niveauEducatif.nom"/>
+						<property name="regexpAttribut" value="6e"/>
+						<property name="population" value=""/>
+						<property name="regexpPopulation" value=""/>
+<!-- 						<property name="population" value="isMemberOf"/> -->
+<!-- 						<property name="regexpPopulation" value="((esco)|(agri)|(clg37)):Applications:Ressources_Editoriales:GAR:.*"/> -->
+					</bean>
+
 	    		</list>
 	    	</property>
 	    </bean>

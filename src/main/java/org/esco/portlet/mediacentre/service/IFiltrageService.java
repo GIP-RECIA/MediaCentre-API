@@ -30,4 +30,14 @@ public interface IFiltrageService {
      */
 	public List<Ressource> filtrerRessources(List<CategorieFiltres> categoriesFiltres,  List<Ressource> ressources) throws Exception;
 
+	
+	/**
+	 * La liste des valeurs de filtrage sera calculee automatiquement en fonction des valeurs obtenues sur l'attribut associe dans la liste des ressources.
+	 * 
+	 * @param categoriesFiltres
+	 * @param ressources
+	 * @return
+	 * @throws Exception
+	 */
+	public List<CategorieFiltres> filtrerCategorieFiltre(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception;
 }

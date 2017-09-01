@@ -94,4 +94,41 @@ public class FiltrageServiceImpl implements IFiltrageService {
     	return ressourcesFiltrees;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.esco.portlet.mediacentre.service.IFiltrageService#filtrerCategorieFiltre(java.util.List, java.util.List)
+	 */
+	@Override
+    public List<CategorieFiltres> filtrerCategorieFiltre(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception {
+		List<CategorieFiltres> categoriesFiltresFiltrees = new ArrayList<CategorieFiltres>();
+		
+		for(CategorieFiltres categorieFiltres : categoriesFiltres){
+			CategorieFiltres categorie = (CategorieFiltres) categorieFiltres.clone();
+			
+			if(categorie.isValeursMultiples()){
+				List<Filtre> listFiltre = new ArrayList<Filtre>();
+				
+				for(Filtre filtre : categorieFiltres.getFiltres()){
+					
+					boolean filtreMatchWithRessource = false;
+					
+					for(Ressource ressource : ressources){
+						
+						if(filtre.estPassante(ressource)){
+							filtreMatchWithRessource = true;
+							break;
+						}
+					}
+					if(filtreMatchWithRessource){
+						listFiltre.add((Filtre) filtre.clone());
+					}
+				}
+				categorie.setFiltres(listFiltre);
+			}
+			if(categorie.getFiltres().size() > 1){
+				categoriesFiltresFiltrees.add(categorie);
+			}
+		}
+		
+		return categoriesFiltresFiltrees;
+	}
 }

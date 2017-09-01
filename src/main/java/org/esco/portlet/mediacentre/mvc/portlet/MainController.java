@@ -16,6 +16,7 @@
 package org.esco.portlet.mediacentre.mvc.portlet;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Main portlet view.
@@ -93,18 +96,22 @@ public class MainController {
         List<String> userLinkedEtablissements = this.mediaCentreService.getUserLinkedEtablissements(request);
         List<String> userCurrentEtablissement = this.mediaCentreService.getUserCurrentEtablissement(request);
         if(categoriesFiltresUser == null){
-        	categoriesFiltresUser = new ArrayList<CategorieFiltres>(categoriesFiltres);
+        	categoriesFiltresUser = getCopyOfListCategoriesFiltres(categoriesFiltres);
         }
+        
         initialiserEtablissementCategorieFiltre(userLinkedEtablissements, userCurrentEtablissement);
         
-        //CategorieFiltreModel categorieFiltreModel = new CategorieFiltreModel();
         if(categorieFiltreModel == null){
         	categorieFiltreModel = new CategorieFiltreModel();
         }
-        categorieFiltreModel.setListCategorieFiltre(categoriesFiltresUser);
         
         //List<Ressource> ressources = filtrageService.filtrerRessources(categoriesFiltres, listeRessourceMediaCenter);
         ressourcesFiltrees = filtrageService.filtrerRessources(categoriesFiltresUser, listeRessourceMediaCenter);
+        // intersection des valeurs de filtrage en fonction des ressources obtenues
+        List<CategorieFiltres> copyOfListCategoriesFiltres = getCopyOfListCategoriesFiltres(categoriesFiltresUser);
+        categoriesFiltresUser = filtrageService.filtrerCategorieFiltre(copyOfListCategoriesFiltres, ressourcesFiltrees);
+        
+        categorieFiltreModel.setListCategorieFiltre(categoriesFiltresUser);
         
         mav.addObject("ressources", ressourcesFiltrees);
         mav.addObject("categorieFiltreModel", categorieFiltreModel);
@@ -186,4 +193,17 @@ public class MainController {
         this.mediaCentreService = mediaCentreService;
     }
     
+	public List<CategorieFiltres> getCopyOfListCategoriesFiltres(List<CategorieFiltres> categoriesFiltres){
+		
+		List<CategorieFiltres> categoriesFiltresCopy =  new ArrayList<CategorieFiltres>();
+		
+		if(categoriesFiltres != null){
+			for(CategorieFiltres categories : categoriesFiltres){
+				CategorieFiltres categorieCLone = (CategorieFiltres) categories.clone();
+				categoriesFiltresCopy.add(categorieCLone);
+			}
+		}
+		return categoriesFiltresCopy;
+	}
+
 }

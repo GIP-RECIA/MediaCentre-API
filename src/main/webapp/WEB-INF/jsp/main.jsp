@@ -157,11 +157,13 @@
 		                            	</c:if>
 		                            	<span class="sautLigne">${ressource.nomEditeur}</span>
 		                            </span>
-		                            <div class="res-tags">
-		                                <span class="label label-danger"><spring:message code="resource.label.curiosity" /></span>
-		                                <span class="label label-success"><spring:message code="resource.label.community" /></span>
-		                                <span class="label label-fav"><spring:message code="resource.label.favorite" /></span>
-		                            </div>
+		                            
+<!-- 		                            <div class="res-tags"> -->
+<%-- 		                                <span class="label label-danger"><spring:message code="resource.label.curiosity" /></span> --%>
+<%-- 		                                <span class="label label-success"><spring:message code="resource.label.community" /></span> --%>
+<%-- 		                                <span class="label label-fav"><spring:message code="resource.label.favorite" /></span> --%>
+<!-- 		                            </div> -->
+		                            
 		                        </div>
 		                        <c:choose>
 			                        <c:when test="${ressource.urlVignette!=''}">
