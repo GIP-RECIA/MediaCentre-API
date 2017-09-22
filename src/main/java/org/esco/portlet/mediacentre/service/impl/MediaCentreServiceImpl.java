@@ -28,7 +28,6 @@ import org.esco.portlet.mediacentre.dao.IPreferenceResource;
 import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IMediaCentreService;
-import org.esco.portlet.mediacentre.service.bean.IMediaUrlBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,8 +88,8 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
     @Autowired
     private IPreferenceResource preferenceResource;
 
-    @Autowired
-    private IMediaUrlBuilder mediaUrlBuilder;
+//    @Autowired
+//    private IMediaUrlBuilder mediaUrlBuilder;
     
     @Autowired
     private IMediaCentreResource mediaCentreResource;    
@@ -217,7 +216,9 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
         
         
         // on alimente l'attribut des favoris
-        for(Ressource ressource : listRessources){
+        int id=1;
+        for(Ressource ressource : listRessources) {
+        	ressource.setIdInterne(id++);
         	String idRessource = ressource.getIdRessource();
         	if(StringUtils.isNotBlank(idRessource)){
         		if(listeFavoris.contains(idRessource)){

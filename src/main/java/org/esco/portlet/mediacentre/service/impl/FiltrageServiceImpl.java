@@ -16,15 +16,22 @@
 package org.esco.portlet.mediacentre.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
+import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement;
 import org.esco.portlet.mediacentre.model.filtres.Filtre;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class FiltrageServiceImpl implements IFiltrageService {
@@ -36,6 +43,12 @@ public class FiltrageServiceImpl implements IFiltrageService {
 	 */
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
+    @Value("${userInfo.key.etabIds}")
+    private String etabCodesInfoKey;
+    
+    @Value("${userInfo.key.currentEtabId}")
+    private String currentEtabCodeInfoKey;
+    
 	/* 
 	 * ===============================================
 	 * Constructeurs de la classe 
@@ -59,76 +72,92 @@ public class FiltrageServiceImpl implements IFiltrageService {
 	 * Méthodes publiques de la classe 
 	 * =============================================== 
 	 */	
-
-	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.service.IFiltrageService#filtrerRessources(java.util.List, java.util.List)
-	 */
-	@Override
-	public List<Ressource> filtrerRessources(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception {
-    	List<Ressource> ressourcesFiltrees = new ArrayList<Ressource>();
-    	
-    	for (Ressource ressource : ressources) {
-    		boolean categoriePassant = true;
-    		
-    		// Verifie si la ressource correspond à toutes les catégories
-	    	for (CategorieFiltres categorie : categoriesFiltres ) {
-	    		
-	    		// Verifie si la ressource correspond à au moins un filtre de la categorie
-	    		boolean filtrePassant = false;
-	    		for (Filtre filtre : categorie.getFiltres()) {
-	    			if (filtre.estPassante(ressource)) {
-	    				filtrePassant = true;
-	    				break;
-	    			}
-	    		}
-	    		categoriePassant = categoriePassant && filtrePassant;
-	    		if (!categoriePassant) {
-	    			break;
-	    		}
-	    	}
-	    	if (categoriePassant) {
-	    		ressourcesFiltrees.add(ressource);
-	    	}
-    	}
-    	
-    	return ressourcesFiltrees;
-	}
 	
 	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.service.IFiltrageService#filtrerCategorieFiltre(java.util.List, java.util.List)
+	 * @see org.esco.portlet.mediacentre.service.IFiltrageService#preparerFiltrage(java.util.Map, java.util.List, java.util.List, java.util.List, java.util.List)
 	 */
-	@Override
-    public List<CategorieFiltres> filtrerCategorieFiltre(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception {
-		List<CategorieFiltres> categoriesFiltresFiltrees = new ArrayList<CategorieFiltres>();
+	public String preparerFiltrage(
+			Map<String, List<String>> userInfoMap, 
+			List<CategorieFiltres> categoriesFiltres,  
+			List<Ressource> ressources, 
+			List<CategorieFiltres> categoriesFiltresCandidats, 
+			List<Ressource> ressourcesCandidates) throws Exception {
 		
-		for(CategorieFiltres categorieFiltres : categoriesFiltres){
-			CategorieFiltres categorie = (CategorieFiltres) categorieFiltres.clone();
-			
-			if(categorie.isValeursMultiples()){
-				List<Filtre> listFiltre = new ArrayList<Filtre>();
-				
-				for(Filtre filtre : categorieFiltres.getFiltres()){
-					
-					boolean filtreMatchWithRessource = false;
-					
-					for(Ressource ressource : ressources){
-						
-						if(filtre.estPassante(ressource)){
-							filtreMatchWithRessource = true;
-							break;
-						}
-					}
-					if(filtreMatchWithRessource){
-						listFiltre.add((Filtre) filtre.clone());
-					}
-				}
-				categorie.setFiltres(listFiltre);
-			}
-			if(categorie.getFiltres().size() > 1){
-				categoriesFiltresFiltrees.add(categorie);
+    	//------------------------------------------------------------
+    	// Calcul des ressources candidates et des filtres a afficher
+    	//------------------------------------------------------------
+    	Map<Integer, Ressource> mapRessourcesCandidates = new HashMap<Integer, Ressource>();
+    	Map<String, Map<String, List<Integer>>> mapCategories = new HashMap<>();
+    	
+    	for (CategorieFiltres categorie : categoriesFiltres ) {
+    		
+    		if (categorie.estCategorieEtablissement()) {
+    			((CategorieFiltresEtablissement)categorie).initialiser(userInfoMap.get(etabCodesInfoKey), userInfoMap.get(currentEtabCodeInfoKey));	
+    		}
+    		
+    		Map<String, List<Integer>> mapFiltre = new HashMap<String, List<Integer>>();
+    		List<Filtre> filtresClone = new ArrayList<Filtre>();
+    		
+    		// Pour chaque filtre de la catégorie, on vérifie s'il existe des ressources passantes 
+    		int nbFiltreSelectAll=0;
+    		for (Filtre filtre : categorie.getFiltres()) {
+    			if (!filtre.concerneUtilisateur(userInfoMap)) {
+    				continue;
+    			}
+    			
+    			List<Integer> listeRessources = new ArrayList<Integer>();
+    			if (!filtre.isCaseSelectAll()) {
+        			for (Ressource ressource : ressources) {
+        				if (filtre.estPassante(ressource)) {
+        					listeRessources.add(ressource.getIdInterne());
+        					mapRessourcesCandidates.put(ressource.getIdInterne(), ressource);
+        				}
+        			}
+    			} else {
+    				nbFiltreSelectAll++;
+    			}
+    			
+    			// S'il existe au moins une ressource passante, on conserve le filtre
+    			if (!listeRessources.isEmpty() || filtre.isCaseSelectAll() || "favoris".equalsIgnoreCase(filtre.getId())) {
+    				mapFiltre.put(filtre.getId(), listeRessources);
+    				
+    				filtresClone.add((Filtre)filtre.clone());
+    			}
+    		}
+    		
+    		// La catégorie est affichée si elle comporte plusieurs filtres (dont le type est different de "selectAll") 
+    		boolean estAffichable = filtresClone.size() > (1 + nbFiltreSelectAll);
+    		if (estAffichable) {
+    			mapCategories.put(categorie.getId(), mapFiltre);
+
+    			CategorieFiltres categorieClone = (CategorieFiltres)categorie.clone();
+    			categoriesFiltresCandidats.add(categorieClone);
+    			categorieClone.setFiltres(filtresClone);
+    		}
+    	}
+    	
+    	ressourcesCandidates.addAll(mapRessourcesCandidates.values());
+    	
+    	// Transformation en JSON du paramétrage
+    	ObjectMapper mapper = new ObjectMapper();
+    	String json = mapper.writeValueAsString(mapCategories);
+    	log.debug("parametres de filtrage : " + json);
+    	log.debug("nombre de ressources candidates : " + ressourcesCandidates.size());
+    	return json;
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see org.esco.portlet.mediacentre.service.IFiltrageService#filtrerGestionAffectation(java.util.List, java.util.Map)
+	 */
+	public List<GestionAffectation> filtrerGestionAffectation(List<GestionAffectation> listeGestionAffectation, Map<String, List<String>> userInfo) {
+		List<GestionAffectation> gestionAffectationFiltrees = new ArrayList<GestionAffectation>();
+		for (GestionAffectation gestionAffectation: listeGestionAffectation) {
+			if (gestionAffectation.concerneUtilisateur(userInfo)) {
+				gestionAffectationFiltrees.add(gestionAffectation);
 			}
 		}
-		
-		return categoriesFiltresFiltrees;
+		return gestionAffectationFiltrees;
 	}
 }
+

@@ -1,3 +1,18 @@
+/**
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.esco.portlet.mediacentre.model.filtres;
 
 import java.util.ArrayList;
@@ -35,8 +50,6 @@ public class CategorieFiltres implements Cloneable {
 	 * Getter / Setter de la classe 
 	 * =============================================== 
 	 */
-
-
 	
 	/**
 	 * Getter de la propriété valeursMultiples
@@ -115,7 +128,13 @@ public class CategorieFiltres implements Cloneable {
 	public void setFiltres(List<Filtre> filtres) {
 		this.filtres = filtres;
 	}
-
+	
+	/* 
+	 * ===============================================
+	 * Méthodes privées de la classe 
+	 * =============================================== 
+	 */
+	
 	/* 
 	 * ===============================================
 	 * Méthodes publiques de la classe 
@@ -140,11 +159,6 @@ public class CategorieFiltres implements Cloneable {
 			categorieFiltres.setValeursMultiples(this.isValeursMultiples());
 			categorieFiltres.setCategorieExpended(this.isCategorieExpended());
 			List<Filtre> listFiltre = new ArrayList<Filtre>();
-			
-			for(Filtre filtre : this.getFiltres()){
-					Filtre filtreCopy = ((Filtre) filtre.clone());
-					listFiltre.add(filtreCopy);
-			}
 			categorieFiltres.setFiltres(listFiltre);
 			
 		} catch (CloneNotSupportedException e) {
@@ -152,4 +166,13 @@ public class CategorieFiltres implements Cloneable {
 		}
 		return categorieFiltres;
 	}
+	
+	/**
+	 * Indique si la categorie correspond à une categorie "etablissement"
+	 * @return false
+	 */
+	public boolean estCategorieEtablissement() {
+		return false;
+	}
+	
 }

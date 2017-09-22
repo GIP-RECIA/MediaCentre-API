@@ -13,156 +13,162 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var mediacentre = mediacentre || {};
 
-
-mediacentre.init = function($, namespace, portletId) {
-
-
-    (function initContainer($, namespace, portletId) {
-        $(window).bind('load', function () {
-               alert($,namespace,portletId);
-               checkAllChild();
-               checkParent();
-               collapseAuto();
-        });
-
-    })($, namespace, portletId);
-
-    function alert(jqueryinstance, cssNamespace, idPortlet) {
-        jqueryinstance(cssNamespace + ' #mydiv_' + idPortlet).on('click', function (e) {
-            alert("click on " + cssNamespace + ' #mydiv_' + idPortlet)
-        });
-    }
-    
-	function checkAllChild(){
-		$('.caseSelectAll').click(function(e){
-			var nameGroup = this.name;
-			var index = nameGroup.indexOf('.', 0);
-			var firstElement = nameGroup.substring(0,index);
-	        var caseFilterACocher = $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre');
-			if(this.checked){
-				caseFilterACocher.prop('checked', true); 
-			}else{
-				caseFilterACocher.prop('checked', false);
-			}
-			submitForm();
-	    });
-	};
-
-	function checkParent(){
-		// en cochant une case enfant on coche ou décoche la Checkbox parent
-		$('.caseAutreFiltre').click(function(e) {
-			var nameGroup = this.name;
-			var index = nameGroup.indexOf('.', 0);
-			var firstElement = nameGroup.substring(0,index);
-			
-			// si la case parent est cochée mais que celle que nous venons de cocher ne l'est pas (plus) : on décoche la case parent
-			if( ($('input:checkbox[name^="' + firstElement + '"].caseSelectAll').is(':checked') == true ) && ($(this).is(':checked') == false) ){
-				$('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', false);
-			}
-			// l'attribut checked est true si on vient de cliquer sur une case à cocher enfant
-			if (this.checked == true){// on définit notre valeur à true
-			      var val = true;
-			      // on boucle pour vérifier si une case à cocher n'est pas décochée : checked renvoie false
-			      $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre').each(
-			    	function(){ // si renvoie false on attribue notre nouvelle valeur à false
-			    		if (this.checked == false)
-			    			val = false;
-			    	 }
-			      );
-			      // on assigne au checkbox parent la bonne valeur : true si toutes sont cochées, false si au moins une checkbox est décochée
-			      $('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', val);
-		      }
-			submitForm();
-		});
-	};
+//----------------------------------
+// Initialisation des callbacks
+//----------------------------------
+var categorieFavoris = null;
+$(function(){
 	
-	function submitForm(){
-		$("#categorieFiltreModel").submit();
-	};
-	
-	function collapseAuto(){
-		$('.filter-title').click(function(e) {
-			var nameGroup = this.name;
-			var index = nameGroup.indexOf('-', 0);
-			var nameCategorie = nameGroup.substring(index + 1);
-			var caseHiddenCheckbox = $('input:checkbox[name="' + nameCategorie + '.categorieExpended"]');
-			if($('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').is(':checked') == true ){
-				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', false);
-			}else{
-				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', true);
-			}
-		});
-	};
-
-};
-
-jQuery(document).ready(function($)
-{
-	$(function(){
-		$('.caseSelectAll').click(function(e){
-			var nameGroup = this.name;
-			var index = nameGroup.indexOf('.', 0);
-			var firstElement = nameGroup.substring(0,index);
-	        //var caseFilterACocher = $('input:checkbox[name="' + nameGroup + '"].caseAutreFiltre');
-			var caseFilterACocher = $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre');
-			if(this.checked){
-				caseFilterACocher.prop('checked', true); 
-			}else{
-				caseFilterACocher.prop('checked', false);
-			}
-			submitForm();
-	    });
-	});
-
-	$(function(){
-		// en cochant une case enfant on coche ou décoche la Checkbox parent
-		$('.caseAutreFiltre').click(function(e) {
-			var nameGroup = this.name;
-			var index = nameGroup.indexOf('.', 0);
-			var firstElement = nameGroup.substring(0,index);
-			
-			// si la case parent est cochée mais que celle que nous venons de cocher ne l'est pas (plus) : on décoche la case parent
-			if( ($('input:checkbox[name^="' + firstElement + '"].caseSelectAll').is(':checked') == true ) && ($(this).is(':checked') == false) ){
-				$('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', false);
-			}
-			// l'attribut checked est true si on vient de cliquer sur une case à cocher enfant
-			if (this.checked == true){// on définit notre valeur à true
-			      var val = true;
-			      // on boucle pour vérifier si une case à cocher n'est pas décochée : checked renvoie false
-			      $('input:checkbox[name^="' + firstElement + '"].caseAutreFiltre').each(
-			    	function(){ // si renvoie false on attribue notre nouvelle valeur à false
-			    		if (this.checked == false)
-			    			val = false;
-			    	 }
-			      );
-			      // on assigne au checkbox parent la bonne valeur : true si toutes sont cochées, false si au moins une checkbox est décochée
-			      $('input:checkbox[name^="' + firstElement + '"].caseSelectAll').prop('checked', val);
-		      }
-			submitForm();
-		});
+	// En cochant la case "select All", on coche ou decoche les checkbox enfants
+	$('.caseSelectAll').click(function(e){
+		var caseFilterACocher = $('input:checkbox.' + this.name + '.caseAutreFiltre');
+		if(this.checked){
+			caseFilterACocher.prop('checked', true); 
+		}else{
+			caseFilterACocher.prop('checked', false);
+		}
+		afficherRessources();
 	});
 	
-	function submitForm(){
-		$("#categorieFiltreModel").submit();
-	};
-	
-	
-	$(function(){
-		$('.filter-title').click(function(e) {
-			var nameGroup = this.name;
-			var index = nameGroup.indexOf('-', 0);
-			var nameCategorie = nameGroup.substring(index + 1);
-			var caseHiddenCheckbox = $('input:checkbox[name="' + nameCategorie + '.categorieExpended"]');
-			if($('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').is(':checked') == true ){
-				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', false);
-			}else{
-				$('input:checkbox[name="' + nameCategorie + '.categorieExpended"]').prop('checked', true);
-			}
-		});
+
+	// En cochant une case enfant on coche ou décoche la Checkbox parent
+	$('.caseAutreFiltre').click(function(e) {
+		var categorie = $(this).closest('ul')[0].id;
+		var valeur = $('input:checkbox.' + categorie + '.caseAutreFiltre:checked').length == $('input:checkbox.' + categorie + '.caseAutreFiltre').length
+		$('input:checkbox.' + categorie + '.caseSelectAll').prop('checked', valeur);
+		afficherRessources()
 	});
+
+	// Initialisation de la variable paramFavoris
+	for (var i in ressourcesParFiltre) {
+		if (ressourcesParFiltre[i].favoris) {
+			categorieFavoris = ressourcesParFiltre[i];
+			break;
+		}
+	}
+
+	$('.add-to-fav').click(changeFavoris);
 	
 	
+	$('input:radio.filtreMediacentre').click(afficherRessources);
+	afficherRessources();
 });
 
+
+//---------------------------------------------------
+// fonction calculant l'intersection de tableaux
+//---------------------------------------------------
+function intersection() {
+	  return Array.from(arguments).reduce(function(previous, current){
+		return previous.filter(function(element){
+		  return current.indexOf(element) > -1;
+		});
+	  });
+	};
+
+//---------------------------------------------------
+// fonction calculant l'union de tableaux
+//---------------------------------------------------
+function union() {
+	let arr = Array.concat.apply(null, arguments);
+	return arr.filter(function (val, index) {
+	  return arr.indexOf(val) === index;
+	});
+}	
+
+//---------------------------------------------------
+// fonction renvoyant l'id des ressources 
+// correspondant aux filtres
+//---------------------------------------------------
+function filtrer() {
+	let ressourcesCandidates = [];
+	for ( let categorie in ressourcesParFiltre) {
+		let ressourcesParCategories = [];	
+		// Recherche de toutes les ressources candidates pour une catégorie
+		for (let filtre in ressourcesParFiltre[categorie]) {
+			for (let i in arguments) {
+				if (filtre == arguments[i]) {
+					ressourcesParCategories = union (ressourcesParCategories, ressourcesParFiltre[categorie][filtre]);
+				}
+			}
+		}
+		ressourcesCandidates.push(ressourcesParCategories);
+	}
+	
+	return intersection.apply(null, ressourcesCandidates);
+}
+
+//---------------------------------------------------
+// fonction rafraichissant l'affichage des ressources 
+// qui correspondent aux filtres
+//---------------------------------------------------
+function afficherRessources() {
+	var tab = $(".filtreMediacentre:checked").toArray();
+	var filtres = tab.reduce(function(arr, elt) { arr.push(elt.id); return arr; }, []);
+	var ressourcesFiltrees = filtrer.apply(null, filtres);
+
+	$(".ressource").each(function(){
+		if (ressourcesFiltrees.includes(parseInt(this.id))) {
+			$(this).show();
+		} else {
+			$(this).hide();
+		}
+	});
+}
+
+//---------------------------------------------------
+// fonction appelée lors d'une modification d'un 
+// favori
+//---------------------------------------------------
+function changeFavoris(event) {
+	event.stopPropagation();
+
+	var id = parseInt($(this).attr("id"));
+	var idRessource = $(this).parent(".action-zone").attr('id');
+	
+	if ($(this).hasClass('added')) {
+		$(this).removeClass('added');
+		supprimerFavori(idRessource);
+		if (categorieFavoris != null) {
+			categorieFavoris.favoris = categorieFavoris.favoris.filter(function(item) { return item != id});
+			if ($('input:radio#favoris').prop('checked')) {
+				afficherRessources();
+			}
+		}
+	} else {
+		$(this).addClass('added');
+		ajouterFavori(idRessource);
+		if (categorieFavoris != null) {
+			categorieFavoris.favoris.push(id);
+		}
+	}
+}
+
+//---------------------------------------------------
+// fonction appelée pour ajouter un favori 
+//---------------------------------------------------
+function ajouterFavori(id){
+	$.ajax({
+        type: "POST",
+        url: urlAjouterFavori, 
+        dataType: 'json',
+         data: { 
+            "id": id
+        }
+    });
+}
+
+//---------------------------------------------------
+// fonction appelée pour supprimer un favori 
+//---------------------------------------------------
+function supprimerFavori(id){
+	$.ajax({
+     type: "POST",
+     url: urlRetirerFavori, 
+     dataType: 'json',
+      data: { 
+         "id": id
+     }
+ });
+}

@@ -26,16 +26,6 @@ $(function() {
     // init material design
     //$.material.init();
 
-    // add-to-fav
-    $('.add-to-fav').on('click',function (e) {
-        if($(this).hasClass('added')){
-            $(this).removeClass('added');
-        }else{
-            $(this).addClass('added');
-        }
-        // prevent block info to show up when starring a res
-        e.stopPropagation();
-    });
     // Prevent block info to glitching up when launching a res
     $('.launch-res').on('click',function (e) {
         e.stopPropagation();

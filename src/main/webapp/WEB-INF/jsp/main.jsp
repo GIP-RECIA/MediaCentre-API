@@ -36,20 +36,42 @@
 		</c:otherwise>
 	</c:choose>
 
+	var ressourcesParFiltre = ${ressourcesParFiltre};
+	var urlAjouterFavori = '<portlet:resourceURL id="ajouterFavori" />';
+	var urlRetirerFavori = '<portlet:resourceURL id="retirerFavori" />';
 </script>
 
-<portlet:actionURL var="filterAllRessources">
-  <portlet:param name="action" value="filterAllRessources" />
-</portlet:actionURL>
 
 <div id="mediacentre_${n}" class="col-md-10 col-md-offset-1 mediacentre">
 
-<jsp:directive.include file="/WEB-INF/jsp/modalGestionAffectation.jsp" />
+	<%-- FAB --%> 
+	<c:if test="${not empty gestionAffectation}">
+		<div class="modal affectations">
+		    <div class="modal-content">
+		        <div class="modal-header">
+		            <h4 class="modal-title"><spring:message code="site.affectation.titre" /><i class="mdi mdi-close withripple"></i></h4>
+		        </div>
+		        <div class="modal-body">
+		           	<c:forEach var="gestionAffectation" items="${gestionAffectation}" >
+			            <div class="website">
+			                <a href="<spring:message code="${gestionAffectation.lien}" />" title="<spring:message code="site.affectation.titre" />" target="_blank">
+			                    <div class="website-name"><spring:message code="${gestionAffectation.nom}" /><i class="mdi mdi-24px mdi-launch"></i></div>
+			                    <div class="website-description"><spring:message code="${gestionAffectation.description}" /></div>
+			                </a>
+			            </div>
+					</c:forEach>
+		        </div>
+		        <div class="modal-footer">
+		            <a class="btn btn-primary"><spring:message code="site.affectation.fermer" /></a>
+		        </div>
+		    </div>
+		</div>
+		<div class="overlay"></div>
 
-	<!--FAB-->
-	<a href="javascript:void(0)" class="btn btn-primary btn-fab fab-affectations">
-	    <i class="mdi mdi-settings"></i>
-	</a>	
+		<a href="javascript:void(0)" class="btn btn-primary btn-fab fab-affectations">
+		    <i class="mdi mdi-settings"></i>
+		</a>	
+	</c:if>
 
 	<!-- i18n messages -->
 	<spring:message code="resource.action.favorite" var="msgResourceActionFavorite" />
@@ -61,7 +83,6 @@
 	    <span class="resourceActionDescribe">${msgResourceActionDescribe}</span>
 	</span>
 	
-
 	<div class="container-fluid">
 	    <!-- copy from here -->
 	    <div class="row">
@@ -76,55 +97,40 @@
 	                </div>
 	                <div id="collapse-full" class="filters-list collapse">
 	                
-	                	<form:form method="POST" commandName="categorieFiltreModel" action="${filterAllRessources}">
-	                
-							<c:forEach var="categorie" items="${categorieFiltreModel.listCategorieFiltre}" varStatus="cat">
-			                    <ul class="form-group filter ${categorie.id}">
-			                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title" name="name-listCategorieFiltre[${cat.index}]" >
-			                        <form:checkbox path="listCategorieFiltre[${cat.index}].categorieExpended" class="actionCache" />
-			                        <span>${categorie.libelle}</span>
-			                        <i class="mdi mdi-24px mdi-menu-down pull-right"></i></a>
-			                        <div id="collapse-${categorie.id}" class="filter-options collapse ${categorie.categorieExpended ? 'in' : ''}" on>
-			                        	
-			                        	<c:forEach var="filtre" items="${categorie.filtres}" varStatus="loop">
-			                        	
-			                        		<c:if test="${not categorie.valeursMultiples}">
-					                            <li class="radio withripple">
-					                                <label>
-<%-- 					                                	<input type="checkbox" name="categoriesFiltre[${cat.index}].filtres[${loop.index}].actif" id="${filtre.id}" value="" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre"> --%>
-														<form:radiobutton path="listCategorieFiltre[${cat.index}].filtres[${loop.index}].actif"/>
-			                        					<spring:message code="${filtre.libelle}" />
-					                                </label>
-					                            </li>
-				                            </c:if>
-				                            
-				                            <c:if test="${categorie.valeursMultiples}">
-												
-												<li class="checkbox withripple">
-			                                		<label>
-<%-- 			                                			<input type="checkbox" name="options_${categorie.id}" id="select_${filtre.id}" value="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="refreshMediacentre ${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" > --%>
-														<form:checkbox path="listCategorieFiltre[${cat.index}].filtres[${loop.index}].actif" class="refreshMediacentre ${filtre.caseSelectAll ? 'caseSelectAll' : 'caseAutreFiltre'}" />
-			                        					<spring:message code="${filtre.libelle}" />
-
-			                                		</label>
-			                                	</li>
-			                                			      
-		                                	</c:if>                      
-			                            </c:forEach>
+						<c:forEach var="categorie" items="${categorieFiltreModel.listCategorieFiltre}" varStatus="cat">
+		                    <ul id="${categorie.id}" class="form-group filter ${categorie.id}">
+		                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title" name="name-listCategorieFiltre[${cat.index}]" >
+		                        <span><spring:message code="${categorie.libelle}" /></span>
+		                        <i class="mdi mdi-24px mdi-menu-down pull-right"></i></a>
+		                        <div id="collapse-${categorie.id}" class="filter-options collapse ${categorie.categorieExpended ? 'in' : ''}" on>
+		                        	
+		                        	<c:forEach var="filtre" items="${categorie.filtres}" varStatus="loop">
+		                        		<c:if test="${not categorie.valeursMultiples}">
+				                            <li class="radio withripple">
+				                                <label>
+				                                	<input type="radio" name="${categorie.id}" id="${filtre.id}" value="" ${filtre.actif ? 'checked' : ''} class="filtreMediacentre"> 
+		                        					<spring:message code="${filtre.libelle}" />
+				                                </label>
+				                            </li>
+			                            </c:if>
 			                            
-			                        </div>
-			                    </ul>
-				
-							</c:forEach>
-							
-							<input type="submit" name="Save" value="OK" hidden="hidden"/>
-							
-						</form:form>
+			                            <c:if test="${categorie.valeursMultiples}">
+											<li class="checkbox withripple">
+		                                		<label>
+		                                			<input type="checkbox" name="${filtre.id}" id="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="${categorie.id}  ${filtre.caseSelectAll ? 'caseSelectAll' : 'filtreMediacentre caseAutreFiltre'}" >  
+		                        					<spring:message code="${filtre.libelle}" />
+		                                		</label>
+		                                	</li>
+	                                	</c:if>                      
+		                            </c:forEach>
+		                        </div>
+		                    </ul>
+						</c:forEach>
 	                </div>
 	            </div>
 	        </div>
 	
-	        <div class="col-xs-12 col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10 grid">
+ 	        <div class="col-xs-12 col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10 grid">
 	            
 	            <div class="container-fluid">
 	            
@@ -133,10 +139,10 @@
 	               	</c:if>
 	            	
 	               	<c:forEach var="ressource" items="${ressources}" >
-		                <div class="col-xs-12 col-sm-6 col-lg-4">
+		                <div id="${ressource.idInterne}" class="col-xs-12 col-sm-6 col-lg-4 ressource"	style="display: none;">
 		                    <div class="res-card">
-		                        <div class="action-zone">
-		                            <a href="javascript:void(0);" title="<spring:message code="resource.add.favorite" />" class="btn btn-primary add-to-fav ${ressource.favorite ? 'added' : ''}">
+		                        <div id="${ressource.idRessource}" class="action-zone">
+		                            <a id="${ressource.idInterne}" href="javascript:void(0);" title="<spring:message code="resource.add.favorite" />" class="btn btn-primary add-to-fav ${ressource.favorite ? 'added' : ''}">
 		                                <i class="mdi mdi-star-outline"></i>
 		                                <i class="mdi mdi-star"></i>
 		                            </a>
@@ -159,9 +165,9 @@
 		                            </span>
 		                            
 <!-- 		                            <div class="res-tags"> -->
-<%-- 		                                <span class="label label-danger"><spring:message code="resource.label.curiosity" /></span> --%>
-<%-- 		                                <span class="label label-success"><spring:message code="resource.label.community" /></span> --%>
-<%-- 		                                <span class="label label-fav"><spring:message code="resource.label.favorite" /></span> --%>
+		                                <span class="label label-danger"><spring:message code="resource.label.curiosity" /></span>
+		                                <span class="label label-success"><spring:message code="resource.label.community" /></span>
+		                                <span class="label label-fav"><spring:message code="resource.label.favorite" /></span>
 <!-- 		                            </div> -->
 		                            
 		                        </div>
@@ -186,6 +192,5 @@
 	</div> <!-- /container -->
 
 </div>
-
 
 <%@include file="/WEB-INF/jsp/scripts.jsp"%>

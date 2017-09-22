@@ -32,8 +32,7 @@
 		web-tier Spring WebApplicationContext to the root context to avoid having 
 		the bean definitions duplicated. -->
 
-	<bean
-			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:configuration.properties" />
 	</bean>
 

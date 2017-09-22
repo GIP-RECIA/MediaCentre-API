@@ -26,7 +26,7 @@
   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
   http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<util:list id="affectation" value-type="org.esco.portlet.mediacentre.model.affectation.GestionAffectation">
+	<util:list id="gestionAffectation" value-type="org.esco.portlet.mediacentre.model.affectation.GestionAffectation">
 		
 		<bean class="org.esco.portlet.mediacentre.model.affectation.GestionAffectation">
 			<property name="id" value="GAR"/>

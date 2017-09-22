@@ -16,28 +16,33 @@
 package org.esco.portlet.mediacentre.service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 
 public interface IFiltrageService {
 
-    /**
-     * @param categoriesFiltres
-     * @param ressources
-     * @return la liste des ressources correspondant aux filtres actifs
-     * @throws Exception
-     */
-	public List<Ressource> filtrerRessources(List<CategorieFiltres> categoriesFiltres,  List<Ressource> ressources) throws Exception;
-
-	
 	/**
-	 * La liste des valeurs de filtrage sera calculee automatiquement en fonction des valeurs obtenues sur l'attribut associe dans la liste des ressources.
+	 * Cette fonction prépare le filtrage en répertoriant les ressources correspondant aux filtres
+	 * et en répertoriant les filtres permettant d'afficher des ressources
 	 * 
-	 * @param categoriesFiltres
-	 * @param ressources
-	 * @return
+	 * @param userInfoMap Map contenant le profil de l'utilisateur
+	 * @param categoriesFiltres l'ensembles des filtres issus du paramétrage
+	 * @param ressources l'ensemble des ressources remontées par le GAR
+	 * @param categoriesFiltresCandidats (en sortie) liste des filtres permettant d'afficher au moins une ressource
+	 * @param ressourcesCandidates (en sortie) liste des ressources pouvant être affichées par au moins un filtre
+	 * @return les ressources candidates par Filtre au format JSON à passer à la JSP  
 	 * @throws Exception
 	 */
-	public List<CategorieFiltres> filtrerCategorieFiltre(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception;
+	String preparerFiltrage(Map<String, List<String>> userInfoMap, List<CategorieFiltres> categoriesFiltres,  List<Ressource> ressources, List<CategorieFiltres> categoriesFiltresCandidats, List<Ressource> ressourcesCandidates) throws Exception;
+	
+	
+	/**
+	 * @param listeGestionAffectation
+	 * @param userInfo
+	 * @return la liste des objets GestionAffectation qui sont autorisés pour l'utilisateur
+	 */
+	List<GestionAffectation> filtrerGestionAffectation(List<GestionAffectation> listeGestionAffectation, Map<String, List<String>> userInfo);
 }

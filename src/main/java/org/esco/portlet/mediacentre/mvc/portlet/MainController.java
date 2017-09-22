@@ -15,21 +15,20 @@
  */
 package org.esco.portlet.mediacentre.mvc.portlet;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltreModel;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
-import org.esco.portlet.mediacentre.model.filtres.Filtre;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
 import org.esco.portlet.mediacentre.service.IMediaCentreService;
@@ -37,22 +36,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
-
-import com.google.common.collect.ImmutableList;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /**
  * Main portlet view.
  */
 @Controller
-//@Scope("session")
 @RequestMapping("VIEW")
 public class MainController {
 
+	/* 
+	 * ===============================================
+	 * Propriétés de la classe 
+	 * =============================================== 
+	 */
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -62,60 +62,58 @@ public class MainController {
     private IFiltrageService filtrageService;    
     
     @Resource
-    List<CategorieFiltres> categoriesFiltres;
-    
-    List<CategorieFiltres> categoriesFiltresUser;
-    
-    CategorieFiltres categorieEtablissement;
-    
-    CategorieFiltreModel categorieFiltreModel;
+    private List<CategorieFiltres> categoriesFiltres;
     
     @Resource
-    List<GestionAffectation> affectation;
+    private List<GestionAffectation> gestionAffectation;
     
-    List<Ressource> listeRessourceMediaCenter;
     
-    List<Ressource> ressourcesFiltrees;
-    
-    ModelAndView mav = new ModelAndView();
+	/* 
+	 * ===============================================
+	 * Constructeurs de la classe 
+	 * =============================================== 
+	 */
+
+	/* 
+	 * ===============================================
+	 * Getter / Setter de la classe 
+	 * =============================================== 
+	 */
+
+	/* 
+	 * ===============================================
+	 * Méthodes privées de la classe 
+	 * =============================================== 
+	 */
+ 
+	/* 
+	 * ===============================================
+	 * Méthodes publiques de la classe 
+	 * =============================================== 
+	 */	
     
     @RenderMapping
     public ModelAndView showMainView(final RenderRequest request, final RenderResponse response) throws Exception {
-        final String viewName = "main";        
-        //final ModelAndView mav = new ModelAndView(viewName);
-        mav = new ModelAndView(viewName);
+        ModelAndView mav = new ModelAndView("main");
         
         if(log.isDebugEnabled()) {
-            log.debug("Using view name " + viewName + " for main view");
+            log.debug("Using view name " + mav.getViewName() + " for main view");
         }
         
-        //List<Ressource> listeRessourceMediaCenter = this.mediaCentreService.retrieveListRessource(request);
-        listeRessourceMediaCenter = this.mediaCentreService.retrieveListRessource(request);
+        Map<String, List<String>> userInfo = mediaCentreService.getUserInfos(request);
+        List<Ressource> listeRessources = mediaCentreService.retrieveListRessource(request);
+
+        List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<CategorieFiltres>();
+    	List<Ressource> ressourcesCandidates = new ArrayList<Ressource>();
+    	
+    	String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfo, categoriesFiltres, listeRessources, categoriesFiltresCandidats, ressourcesCandidates);
+    	
+        CategorieFiltreModel categorieFiltreModel = new CategorieFiltreModel(categoriesFiltresCandidats);
         
-        // ajout de la catégorie LinkedEtablissement
-        List<String> userLinkedEtablissements = this.mediaCentreService.getUserLinkedEtablissements(request);
-        List<String> userCurrentEtablissement = this.mediaCentreService.getUserCurrentEtablissement(request);
-        if(categoriesFiltresUser == null){
-        	categoriesFiltresUser = getCopyOfListCategoriesFiltres(categoriesFiltres);
-        }
-        
-        initialiserEtablissementCategorieFiltre(userLinkedEtablissements, userCurrentEtablissement);
-        
-        if(categorieFiltreModel == null){
-        	categorieFiltreModel = new CategorieFiltreModel();
-        }
-        
-        //List<Ressource> ressources = filtrageService.filtrerRessources(categoriesFiltres, listeRessourceMediaCenter);
-        ressourcesFiltrees = filtrageService.filtrerRessources(categoriesFiltresUser, listeRessourceMediaCenter);
-        // intersection des valeurs de filtrage en fonction des ressources obtenues
-        List<CategorieFiltres> copyOfListCategoriesFiltres = getCopyOfListCategoriesFiltres(categoriesFiltresUser);
-        categoriesFiltresUser = filtrageService.filtrerCategorieFiltre(copyOfListCategoriesFiltres, ressourcesFiltrees);
-        
-        categorieFiltreModel.setListCategorieFiltre(categoriesFiltresUser);
-        
-        mav.addObject("ressources", ressourcesFiltrees);
+        mav.addObject("ressourcesParFiltre", ressourcesParFiltre);
+        mav.addObject("ressources", ressourcesCandidates);
         mav.addObject("categorieFiltreModel", categorieFiltreModel);
-        mav.addObject("affectation", affectation);
+        mav.addObject("gestionAffectation", filtrageService.filtrerGestionAffectation(gestionAffectation, userInfo));
         
         if(log.isDebugEnabled()) {
             log.debug("Rendering main view");
@@ -132,78 +130,18 @@ public class MainController {
     	
     }
 
-    @RequestMapping(value = { "VIEW" }, params = { "action=filterAllRessources" })
-	public void filterAllRessources (@ModelAttribute("categorieFiltreModel") CategorieFiltreModel categorieFiltreModel,
-			ActionRequest request, ActionResponse response, ModelMap model) {
-    	
-    	// mise à jour des attributs de filtres en fonction du model --> réutilisé dans le view
-    	categoriesFiltresUser = new ArrayList<CategorieFiltres>(categorieFiltreModel.getListCategorieFiltre());
-    	
-		model.addAttribute("ressources", ressourcesFiltrees);
-		model.addAttribute("categorieFiltreModel", categorieFiltreModel);
-		model.addAttribute("affectation", affectation);
-	}
-    
-    @ModelAttribute("categorieFiltreModel")
-	public CategorieFiltreModel getCategorieFiltreModel() {
-		return categorieFiltreModel;
-	}
-    
-    /**
-     * Méthode qui ajoute la categorie de filtre des etablissements (info User reçues du portail)
-     * 
-     * @param userLinkedEtablissements
-     * @param userCurrentEtablissement
-     */
-    private void initialiserEtablissementCategorieFiltre(List<String> userLinkedEtablissements, List<String> userCurrentEtablissement){
-    	
-    	if(categorieEtablissement == null){
-    	
-	    	if(userLinkedEtablissements.size() >1){
-	    		categorieEtablissement = new CategorieFiltres();
-	    		categorieEtablissement.setId("etablissement");
-	    		categorieEtablissement.setLibelle("Etablissement");
-	    		categorieEtablissement.setValeursMultiples(true);
-		    	List<Filtre> filtreEtab = new ArrayList<Filtre>();
-		    	for(String linkedEtablissement : userLinkedEtablissements){
-		    		Filtre filtre = new Filtre();
-		    		filtre.setId(linkedEtablissement);
-		    		filtre.setLibelle(linkedEtablissement);
-		    		boolean actif = false;
-		    		if(userCurrentEtablissement.contains(linkedEtablissement)){
-		    			actif = true;
-		    		}
-		    		filtre.setActif(actif);
-		    		filtre.setNomAttribut("idEtablissement.UAI");
-		    		filtre.setRegexpAttribut(linkedEtablissement);
-		    		filtreEtab.add(filtre);
-		    	}
-		    	categorieEtablissement.setFiltres(filtreEtab);
-		    	categoriesFiltresUser.add(1, categorieEtablissement);
-	    	}
-    	}
+    @ResourceMapping(value="ajouterFavori")
+    public void ajouterFavori(ResourceRequest request, ResourceResponse response) throws IOException {
+    	String id = request.getParameter("id");
+    	mediaCentreService.addToUserFavorites(request, id);
+    	response.getWriter().write("{\"success\":true}");
     }
     
-    
-    public IMediaCentreService getMediaCentreService() {
-        return mediaCentreService;
-    }
-
-    public void setMediaCentreService(IMediaCentreService mediaCentreService) {
-        this.mediaCentreService = mediaCentreService;
+    @ResourceMapping(value="retirerFavori")
+    public void retirerFavori(ResourceRequest request, ResourceResponse response) throws IOException {
+    	String id = request.getParameter("id");
+    	mediaCentreService.removeToUserFavorites(request, id);
+    	response.getWriter().write("{\"success\":true}");
     }
     
-	public List<CategorieFiltres> getCopyOfListCategoriesFiltres(List<CategorieFiltres> categoriesFiltres){
-		
-		List<CategorieFiltres> categoriesFiltresCopy =  new ArrayList<CategorieFiltres>();
-		
-		if(categoriesFiltres != null){
-			for(CategorieFiltres categories : categoriesFiltres){
-				CategorieFiltres categorieCLone = (CategorieFiltres) categories.clone();
-				categoriesFiltresCopy.add(categorieCLone);
-			}
-		}
-		return categoriesFiltresCopy;
-	}
-
 }

@@ -15,6 +15,7 @@
  */
 package org.esco.portlet.mediacentre.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,6 +46,8 @@ public class MockPreferenceResourceImpl implements IPreferenceResource {
 	
 	private static final String SPLIT_SEP = ",";
 	
+	private List<String> favoris = Arrays.asList("http://n2t.net/ark:/99999/RSF000006");
+	
 	@NonNull
     @Value("${userInfo.mediacentre.favorites}")
     @Setter
@@ -54,9 +57,9 @@ public class MockPreferenceResourceImpl implements IPreferenceResource {
     public List<String> getUserFavorites(@NotNull final PortletRequest portletRequest) {
 		Assert.hasText(this.mediacentreFavorites, "No Favorite Codes user info key configured !");
 		
-		final String[] favorite = System.getProperty("mediacentre.userFavorite", "http://n2t.net/ark:/99999/RSF000001").split(SPLIT_SEP);
+		//final String[] favorite = System.getProperty("mediacentre.userFavorite", "http://n2t.net/ark:/99999/RSF000001").split(SPLIT_SEP);
 		
-		return Lists.newArrayList(favorite);
+		return favoris;
     }
 
     @Override
@@ -65,9 +68,16 @@ public class MockPreferenceResourceImpl implements IPreferenceResource {
 
     @Override
     public void addToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) {
+    	favoris.add(favorite);
+    	log.debug("addToUserFavorites" + favoris);
     }
 
     @Override
     public void removeToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) {
+    	int i = favoris.indexOf(favorite);
+    	if (i>=0) {
+    		favoris.remove(i);
+    	}
+    	log.debug("removeToUserFavorites" + favoris);
     }
 }
