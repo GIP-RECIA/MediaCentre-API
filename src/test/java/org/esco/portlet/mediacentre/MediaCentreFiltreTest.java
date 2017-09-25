@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016 ESUP-Portail (https://www.esup-portail.org/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.esco.portlet.mediacentre;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,20 +28,22 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
+import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement;
 import org.esco.portlet.mediacentre.model.filtres.Filtre;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
+import org.esco.portlet.mediacentre.service.IFiltrageService;
+import org.esco.portlet.mediacentre.service.IMediaCentreService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -52,10 +53,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ContextConfiguration(locations="classpath:applicationContextFiltre.xml")
 public class MediaCentreFiltreTest {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    @SuppressWarnings("unused")
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Resource 
     List<CategorieFiltres> categoriesFiltres;
+    
+    @Autowired
+    private IFiltrageService filtrageService;        
+    
+    @Autowired
+    private IUserResource userResource;    
+    
+    @Autowired
+    private IMediaCentreService mediaCentreService;    
     
     @Test
     public void testFiltre() throws Exception {
@@ -199,4 +210,57 @@ public class MediaCentreFiltreTest {
     	
     	System.out.println("Ok");
     }     
+
+    @Test
+    public void testFiltrageRessource() throws Exception {
+    	
+    	List<Ressource> ressources = mediaCentreService.retrieveListRessource(null);
+    	
+    	List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<CategorieFiltres>();
+    	List<Ressource> ressourcesCandidates = new ArrayList<Ressource>();
+    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
+    	
+    	String parametrage = filtrageService.preparerFiltrage(userInfoMap, categoriesFiltres, ressources, categoriesFiltresCandidats, ressourcesCandidates);
+        	
+        	
+//        	ObjectMapper mapper = new ObjectMapper();
+//        	String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(categoriesFiltresCandidats);
+        	//System.out.println(json);
+        	
+        	
+        	//---------------------------------
+        	
+//        	System.out.println(ressourcesFiltrees);
+        	
+    	System.out.println("Ok");
+    }     
+    
+    @Test
+    public void testFiltreUser() {
+    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
+    	
+    	
+    	for (Filtre filtre : categoriesFiltres.get(2).getFiltres()) {
+    		System.out.println(filtre.getId() + " : " + filtre.concerneUtilisateur(userInfoMap));
+    	}
+    	
+    	System.out.println("Ok");
+    }
+    
+    
+    @Test
+    public void testFiltreEtab() throws JsonProcessingException {
+    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
+    	
+    	CategorieFiltresEtablissement categorie = (CategorieFiltresEtablissement)categoriesFiltres.get(0);
+    	categorie.initialiser( mediaCentreService.getUserLinkedEtablissements(null), mediaCentreService.getUserCurrentEtablissement(null));
+    	
+    	ObjectMapper mapper = new ObjectMapper();
+    	String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(categorie);
+    	System.out.println(json);
+    	System.out.println("Ok");
+    }    
 }
+
+
+

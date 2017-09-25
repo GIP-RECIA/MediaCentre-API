@@ -32,7 +32,7 @@
 			<property name="id" value="GAR"/>
 			<property name="nom" value="site.affectation.nom.GAR"/>
 			<property name="description" value="site.affectation.description.GAR"/>
-			<property name="lien" value="site.affectation.lien.GAR"/>
+			<property name="lien" value="http://www.google.fr/"/>
 			<property name="population" value="isMemberOf"/>
 			<property name="regexpPopulation" value="((esco)|(clg37)):Admin:mediacentre:GAR:RESPONSABLE_AFFECTATION:.+"/>
 		</bean>
@@ -41,9 +41,9 @@
 			<property name="id" value="ASR"/>
 			<property name="nom" value="site.affectation.nom.ASR"/>
 			<property name="description" value="site.affectation.description.ASR"/>
-			<property name="lien" value="site.affectation.lien.ASR"/>
+			<property name="lien" value="http://www.google.fr/"/>
 			<property name="population" value="isMemberOf"/>
-			<property name="regexpPopulation" value="((esco)|(clg37)):Admin:mediacentre:GAR:RESPONSABLE_AFFECTATION:.+"/>
+			<property name="regexpPopulation" value="esco:Applications:MediaCentre:GAR:RespAff:Etab_0450822X"/>
 		</bean>
 		
 	</util:list>

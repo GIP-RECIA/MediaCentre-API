@@ -1,6 +1,6 @@
 <%--
 
-    Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
+    Copyright Â© 2017 GIP-RECIA (https://www.recia.fr/)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@
 	                </div>
 	                <div id="collapse-full" class="filters-list collapse">
 	                
-						<c:forEach var="categorie" items="${categorieFiltreModel.listCategorieFiltre}" varStatus="cat">
+						<c:forEach var="categorie" items="${categoriesFiltres}" varStatus="cat">
 		                    <ul id="${categorie.id}" class="form-group filter ${categorie.id}">
 		                        <a data-toggle="collapse" href="#collapse-${categorie.id}" class="filter-title" name="name-listCategorieFiltre[${cat.index}]" >
 		                        <span><spring:message code="${categorie.libelle}" /></span>
@@ -133,10 +133,8 @@
  	        <div class="col-xs-12 col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10 grid">
 	            
 	            <div class="container-fluid">
-	            
-	            	<c:if test="${empty ressources}" >
-	               		<spring:message code="resource.error.empty" />
-	               	</c:if>
+	            	
+            		<div id="msgAucuneRessource" style="display:none;"><spring:message code="${empty ressources ? 'resource.error.empty' : 'resource.error.filter'}" /></div>
 	            	
 	               	<c:forEach var="ressource" items="${ressources}" >
 		                <div id="${ressource.idInterne}" class="col-xs-12 col-sm-6 col-lg-4 ressource"	style="display: none;">
@@ -164,15 +162,9 @@
 		                            	<span class="sautLigne">${ressource.nomEditeur}</span>
 		                            </span>
 		                            
-<!-- 		                            <div class="res-tags"> -->
-		                                <span class="label label-danger"><spring:message code="resource.label.curiosity" /></span>
-		                                <span class="label label-success"><spring:message code="resource.label.community" /></span>
-		                                <span class="label label-fav"><spring:message code="resource.label.favorite" /></span>
-<!-- 		                            </div> -->
-		                            
 		                        </div>
 		                        <c:choose>
-			                        <c:when test="${ressource.urlVignette!=''}">
+									<c:when test="${(not empty ressource.urlVignette) and (ressource.urlVignette!='')}">			                        
 				                        <div class="res-img img-placeholder" style="background: url(${ressource.urlVignette}) no-repeat 50%;background-size:cover;">
 				                            <i class="mdi ${ressource.urlVignette=='' ? 'mdi-file-outline' : ''}"></i>
 				                        </div>

@@ -27,7 +27,6 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
-import org.esco.portlet.mediacentre.model.filtres.CategorieFiltreModel;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
@@ -108,11 +107,9 @@ public class MainController {
     	
     	String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfo, categoriesFiltres, listeRessources, categoriesFiltresCandidats, ressourcesCandidates);
     	
-        CategorieFiltreModel categorieFiltreModel = new CategorieFiltreModel(categoriesFiltresCandidats);
-        
         mav.addObject("ressourcesParFiltre", ressourcesParFiltre);
         mav.addObject("ressources", ressourcesCandidates);
-        mav.addObject("categorieFiltreModel", categorieFiltreModel);
+        mav.addObject("categoriesFiltres", categoriesFiltresCandidats);
         mav.addObject("gestionAffectation", filtrageService.filtrerGestionAffectation(gestionAffectation, userInfo));
         
         if(log.isDebugEnabled()) {

@@ -50,7 +50,6 @@ $(function(){
 
 	$('.add-to-fav').click(changeFavoris);
 	
-	
 	$('input:radio.filtreMediacentre').click(afficherRessources);
 	afficherRessources();
 });
@@ -71,7 +70,7 @@ function intersection() {
 // fonction calculant l'union de tableaux
 //---------------------------------------------------
 function union() {
-	let arr = Array.concat.apply(null, arguments);
+	var arr = [].concat.apply([].concat, arguments);
 	return arr.filter(function (val, index) {
 	  return arr.indexOf(val) === index;
 	});
@@ -82,12 +81,12 @@ function union() {
 // correspondant aux filtres
 //---------------------------------------------------
 function filtrer() {
-	let ressourcesCandidates = [];
-	for ( let categorie in ressourcesParFiltre) {
-		let ressourcesParCategories = [];	
+	var ressourcesCandidates = [];
+	for ( var categorie in ressourcesParFiltre) {
+		var ressourcesParCategories = [];	
 		// Recherche de toutes les ressources candidates pour une catégorie
-		for (let filtre in ressourcesParFiltre[categorie]) {
-			for (let i in arguments) {
+		for (var filtre in ressourcesParFiltre[categorie]) {
+			for (var i in arguments) {
 				if (filtre == arguments[i]) {
 					ressourcesParCategories = union (ressourcesParCategories, ressourcesParFiltre[categorie][filtre]);
 				}
@@ -96,7 +95,7 @@ function filtrer() {
 		ressourcesCandidates.push(ressourcesParCategories);
 	}
 	
-	return intersection.apply(null, ressourcesCandidates);
+	return intersection.apply(intersection, ressourcesCandidates);
 }
 
 //---------------------------------------------------
@@ -106,7 +105,13 @@ function filtrer() {
 function afficherRessources() {
 	var tab = $(".filtreMediacentre:checked").toArray();
 	var filtres = tab.reduce(function(arr, elt) { arr.push(elt.id); return arr; }, []);
-	var ressourcesFiltrees = filtrer.apply(null, filtres);
+	var ressourcesFiltrees = filtrer.apply(filtrer, filtres);
+
+	if (ressourcesFiltrees.length == 0) {
+		$("#msgAucuneRessource").show();
+	} else {
+		$("#msgAucuneRessource").hide();		
+	}
 
 	$(".ressource").each(function(){
 		if (ressourcesFiltrees.includes(parseInt(this.id))) {

@@ -30,8 +30,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.google.common.collect.Lists;
-
 import lombok.NonNull;
 import lombok.Setter;
 
@@ -44,14 +42,16 @@ public class MockPreferenceResourceImpl implements IPreferenceResource {
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	private static final String SPLIT_SEP = ",";
-	
-	private List<String> favoris = Arrays.asList("http://n2t.net/ark:/99999/RSF000006");
+	private List<String> favoris = new ArrayList<String>(); 
 	
 	@NonNull
     @Value("${userInfo.mediacentre.favorites}")
     @Setter
     private String mediacentreFavorites;
+
+	public MockPreferenceResourceImpl() {
+		favoris.add("http://n2t.net/ark:/99999/RSF000006");
+	}
 	
 	@Override
     public List<String> getUserFavorites(@NotNull final PortletRequest portletRequest) {
@@ -66,9 +66,10 @@ public class MockPreferenceResourceImpl implements IPreferenceResource {
     public void setUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites) {
     }
 
-    @Override
+
+	@Override
     public void addToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) {
-    	favoris.add(favorite);
+    	favoris.add(new String(favorite));
     	log.debug("addToUserFavorites" + favoris);
     }
 
