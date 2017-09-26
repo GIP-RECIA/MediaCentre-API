@@ -504,8 +504,8 @@
 								<include>**/portlet.xml</include>
 							</includes>
 							<excludes>
-								<exclude>context-dev/**</exclude>
-								<exclude>context-prod/**</exclude>
+								<exclude>context-dev/</exclude>
+								<exclude>context-prod/*.*</exclude>
 							</excludes>
 						</resource>
 						<resource>
@@ -516,9 +516,16 @@
 							</includes>
 							<filtering>true</filtering>
 						</resource>
+						<resource>
+							<directory>src/main/webapp/WEB-INF/${web.dir}</directory>
+							<targetPath>WEB-INF</targetPath>
+							<filtering>true</filtering>
+						</resource>
 					</webResources>
-					<packagingExcludes>WEB-INF/context-*/</packagingExcludes>
-
+					<webXml>src/main/webapp/WEB-INF/${web.dir}/web.xml</webXml>
+					<packagingExcludes>WEB-INF/*-*/</packagingExcludes>
+					
+					
 				</configuration>
 			</plugin>
 			<plugin>
@@ -587,8 +594,6 @@
 							<value>UTF-8</value>
 						</systemProperty>
 
-
-
 						<systemProperty>
 							<name>file.encoding</name>
 							<value>UTF-8</value>
@@ -624,6 +629,7 @@
 				<logback.loglevel>INFO</logback.loglevel>
 				<portlet.usePortalJsLibs>true</portlet.usePortalJsLibs>
 				<context.dir>context-prod</context.dir>
+				<web.dir>web-prod</web.dir>
 				<resources.dir>prod</resources.dir>
 			</properties>
 		</profile>
@@ -633,6 +639,7 @@
 				<logback.loglevel>DEBUG</logback.loglevel>
 				<portlet.usePortalJsLibs>true</portlet.usePortalJsLibs>
 				<context.dir>context-dev</context.dir>
+				<web.dir>web-dev</web.dir>
 				<resources.dir>dev</resources.dir>
 			</properties>
 		</profile>
