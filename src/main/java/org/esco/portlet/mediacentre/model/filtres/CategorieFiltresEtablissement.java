@@ -119,7 +119,10 @@ public class CategorieFiltresEtablissement extends CategorieFiltres {
 		if (etablissementsCourants != null && !etablissementsCourants.isEmpty()) {
 			etablissementCourant = etablissementsCourants.get(0);
 		}
-		Collections.sort(etablissements);
+		
+		List<String> etablissementsTries = new ArrayList<String>();
+		etablissementsTries.addAll(etablissements);
+		Collections.sort(etablissementsTries);
 		
 		List<Filtre> filtres = new ArrayList<Filtre>();
 		
@@ -132,7 +135,7 @@ public class CategorieFiltresEtablissement extends CategorieFiltres {
     		filtres.add(filtre);
 		}
 		
-		for (String etablissement : etablissements) {
+		for (String etablissement : etablissementsTries) {
 	    		Filtre filtre = new Filtre();
 	    		filtre.setId(etablissement);
 	    		filtre.setLibelle(etablissement);
