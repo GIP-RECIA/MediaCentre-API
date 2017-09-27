@@ -70,7 +70,7 @@ function intersection() {
 // fonction calculant l'union de tableaux
 //---------------------------------------------------
 function union() {
-	var arr = [].concat.apply([].concat, arguments);
+	var arr = [].concat.apply([], arguments);
 	return arr.filter(function (val, index) {
 	  return arr.indexOf(val) === index;
 	});
@@ -95,7 +95,7 @@ function filtrer() {
 		ressourcesCandidates.push(ressourcesParCategories);
 	}
 	
-	return intersection.apply(intersection, ressourcesCandidates);
+	return intersection.apply(null, ressourcesCandidates);
 }
 
 //---------------------------------------------------
