@@ -35,6 +35,8 @@ public class UserResourceImpl implements IUserResource{
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    //private IUserResource mockedUserResource;
+    
     /**
      * Retrieve the user info attribute from portlet context, or the Mocked user info
      *
@@ -44,14 +46,16 @@ public class UserResourceImpl implements IUserResource{
      */
     @SuppressWarnings("unchecked")
     public List<String> getUserInfo(@NotNull final PortletRequest request, @NotNull final String attributeName) {
+    	log.debug("getUserInfo attributeName={}", attributeName);
+    	
         if (attributeName.isEmpty()) return Collections.EMPTY_LIST;
-        Map<String, List<String>> userInfo =
-                (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
-
+        Map<String, List<String>> userInfo = (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
+        log.debug("getUserInfo userInfo = {}", userInfo );
+        
         List<String> attributeValues = null;
 
         if (userInfo != null) {
-            if (userInfo.containsKey(attributeValues)) {
+            if (userInfo.containsKey(attributeName)) {
                 attributeValues = userInfo.get(attributeName);
             } else {
                 log.warn("User attribute '{}' wasn't retrieved, check if the file portlet.xml contains the attribute shared by the portal !!", attributeName);
@@ -64,7 +68,7 @@ public class UserResourceImpl implements IUserResource{
         if (attributeValues == null) {
             attributeValues = Collections.EMPTY_LIST;
         }
-
+        log.debug("getUserInfo attributeValues = {}", attributeValues );
         return attributeValues;
     }
 
@@ -77,9 +81,8 @@ public class UserResourceImpl implements IUserResource{
     @SuppressWarnings("unchecked")
     public Map<String, List<String>> getUserInfoMap(@NotNull final PortletRequest request) {
 
-        Map<String, List<String>> userInfo =
-                (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
-
+        Map<String, List<String>> userInfo = (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
+        log.debug("getUserInfoMap userInfo = {}", userInfo );
         if (userInfo != null) {
             return userInfo;
         } else {
@@ -91,4 +94,11 @@ public class UserResourceImpl implements IUserResource{
 
     }
 
+    /**public IUserResource getMockedUserResource() {
+        return mockedUserResource;
+    }
+
+    public void setMockedUserResource(IUserResource mockedUserResource) {
+        this.mockedUserResource = mockedUserResource;
+    }*/
 }

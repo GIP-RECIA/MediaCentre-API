@@ -16,6 +16,7 @@
 package org.esco.portlet.mediacentre.dao.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class PreferenceResourceImpl implements IPreferenceResource {
         PortletPreferences pp = portletRequest.getPreferences();
 
         if (!favorite.isEmpty()) {
-            List<String> favorites = Arrays.asList(pp.getValues(FAVORITES_PREF, new String[0]));
+            List<String> favorites = new ArrayList<String>(Arrays.asList(pp.getValues(FAVORITES_PREF, new String[0])));
             favorites.add(favorite);
 
             pp.setValues(FAVORITES_PREF, favorites.toArray(new String[favorites.size()]));
@@ -98,7 +99,7 @@ public class PreferenceResourceImpl implements IPreferenceResource {
     public void removeToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite) throws ReadOnlyException  {
         PortletPreferences pp = portletRequest.getPreferences();
 
-        List<String> favorites = Arrays.asList(pp.getValues(FAVORITES_PREF, new String[0]));
+        List<String> favorites = new ArrayList<String>(Arrays.asList(pp.getValues(FAVORITES_PREF, new String[0])));
         favorites.remove(favorite);
 
         if (favorites.isEmpty()) {

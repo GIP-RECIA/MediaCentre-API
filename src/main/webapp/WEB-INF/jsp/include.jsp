@@ -26,5 +26,4 @@
 <portlet:defineObjects/>
 <c:set var="usePortalJsLibs" value="${renderRequest.preferences.map['usePortalJsLibs'][0]}"/>
 <c:set var="portalJsNamespace" value="${renderRequest.preferences.map['portalJsNamespace'][0]}"/>
-<c:set var="openKnownMoreInModal" value="${renderRequest.preferences.map['openKnownMoreInModal'][0]}"/>
 <c:set var="n"><portlet:namespace/></c:set>

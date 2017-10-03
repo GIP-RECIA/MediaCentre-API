@@ -21,14 +21,16 @@ import java.util.Map;
 import javax.portlet.PortletRequest;
 import javax.validation.constraints.NotNull;
 
+import org.esco.portlet.mediacentre.model.ressource.Ressource;
+
 /**
  * Created by jgribonvald on 06/06/17.
  */
-public interface IPortletService {
+public interface IMediaCentreService {
 
-    List<String> getUserLinkedEtablissements(@NotNull final PortletRequest portletRequest);
+	List<String> getUserLinkedEtablissements(@NotNull final PortletRequest portletRequest);
 
-    String getUserCurrentEtablissement(@NotNull final PortletRequest portletRequest);
+	List<String> getUserCurrentEtablissement(@NotNull final PortletRequest portletRequest);
 
     List<String> getUserGroups(@NotNull final PortletRequest portletRequest);
 
@@ -48,4 +50,5 @@ public interface IPortletService {
 
     void removeToUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final String favorite);
 
+    List<Ressource> retrieveListRessource(final PortletRequest request);
 }

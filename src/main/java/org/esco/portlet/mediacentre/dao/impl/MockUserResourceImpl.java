@@ -43,21 +43,33 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @NonNull
+    @Value("${userInfo.key.uid}")
+    /*@Setter*/
+    private String uidInfoKey;
+
+    @NonNull
     @Value("${userInfo.key.etabIds}")
-    @Setter
+    /*@Setter*/
     private String etabCodesInfoKey;
+    
     @NonNull
     @Value("${userInfo.key.currentEtabId}")
-    @Setter
+   /* @Setter*/
     private String currentEtabCodeInfoKey;
+    
+    @NonNull
+    @Value("${userInfo.key.profils}")
+    /*@Setter*/
+    private String profilsInfoKey;
+
     @NonNull
     @Value("${userInfo.key.groups}")
-    @Setter
+    /*@Setter*/
     private String userGroupsInfokey;
 
     private final Map<String, List<String>> userInfoMap = new HashMap<>();
 
-    /**
+	/**
      * Retrieve the user info attribute from portlet context, or the Mocked user info
      *
      * @param request the portlet request
@@ -72,7 +84,7 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
 
         List<String> attributeValues = null;
         if (userInfo != null) {
-            if (userInfo.containsKey(attributeValues)) {
+            if (userInfo.containsKey(attributeName)) {
                 attributeValues = userInfo.get(attributeName);
             } else {
                 log.warn("User attribute '{}' wasn't retrieved, check if the file portlet.xml contains the attribute shared by the portal !!", attributeName);
@@ -99,20 +111,22 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
         Assert.hasText(this.currentEtabCodeInfoKey, "No Current Etab Code user info key configured !");
         Assert.hasText(this.userGroupsInfokey, "No Group user info key configured !");
 
-        final String[] etabs = System.getProperty("mediacentre.userEtabs", "0450822X,0333333Y,0377777U")
+        final String[] etabs = System.getProperty("mediacentre.userEtabs", "0450822X,0333333Y,0377777U,0291595B")
                 .split(SPLIT_SEP);
-        final String[] current = System.getProperty("mediacentre.userCurrentEtab", "0450822X").split(SPLIT_SEP);
+        final String[] current = System.getProperty("mediacentre.userCurrentEtab", "0450822X,0291595B").split(SPLIT_SEP);
 
         final String[] groups = System.getProperty("mediacentre.userMemberOf",
                 "esco:Applications:MediaCentre:GAR:RespAff:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0333333Y"
         + ",esco:Etablissements:Etab_0450822X:Profs,esco:Etablissements:Etab_0333333Y:Profs,esco:Etablissements:Etab_0377777U:Profs").split(SPLIT_SEP);
 
-        final String[] profiles =   System.getProperty("mediacentre.userProfiles", "National_ENS,National_EVS").split(SPLIT_SEP);
-
+        final String[] profiles =   System.getProperty("mediacentre.userProfiles", "National_ENS, National_EVS").split(SPLIT_SEP);
+        final String uid = System.getProperty("mediacentre.userId", "F16X001m");
+        
         this.userInfoMap.put(this.etabCodesInfoKey, Arrays.asList(etabs));
         this.userInfoMap.put(this.currentEtabCodeInfoKey, Arrays.asList(current));
         this.userInfoMap.put(this.userGroupsInfokey, Arrays.asList(groups));
-        this.userInfoMap.put("ENTPersonProfiles", Arrays.asList(profiles));
+        this.userInfoMap.put(this.profilsInfoKey, Arrays.asList(profiles));
+        this.userInfoMap.put(this.uidInfoKey, Arrays.asList(uid));
 
         log.debug("userInfoMap : {}", this.userInfoMap);
 
