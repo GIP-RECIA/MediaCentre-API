@@ -32,20 +32,10 @@
 			<property name="id" value="GAR"/>
 			<property name="nom" value="site.affectation.nom.GAR"/>
 			<property name="description" value="site.affectation.description.GAR"/>
-			<property name="lien" value="http://www.google.fr/"/>
+			<property name="lien" value="https://maquette-lycees.netocentre.fr/idp/profile/SAML2/Unsolicited/SSO?providerId=urn:gar:ihmAffectation:seclin&amp;target=https://affectation.partenaire.test-gar.education.fr"/>
 			<property name="population" value="isMemberOf"/>
-			<property name="regexpPopulation" value="((esco)|(clg37)):Admin:mediacentre:GAR:RESPONSABLE_AFFECTATION:.+"/>
+			<property name="regexpPopulation" value="((esco)|(clg37)):admin:mediacentre:GAR:RESPONSABLE_AFFECTATION:.+"/>			
 		</bean>
-		
-		<bean class="org.esco.portlet.mediacentre.model.affectation.GestionAffectation">
-			<property name="id" value="ASR"/>
-			<property name="nom" value="site.affectation.nom.ASR"/>
-			<property name="description" value="site.affectation.description.ASR"/>
-			<property name="lien" value="http://www.google.fr/"/>
-			<property name="population" value="isMemberOf"/>
-			<property name="regexpPopulation" value="esco:Applications:MediaCentre:GAR:RespAff:Etab_0450822X"/>
-		</bean>
-		
 	</util:list>
 
 </beans>
