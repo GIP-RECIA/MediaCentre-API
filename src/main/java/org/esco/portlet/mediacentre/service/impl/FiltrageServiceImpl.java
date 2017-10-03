@@ -89,6 +89,12 @@ public class FiltrageServiceImpl implements IFiltrageService {
     	Map<Integer, Ressource> mapRessourcesCandidates = new HashMap<Integer, Ressource>();
     	Map<String, Map<String, List<Integer>>> mapCategories = new HashMap<>();
     	
+    	if (log.isDebugEnabled()) {
+    		log.debug("Ressources avant filtrage");
+    		ObjectMapper mapper = new ObjectMapper();
+        	log.debug(mapper.writeValueAsString(ressources));
+    	}
+    	
     	for (CategorieFiltres categorie : categoriesFiltres ) {
     		
     		if (categorie.estCategorieEtablissement()) {
@@ -137,6 +143,11 @@ public class FiltrageServiceImpl implements IFiltrageService {
     	}
     	
     	ressourcesCandidates.addAll(mapRessourcesCandidates.values());
+    	if (log.isDebugEnabled()) {
+    		log.debug("Ressources filtrées");
+    		ObjectMapper mapper = new ObjectMapper();
+        	log.debug(mapper.writeValueAsString(ressourcesCandidates));
+    	}    	
     	
     	// Transformation en JSON du paramétrage
     	ObjectMapper mapper = new ObjectMapper();

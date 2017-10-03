@@ -46,10 +46,12 @@ public class UserResourceImpl implements IUserResource{
      */
     @SuppressWarnings("unchecked")
     public List<String> getUserInfo(@NotNull final PortletRequest request, @NotNull final String attributeName) {
+    	log.debug("getUserInfo attributeName={}", attributeName);
+    	
         if (attributeName.isEmpty()) return Collections.EMPTY_LIST;
-        Map<String, List<String>> userInfo =
-                (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
-
+        Map<String, List<String>> userInfo = (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
+        log.debug("getUserInfo userInfo = {}", userInfo );
+        
         List<String> attributeValues = null;
 
         if (userInfo != null) {
@@ -66,7 +68,7 @@ public class UserResourceImpl implements IUserResource{
         if (attributeValues == null) {
             attributeValues = Collections.EMPTY_LIST;
         }
-
+        log.debug("getUserInfo attributeValues = {}", attributeValues );
         return attributeValues;
     }
 
@@ -79,9 +81,8 @@ public class UserResourceImpl implements IUserResource{
     @SuppressWarnings("unchecked")
     public Map<String, List<String>> getUserInfoMap(@NotNull final PortletRequest request) {
 
-        Map<String, List<String>> userInfo =
-                (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
-
+        Map<String, List<String>> userInfo = (Map<String, List<String>>) request.getAttribute("org.jasig.portlet.USER_INFO_MULTIVALUED");
+        log.debug("getUserInfoMap userInfo = {}", userInfo );
         if (userInfo != null) {
             return userInfo;
         } else {
