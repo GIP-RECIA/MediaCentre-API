@@ -26,7 +26,6 @@ import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -48,7 +47,6 @@ public class MediaCentreResourceJacksonImpl implements IMediaCentreResource {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Cacheable(cacheNames = "listeRessourcesMedia", key = "#mediaUrl")
     public List<Ressource> retrieveListRessource(String mediaUrl, PortletRequest request, Map<String, List<String>> userInfos) {
         return this.getServiceMediaCentre(mediaUrl, request, userInfos);
     }
@@ -61,8 +59,6 @@ public class MediaCentreResourceJacksonImpl implements IMediaCentreResource {
         List<Ressource> listRessourceMediaCentre = new ArrayList<>();
 
         try {
-            //listRessourceMediaCentre = Lists.newArrayList(restTemplate.getForObject(url, Ressource[].class));
-        	
         	HttpHeaders requestHeaders = new HttpHeaders();
         	requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         	HttpEntity<Map<String, List<String>>> requestEntity = new HttpEntity<Map<String, List<String>>>(userInfos, requestHeaders);
