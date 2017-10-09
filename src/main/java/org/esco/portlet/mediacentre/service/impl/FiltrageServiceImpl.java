@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement;
+import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresUtilisateur;
 import org.esco.portlet.mediacentre.model.filtres.Filtre;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
@@ -96,9 +96,16 @@ public class FiltrageServiceImpl implements IFiltrageService {
     	}
     	
     	for (CategorieFiltres categorie : categoriesFiltres ) {
-    		
+    		if ( !categorie.concerneUtilisateur(userInfoMap)) {
+    			continue;
+    		}
+    				
     		if (categorie.estCategorieEtablissement()) {
+    			categorie = (CategorieFiltres)categorie.clone();
     			((CategorieFiltresEtablissement)categorie).initialiser(userInfoMap.get(etabCodesInfoKey), userInfoMap.get(currentEtabCodeInfoKey));	
+    		} else if (categorie.estCategorieUtilisateur()) {
+    			categorie = (CategorieFiltres)categorie.clone();
+    			((CategorieFiltresUtilisateur)categorie).initialiser(userInfoMap);	
     		}
     		
     		Map<String, List<Integer>> mapFiltre = new HashMap<String, List<Integer>>();

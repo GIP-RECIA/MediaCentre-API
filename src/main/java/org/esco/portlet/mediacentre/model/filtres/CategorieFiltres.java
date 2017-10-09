@@ -17,6 +17,9 @@ package org.esco.portlet.mediacentre.model.filtres;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author elecaude
@@ -38,6 +41,10 @@ public class CategorieFiltres implements Cloneable {
 	private boolean categorieExpended = false;
 
 	private List<Filtre> filtres;
+
+	private String population;
+	
+	private String regexpPopulation;	
 	
 	/* 
 	 * ===============================================
@@ -73,6 +80,38 @@ public class CategorieFiltres implements Cloneable {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * Getter de la propriété population
+	 * @return la propriété population
+	 */
+	public String getPopulation() {
+		return population;
+	}
+
+	/**
+	 * Setter de la propriété population
+	 * @param population 
+	 */
+	public void setPopulation(String population) {
+		this.population = population;
+	}
+
+	/**
+	 * Getter de la propriété regexpPopulation
+	 * @return la propriété regexpPopulation
+	 */
+	public String getRegexpPopulation() {
+		return regexpPopulation;
+	}
+
+	/**
+	 * Setter de la propriété regexpPopulation
+	 * @param regexpPopulation 
+	 */
+	public void setRegexpPopulation(String regexpPopulation) {
+		this.regexpPopulation = regexpPopulation;
 	}
 
 	/**
@@ -140,13 +179,15 @@ public class CategorieFiltres implements Cloneable {
 	 * Méthodes publiques de la classe 
 	 * =============================================== 
 	 */
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "CategorieFiltres [id=" + id + ", libelle=" + libelle + ", valeursMultiples=" + valeursMultiples
-				+ ", categorieExpended=" + categorieExpended + ", filtres=" + filtres + "]";
+				+ ", categorieExpended=" + categorieExpended + ", filtres=" + filtres + ", population=" + population
+				+ ", regexpPopulation=" + regexpPopulation + "]";
 	}
 	
 	@Override
@@ -158,6 +199,8 @@ public class CategorieFiltres implements Cloneable {
 			categorieFiltres.setLibelle(this.getLibelle());
 			categorieFiltres.setValeursMultiples(this.isValeursMultiples());
 			categorieFiltres.setCategorieExpended(this.isCategorieExpended());
+			categorieFiltres.setPopulation(getPopulation());
+			categorieFiltres.setRegexpPopulation(getRegexpPopulation());
 			List<Filtre> listFiltre = new ArrayList<Filtre>();
 			categorieFiltres.setFiltres(listFiltre);
 			
@@ -166,7 +209,7 @@ public class CategorieFiltres implements Cloneable {
 		}
 		return categorieFiltres;
 	}
-	
+
 	/**
 	 * Indique si la categorie correspond à une categorie "etablissement"
 	 * @return false
@@ -174,5 +217,38 @@ public class CategorieFiltres implements Cloneable {
 	public boolean estCategorieEtablissement() {
 		return false;
 	}
-	
+
+	/**
+	 * Indique si la categorie correspond à une categorie "utilisateur"
+	 * @return false
+	 */
+	public boolean estCategorieUtilisateur() {
+		return false;
+	}
+
+    /**
+     * @param userInfoMap Map contenant le profil de l'utilisateur
+     * @return true si le filtre concerne l'utilisateur, false Sinon
+     * @throws Exception
+     */
+    public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
+    	String regexp = getRegexpPopulation();
+    	if (userInfoMap == null || StringUtils.isBlank(getPopulation()) || StringUtils.isBlank(regexp)) {
+    		return true;
+    	}
+    	
+    	List<String> valeurs = userInfoMap.get(getPopulation());
+    	if (valeurs == null) {
+    		return false;
+    	}
+    	
+    	for (String valeur : valeurs) {
+    		if (valeur.matches(regexp)) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }    
+
 }

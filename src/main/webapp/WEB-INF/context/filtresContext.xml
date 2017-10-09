@@ -27,11 +27,17 @@
   http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<util:list id="categoriesFiltres" value-type="org.esco.portlet.mediacentre.model.filtres.CategorieFiltres">
-		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement">
+		
+		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresUtilisateur">
 			<property name="id" value="etablissements"/>
 			<property name="libelle" value="filter.establishments"/>
 			<property name="libelleTous" value="filter.establishments.all"/>
 			<property name="nomAttributFiltre" value="idEtablissement.UAI"/>
+			<property name="attributUtilisateur" value="ESCOUAI"/>
+			<property name="attributUtilisateurDefaut" value="ESCOUAICourant"/>
+			<property name="valeursMultiples" value="true"/>
+			<property name="population" value="ENTPersonProfils"/>
+			<property name="regexpPopulation" value="National_ENS"/>
 		</bean>
 		
 		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltres">
