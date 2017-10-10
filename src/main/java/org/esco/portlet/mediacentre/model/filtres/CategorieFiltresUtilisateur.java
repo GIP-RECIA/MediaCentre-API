@@ -150,12 +150,17 @@ public class CategorieFiltresUtilisateur extends CategorieFiltres {
 	 * @param userInfoMap
 	 */
 	public void initialiser(Map<String, List<String>> userInfoMap) {
-		List<String> valeurs = userInfoMap.get(getAttributUtilisateur());
-		List<String> valeursDefaut = userInfoMap.get(getAttributUtilisateurDefaut());
-		
-		if (valeurs == null || valeurs.isEmpty()) {
+		List<String> attributs = userInfoMap.get(getAttributUtilisateur());
+		if (attributs == null) {
 			return;
 		}
+		List<String> valeurs = new ArrayList<String>(attributs);
+		List<String> valeursDefaut = userInfoMap.get(getAttributUtilisateurDefaut());
+		
+		if (valeurs.isEmpty()) {
+			return;
+		}
+
 		Collections.sort(valeurs);
 		String valeurDefaut = valeursDefaut != null && !valeursDefaut.isEmpty() ? valeursDefaut.get(0) : null;
 		
