@@ -18,6 +18,7 @@ package org.esco.portlet.mediacentre.model.filtres;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -25,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
  * @author elecaude
  *
  */
-public class CategorieFiltresEtablissement extends CategorieFiltres {
+public class CategorieFiltresUtilisateur extends CategorieFiltres {
 
 	/* 
 	 * ===============================================
@@ -34,6 +35,8 @@ public class CategorieFiltresEtablissement extends CategorieFiltres {
 	 */
 	private String libelleTous;
 	private String nomAttributFiltre;
+	private String AttributUtilisateur;
+	private String AttributUtilisateurDefaut;
 	
 	/* 
 	 * ===============================================
@@ -52,6 +55,38 @@ public class CategorieFiltresEtablissement extends CategorieFiltres {
 	 */
 	public String getLibelleTous() {
 		return libelleTous;
+	}
+
+	/**
+	 * Getter de la propriété attributUtilisateur
+	 * @return la propriété attributUtilisateur
+	 */
+	public String getAttributUtilisateur() {
+		return AttributUtilisateur;
+	}
+
+	/**
+	 * Setter de la propriété attributUtilisateur
+	 * @param attributUtilisateur 
+	 */
+	public void setAttributUtilisateur(String attributUtilisateur) {
+		AttributUtilisateur = attributUtilisateur;
+	}
+
+	/**
+	 * Getter de la propriété attributUtilisateurDefaut
+	 * @return la propriété attributUtilisateurDefaut
+	 */
+	public String getAttributUtilisateurDefaut() {
+		return AttributUtilisateurDefaut;
+	}
+
+	/**
+	 * Setter de la propriété attributUtilisateurDefaut
+	 * @param attributUtilisateurDefaut 
+	 */
+	public void setAttributUtilisateurDefaut(String attributUtilisateurDefaut) {
+		AttributUtilisateurDefaut = attributUtilisateurDefaut;
 	}
 
 	/**
@@ -89,19 +124,12 @@ public class CategorieFiltresEtablissement extends CategorieFiltres {
 	 * Méthodes publiques de la classe 
 	 * =============================================== 
 	 */
-	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#isValeursMultiples()
-	 */
-	@Override
-	public boolean isValeursMultiples() {
-		return true;
-	}
 
 	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#estCategorieEtablissement()
+	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#estCategorieUtilisateur()
 	 */
 	@Override
-	public boolean estCategorieEtablissement() {
+	public boolean estCategorieUtilisateur() {
 		return true;
 	}
 
@@ -110,50 +138,56 @@ public class CategorieFiltresEtablissement extends CategorieFiltres {
 	 */
 	@Override
 	public Object clone() {
-		CategorieFiltresEtablissement categorie = (CategorieFiltresEtablissement)super.clone();
+		CategorieFiltresUtilisateur categorie = (CategorieFiltresUtilisateur)super.clone();
 		categorie.setLibelleTous(getLibelleTous());
-		categorie.setNomAttributFiltre(getNomAttributFiltre());
+		categorie.setAttributUtilisateur(getAttributUtilisateur());
+		categorie.setAttributUtilisateurDefaut(getAttributUtilisateurDefaut());
 		return categorie;
 	}
-
+	
 	/**
-	 * Initialise la liste des filtres de la catégorie avec les établissements de l'utilisateur
-	 * @param etablissements
-	 * @param etablissementsCourants
+	 * Initialise la liste des filtres de la catégorie à partir des données de l'utilisateur
+	 * @param userInfoMap
 	 */
-	public void initialiser(List<String> etablissements, List<String> etablissementsCourants) {
-		if (etablissements == null) {
+	public void initialiser(Map<String, List<String>> userInfoMap) {
+		List<String> attributs = userInfoMap.get(getAttributUtilisateur());
+		if (attributs == null) {
 			return;
 		}
-		String etablissementCourant = "";
-		if (etablissementsCourants != null && !etablissementsCourants.isEmpty()) {
-			etablissementCourant = etablissementsCourants.get(0);
-		}
+		List<String> valeurs = new ArrayList<String>(attributs);
+		List<String> valeursDefaut = userInfoMap.get(getAttributUtilisateurDefaut());
 		
-		List<String> etablissementsTries = new ArrayList<String>();
-		etablissementsTries.addAll(etablissements);
-		Collections.sort(etablissementsTries);
+		if (valeurs.isEmpty()) {
+			return;
+		}
+
+		Collections.sort(valeurs);
+		String valeurDefaut = valeursDefaut != null && !valeursDefaut.isEmpty() ? valeursDefaut.get(0) : null;
 		
 		List<Filtre> filtres = new ArrayList<Filtre>();
 		
-		if (StringUtils.isNotBlank(getLibelleTous())) {
+		if (isValeursMultiples() &&  StringUtils.isNotBlank(getLibelleTous())) {
 			Filtre filtre = new Filtre();
     		filtre.setId(getId());
     		filtre.setLibelle(getLibelleTous());
     		filtre.setActif(false);
     		filtre.setCaseSelectAll(true);
     		filtres.add(filtre);
-		}
+		}		
 		
-		for (String etablissement : etablissementsTries) {
-	    		Filtre filtre = new Filtre();
-	    		filtre.setId(etablissement);
-	    		filtre.setLibelle(etablissement);
-	    		filtre.setActif(etablissement.equalsIgnoreCase(etablissementCourant));
-	    		filtre.setNomAttribut(getNomAttributFiltre());
-	    		filtre.setRegexpAttribut(etablissement);
-	    		filtres.add(filtre);
-	    }
+		for (String valeur : valeurs) {
+			Filtre filtre = new Filtre();
+			filtre.setActif(false);
+			filtre.setId(valeur);
+			filtre.setLibelle(valeur);
+			filtre.setRegexpAttribut(valeur);
+			filtre.setNomAttribut(getNomAttributFiltre());
+			filtres.add(filtre);
+			if (valeur.equals(valeurDefaut)) {
+				filtre.setActif(true);
+			}
+		}
 		setFiltres(filtres);
-	}
+	}	
+	
 }
