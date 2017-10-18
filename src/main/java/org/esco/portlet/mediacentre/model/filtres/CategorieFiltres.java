@@ -211,18 +211,10 @@ public class CategorieFiltres implements Cloneable {
 	}
 
 	/**
-	 * Indique si la categorie correspond à une categorie "etablissement"
+	 * Indique si la categorie correspond à une categorie "calculee"
 	 * @return false
 	 */
-	public boolean estCategorieEtablissement() {
-		return false;
-	}
-
-	/**
-	 * Indique si la categorie correspond à une categorie "utilisateur"
-	 * @return false
-	 */
-	public boolean estCategorieUtilisateur() {
+	public boolean estCategorieCalculee() {
 		return false;
 	}
 
