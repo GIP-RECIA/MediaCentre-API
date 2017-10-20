@@ -203,7 +203,7 @@ public class MediaCentreFiltreTest {
         	
         	Ressource ressource =  ressources.get(0);
         	
-        	List<Object> valeurs = ressource.getValeursAttribut("domaineEnseignement.nom");
+        	List<String> valeurs = ressource.getValeursAttribut("domaineEnseignement.nom");
         	
         	System.out.println("=> " + valeurs);
         }    	
@@ -253,7 +253,7 @@ public class MediaCentreFiltreTest {
     	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
     	
     	CategorieFiltresEtablissement categorie = (CategorieFiltresEtablissement)categoriesFiltres.get(0);
-    	categorie.initialiser( mediaCentreService.getUserLinkedEtablissements(null), mediaCentreService.getUserCurrentEtablissement(null));
+    	categorie.initialiser(userInfoMap, null );
     	
     	ObjectMapper mapper = new ObjectMapper();
     	String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(categorie);

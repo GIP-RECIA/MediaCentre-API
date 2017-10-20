@@ -213,7 +213,7 @@ public class Filtre implements Cloneable{
     		return false;
     	}
     	
-    	List<Object> valeurs = ressource.getValeursAttribut(getNomAttribut());
+    	List<String> valeurs = ressource.getValeursAttribut(getNomAttribut());
     	
     	for (Object valeur : valeurs) {
     		if (valeur == null) {

@@ -17,8 +17,9 @@ package org.esco.portlet.mediacentre.model.ressource;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -83,17 +84,16 @@ public abstract class AbstractJson {
 		}
 	}
 
-
 	/**
 	 * Methode de recuperation des valeurs d'un attribut d'un objet en utilisant une notation "pointee" pour retrouver l'attribut
 	 * @param chemin 
 	 * @return la liste des valeurs de l'attribut
 	 * @throws Exception
 	 */
-	public List<Object> getValeursAttribut(String chemin) throws Exception {
+	public List<String> getValeursAttribut(String chemin) throws Exception {
 		Class<? extends Object> objectClass = this.getClass();	
 		String nomAttribut = null;
-		List<Object> valeurs = new ArrayList<Object>();		
+		Set<String> valeurs = new HashSet<String>();		
 		
 		int posPoint = chemin.indexOf('.');
 		boolean estAttributFinal = (posPoint<0);
@@ -107,8 +107,8 @@ public abstract class AbstractJson {
 		
 		
 		if (estAttributFinal) {
-			valeurs.add(valeurAttribut);
-			return valeurs;
+			valeurs.add(valeurAttribut.toString());
+			return new ArrayList<String>(valeurs);
 		} 
 		
 		if (valeurAttribut instanceof List<?>) {
@@ -123,7 +123,7 @@ public abstract class AbstractJson {
 			}
 		}
 		
-		return valeurs;
+		return new ArrayList<String>(valeurs);
 	}	
 	
 }

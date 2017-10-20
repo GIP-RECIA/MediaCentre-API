@@ -19,28 +19,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.esco.portlet.mediacentre.model.ressource.ListeRessource;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author elecaude
  *
  */
-public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
+public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 
 	/* 
 	 * ===============================================
 	 * Propriétés de la classe 
 	 * =============================================== 
 	 */
-    @Value("${userInfo.key.etabIds}")
-    private String etabCodesInfoKey;
-    
-    @Value("${userInfo.key.currentEtabId}")
-    private String currentEtabCodeInfoKey;
-    
+	
 	/* 
 	 * ===============================================
 	 * Constructeurs de la classe 
@@ -64,55 +60,41 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 	 * Méthodes publiques de la classe 
 	 * =============================================== 
 	 */
-	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#isValeursMultiples()
-	 */
-	@Override
-	public boolean isValeursMultiples() {
-		return true;
-	}
 
 	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules#initialiser(java.util.Map, java.util.List)
+	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules#initialiser(java.util.List, java.util.List)
 	 */
 	@Override
-	public void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) {
-		
-		List<String> etablissements = userInfoMap.get(etabCodesInfoKey);
-		List<String> etablissementsCourants = userInfoMap.get(currentEtabCodeInfoKey);
-		if (etablissements == null) {
+	public void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) throws Exception {
+		if (ressources == null) {
 			return;
 		}
-		String etablissementCourant = "";
-		if (etablissementsCourants != null && !etablissementsCourants.isEmpty()) {
-			etablissementCourant = etablissementsCourants.get(0);
-		}
 		
-		List<String> etablissementsTries = new ArrayList<String>();
-		etablissementsTries.addAll(etablissements);
-		Collections.sort(etablissementsTries);
-		
-		List<Filtre> filtres = new ArrayList<Filtre>();
-		
+		ListeRessource listeRessource = new ListeRessource(ressources); 
+    	List<String> listeValeurs = listeRessource.getValeursAttribut("ressources." + getNomAttributFiltre());
+    	List<Filtre> filtres = new ArrayList<Filtre>();
+    	Collections.sort(listeValeurs);
+    	
 		if (StringUtils.isNotBlank(getLibelleTous())) {
 			Filtre filtre = new Filtre();
-    		filtre.setId(getId());
-    		filtre.setLibelle(getLibelleTous());
-    		filtre.setActif(false);
-    		filtre.setCaseSelectAll(true);
-    		filtres.add(filtre);
+			filtre.setId(getId());
+			filtre.setLibelle(getLibelleTous());			
+			filtre.setCaseSelectAll(true);
+			filtre.setRegexpAttribut(".*");
+			filtres.add(filtre);
 		}
 		
-		for (String etablissement : etablissementsTries) {
-	    		Filtre filtre = new Filtre();
-	    		filtre.setId(etablissement);
-	    		filtre.setLibelle(etablissement);
-	    		filtre.setActif(etablissement.equalsIgnoreCase(etablissementCourant));
-	    		filtre.setNomAttribut(getNomAttributFiltre());
-	    		filtre.setRegexpAttribut(etablissement);
-	    		filtres.add(filtre);
-	    }
+		for (int i=0 ; i<listeValeurs.size() ; i++) {
+			String valeur = listeValeurs.get(i);
+			
+			Filtre filtre = new Filtre();
+			filtre.setId(getId() + "_" + i);
+			filtre.setLibelle(valeur);
+    		filtre.setNomAttribut(getNomAttributFiltre());
+    		filtre.setRegexpAttribut(Pattern.quote(valeur));
+    		filtres.add(filtre);			
+		}
+				
 		setFiltres(filtres);
 	}
-	
 }

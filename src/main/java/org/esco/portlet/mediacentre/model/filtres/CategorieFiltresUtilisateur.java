@@ -21,20 +21,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.esco.portlet.mediacentre.model.ressource.Ressource;
 
 /**
  * @author elecaude
  *
  */
-public class CategorieFiltresUtilisateur extends CategorieFiltres {
+public class CategorieFiltresUtilisateur extends CategorieFiltresCalcules {
 
 	/* 
 	 * ===============================================
 	 * Propriétés de la classe 
 	 * =============================================== 
 	 */
-	private String libelleTous;
-	private String nomAttributFiltre;
 	private String AttributUtilisateur;
 	private String AttributUtilisateurDefaut;
 	
@@ -49,13 +48,6 @@ public class CategorieFiltresUtilisateur extends CategorieFiltres {
 	 * Getter / Setter de la classe 
 	 * =============================================== 
 	 */
-	/**
-	 * Getter de la propriété libelleTous
-	 * @return la propriété libelleTous
-	 */
-	public String getLibelleTous() {
-		return libelleTous;
-	}
 
 	/**
 	 * Getter de la propriété attributUtilisateur
@@ -89,30 +81,6 @@ public class CategorieFiltresUtilisateur extends CategorieFiltres {
 		AttributUtilisateurDefaut = attributUtilisateurDefaut;
 	}
 
-	/**
-	 * Setter de la propriété libelleTous
-	 * @param libelleTous 
-	 */
-	public void setLibelleTous(String libelleTous) {
-		this.libelleTous = libelleTous;
-	}
-
-	/**
-	 * Getter de la propriété nomAttributFiltre
-	 * @return la propriété nomAttributFiltre
-	 */
-	public String getNomAttributFiltre() {
-		return nomAttributFiltre;
-	}
-
-	/**
-	 * Setter de la propriété nomAttributFiltre
-	 * @param nomAttributFiltre 
-	 */
-	public void setNomAttributFiltre(String nomAttributFiltre) {
-		this.nomAttributFiltre = nomAttributFiltre;
-	}
-
 	/* 
 	 * ===============================================
 	 * Méthodes privées de la classe 
@@ -126,30 +94,21 @@ public class CategorieFiltresUtilisateur extends CategorieFiltres {
 	 */
 
 	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#estCategorieUtilisateur()
-	 */
-	@Override
-	public boolean estCategorieUtilisateur() {
-		return true;
-	}
-
-	/* (non-Javadoc)
 	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#clone()
 	 */
 	@Override
 	public Object clone() {
 		CategorieFiltresUtilisateur categorie = (CategorieFiltresUtilisateur)super.clone();
-		categorie.setLibelleTous(getLibelleTous());
-		categorie.setAttributUtilisateur(getAttributUtilisateur());
 		categorie.setAttributUtilisateurDefaut(getAttributUtilisateurDefaut());
 		return categorie;
 	}
-	
-	/**
-	 * Initialise la liste des filtres de la catégorie à partir des données de l'utilisateur
-	 * @param userInfoMap
+		
+
+	/* (non-Javadoc)
+	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules#initialiser(java.util.Map, java.util.List)
 	 */
-	public void initialiser(Map<String, List<String>> userInfoMap) {
+	@Override
+	public void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) {
 		List<String> attributs = userInfoMap.get(getAttributUtilisateur());
 		if (attributs == null) {
 			return;
