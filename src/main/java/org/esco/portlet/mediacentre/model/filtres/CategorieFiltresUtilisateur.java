@@ -125,7 +125,7 @@ public class CategorieFiltresUtilisateur extends CategorieFiltresCalcules {
 		
 		List<Filtre> filtres = new ArrayList<Filtre>();
 		
-		if (isValeursMultiples() &&  StringUtils.isNotBlank(getLibelleTous())) {
+		if (isValeursMultiples() && StringUtils.isNotBlank(getLibelleTous())) {
 			Filtre filtre = new Filtre();
     		filtre.setId(getId());
     		filtre.setLibelle(getLibelleTous());

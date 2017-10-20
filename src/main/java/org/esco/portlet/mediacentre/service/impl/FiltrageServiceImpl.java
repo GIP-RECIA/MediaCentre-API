@@ -27,6 +27,7 @@ import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules;
 import org.esco.portlet.mediacentre.model.filtres.Filtre;
+import org.esco.portlet.mediacentre.model.filtres.FiltreFavoris;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
 import org.slf4j.Logger;
@@ -125,7 +126,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
     			}
     			
     			// S'il existe au moins une ressource passante, on conserve le filtre
-    			if (!listeRessources.isEmpty() || filtre.isCaseSelectAll() || "favoris".equalsIgnoreCase(filtre.getId())) {
+    			if (!listeRessources.isEmpty() || filtre.isCaseSelectAll() || FiltreFavoris.DEFAULT_ID.equalsIgnoreCase(filtre.getId())) {
     				mapFiltre.put(filtre.getId(), listeRessources);
     				
     				filtresClone.add((Filtre)filtre.clone());
@@ -175,7 +176,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
     			if (listeRessources.isEmpty()) {
     				continue;
     			}
-    			if (!Collections.disjoint(listeRessources, ressourcesConservees)) {
+    			if (!Collections.disjoint(listeRessources, ressourcesConservees) || FiltreFavoris.DEFAULT_ID.equals(filtre)) {
     				listeRessources.retainAll(ressourcesConservees);
     				listeFiltresFinale.put(filtre, listeRessources);
     			} else {

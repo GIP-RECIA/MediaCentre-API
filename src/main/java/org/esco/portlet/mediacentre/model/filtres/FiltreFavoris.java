@@ -20,6 +20,11 @@ package org.esco.portlet.mediacentre.model.filtres;
  *
  */
 public class FiltreFavoris extends Filtre {
+
+	public static final String DEFAULT_ID = "favoris";
+	public static final String DEFAULT_NOM_ATTR = "favorite";
+	public static final String DEFAULT_REGEX_ATTR = "true";
+
 	/* 
 	 * ===============================================
 	 * Propriétés de la classe 
@@ -33,9 +38,9 @@ public class FiltreFavoris extends Filtre {
 	 */
 
 	public FiltreFavoris() {
-		super.setId("favoris");
-		super.setNomAttribut("favorite");
-		super.setRegexpAttribut("true");
+		super.setId(DEFAULT_ID);
+		super.setNomAttribut(DEFAULT_NOM_ATTR);
+		super.setRegexpAttribut(DEFAULT_REGEX_ATTR);
 		super.setCaseSelectAll(false);
 	}
 	
