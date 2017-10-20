@@ -16,13 +16,16 @@
 package org.esco.portlet.mediacentre.model.filtres;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang.StringUtils;
+import org.esco.portlet.mediacentre.model.ressource.IdEtablissement;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author elecaude
@@ -35,11 +38,8 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 	 * Propriétés de la classe 
 	 * =============================================== 
 	 */
-    @Value("${userInfo.key.etabIds}")
-    private String etabCodesInfoKey;
-    
-    @Value("${userInfo.key.currentEtabId}")
-    private String currentEtabCodeInfoKey;
+	@NotNull
+	private String attributUtilisateurDefaut;
     
 	/* 
 	 * ===============================================
@@ -53,7 +53,14 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 	 * =============================================== 
 	 */
 
-	/* 
+	public String getAttributUtilisateurDefaut() {
+		return attributUtilisateurDefaut;
+	}
+
+	public void setAttributUtilisateurDefaut(final String attributUtilisateurDefaut) {
+		this.attributUtilisateurDefaut = attributUtilisateurDefaut;
+	}
+	/*
 	 * ===============================================
 	 * Méthodes privées de la classe 
 	 * =============================================== 
@@ -64,37 +71,33 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 	 * Méthodes publiques de la classe 
 	 * =============================================== 
 	 */
-	/* (non-Javadoc)
-	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#isValeursMultiples()
-	 */
-	@Override
-	public boolean isValeursMultiples() {
-		return true;
-	}
 
 	/* (non-Javadoc)
 	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules#initialiser(java.util.Map, java.util.List)
 	 */
 	@Override
-	public void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) {
-		
-		List<String> etablissements = userInfoMap.get(etabCodesInfoKey);
-		List<String> etablissementsCourants = userInfoMap.get(currentEtabCodeInfoKey);
-		if (etablissements == null) {
+	public void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) throws Exception {
+		if (ressources == null) {
 			return;
 		}
+		Set<IdEtablissement> etablissements = new HashSet<IdEtablissement>();
+		for (Ressource ressource: ressources) {
+			if (ressource.getIdEtablissement() != null && !ressource.getIdEtablissement().isEmpty()) {
+				 etablissements.addAll(ressource.getIdEtablissement());
+			}
+		}
+		if (etablissements.isEmpty()) {
+			return;
+		}
+		final List<String> etablissementsCourants = userInfoMap.get(getAttributUtilisateurDefaut());
 		String etablissementCourant = "";
 		if (etablissementsCourants != null && !etablissementsCourants.isEmpty()) {
 			etablissementCourant = etablissementsCourants.get(0);
 		}
-		
-		List<String> etablissementsTries = new ArrayList<String>();
-		etablissementsTries.addAll(etablissements);
-		Collections.sort(etablissementsTries);
-		
+
 		List<Filtre> filtres = new ArrayList<Filtre>();
 		
-		if (StringUtils.isNotBlank(getLibelleTous())) {
+		if (isValeursMultiples() && StringUtils.isNotBlank(getLibelleTous())) {
 			Filtre filtre = new Filtre();
     		filtre.setId(getId());
     		filtre.setLibelle(getLibelleTous());
@@ -103,14 +106,17 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
     		filtres.add(filtre);
 		}
 		
-		for (String etablissement : etablissementsTries) {
-	    		Filtre filtre = new Filtre();
-	    		filtre.setId(etablissement);
-	    		filtre.setLibelle(etablissement);
-	    		filtre.setActif(etablissement.equalsIgnoreCase(etablissementCourant));
-	    		filtre.setNomAttribut(getNomAttributFiltre());
-	    		filtre.setRegexpAttribut(etablissement);
-	    		filtres.add(filtre);
+		for (IdEtablissement etablissement : etablissements) {
+			Filtre filtre = new Filtre();
+			filtre.setActif(false);
+			filtre.setId(etablissement.getUAI());
+			filtre.setLibelle(etablissement.getNom());
+			filtre.setNomAttribut(getNomAttributFiltre());
+			filtre.setRegexpAttribut(etablissement.getUAI());
+			if (etablissement.getUAI().equalsIgnoreCase(etablissementCourant)) {
+				filtre.setActif(true);
+			}
+			filtres.add(filtre);
 	    }
 		setFiltres(filtres);
 	}

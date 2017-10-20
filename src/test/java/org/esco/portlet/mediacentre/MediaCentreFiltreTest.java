@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement;
@@ -42,9 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created by jgribonvald on 14/09/16.
@@ -249,7 +247,7 @@ public class MediaCentreFiltreTest {
     
     
     @Test
-    public void testFiltreEtab() throws JsonProcessingException {
+    public void testFiltreEtab() throws Exception {
     	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
     	
     	CategorieFiltresEtablissement categorie = (CategorieFiltresEtablissement)categoriesFiltres.get(0);

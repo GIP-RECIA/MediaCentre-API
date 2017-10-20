@@ -18,12 +18,14 @@ package org.esco.portlet.mediacentre.model.ressource;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.EqualsAndHashCode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "UAI",
     "nom"
 })
+@EqualsAndHashCode(of = "uAI", callSuper = false)
 public class IdEtablissement extends AbstractJson {
 
     @JsonProperty("UAI")
