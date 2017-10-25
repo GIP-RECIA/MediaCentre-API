@@ -72,7 +72,17 @@
 			<property name="valeursMultiples" value="true"/>
 			<property name="population" value="ENTPersonProfils"/>
 			<property name="regexpPopulation" value="((National_ENS)|(National_DOC)|(National_EVS))"/>
-		</bean>	
+		</bean>
+
+		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresRessource">
+			<property name="id" value="typeMedia"/>
+			<property name="libelle" value="filter.type"/>
+			<property name="libelleTous" value="filter.type.all"/>
+			<property name="nomAttributFiltre" value="typePresentation.nom"/>
+			<property name="valeursMultiples" value="true"/>
+			<property name="population" value=""/>
+			<property name="regexpPopulation" value=""/>
+		</bean>
 		
 		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresRessource">
 			<property name="id" value="discipline"/>
