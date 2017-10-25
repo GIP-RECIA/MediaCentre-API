@@ -76,7 +76,7 @@ public class MediaCentreFiltreTest {
     }
     
     
-    @Test
+    //@Test
     public void testFiltrageRessourceGET() throws Exception {
     	
 		String urlWS = "http://localhost:8090/mediacentre-web/json/mediacentre.json";
@@ -129,7 +129,7 @@ public class MediaCentreFiltreTest {
     	return ressourcesFiltrees;
     }
     
-    @Test
+    //@Test
     public void testFiltrageCategorieFiltresGET() throws Exception {
     	
 		String urlWS = "http://localhost:8090/mediacentre-web/json/mediacentre.json";
@@ -186,7 +186,7 @@ public class MediaCentreFiltreTest {
 	}
     
     
-    @Test
+    //@Test
     public void testReflect() throws Exception {
     	
 		String urlWS = "http://localhost:8090/mediacentre-web/json/mediacentre.json";
@@ -238,7 +238,7 @@ public class MediaCentreFiltreTest {
     	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
     	
     	
-    	for (Filtre filtre : categoriesFiltres.get(2).getFiltres()) {
+    	for (Filtre filtre : categoriesFiltres.get(1).getFiltres()) {
     		System.out.println(filtre.getId() + " : " + filtre.concerneUtilisateur(userInfoMap));
     	}
     	

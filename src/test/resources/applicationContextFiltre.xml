@@ -76,12 +76,11 @@
 	
 	<util:list id="categoriesFiltres" value-type="org.esco.portlet.mediacentre.model.filtres.CategorieFiltres">
 		
-		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresUtilisateur">
+		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement">
 			<property name="id" value="etablissements"/>
 			<property name="libelle" value="filter.establishments"/>
 			<property name="libelleTous" value="filter.establishments.all"/>
 			<property name="nomAttributFiltre" value="idEtablissement.UAI"/>
-			<property name="attributUtilisateur" value="ESCOUAI"/>
 			<property name="attributUtilisateurDefaut" value="ESCOUAICourant"/>
 			<property name="valeursMultiples" value="true"/>
 			<property name="population" value="ENTPersonProfils"/>
