@@ -168,7 +168,8 @@ mediacentre.init = function($, namespace, refCount, ressourcesParFiltre, urlAjou
 			url: urlAjouterFavori,
 			dataType: 'json',
 			data: {
-				"id": id
+				"id": id,
+				"time":  (new Date).getTime()
 			}
 		});
 	}
@@ -182,7 +183,8 @@ mediacentre.init = function($, namespace, refCount, ressourcesParFiltre, urlAjou
 			url: urlRetirerFavori,
 			dataType: 'json',
 			data: {
-				"id": id
+				"id": id,
+				"time":  (new Date).getTime()
 			}
 		});
 	}

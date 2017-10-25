@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.portlet.CacheControl;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -115,6 +116,8 @@ public class MainController {
         if(log.isDebugEnabled()) {
             log.debug("Rendering main view");
         }
+
+        response.getCacheControl().setExpirationTime(0);
         
         return mav;
     }
