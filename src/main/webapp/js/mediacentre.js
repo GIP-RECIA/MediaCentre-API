@@ -14,166 +14,177 @@
  * limitations under the License.
  */
 
+var mediacentre = mediacentre || {};
+
+mediacentre.init = function($, namespace, refCount, ressourcesParFiltre, urlAjouterFavori, urlRetirerFavori) {
 //----------------------------------
 // Initialisation des callbacks
 //----------------------------------
-var categorieFavoris = null;
-$(function(){
-	
-	// En cochant la case "select All", on coche ou decoche les checkbox enfants
-	$('.caseSelectAll').click(function(e){
-		var caseFilterACocher = $('input:checkbox.' + this.name + '.caseAutreFiltre');
-		if(this.checked){
-			caseFilterACocher.prop('checked', true); 
-		}else{
-			caseFilterACocher.prop('checked', false);
+	var categorieFavoris = null;
+	(function ($, namespace, refCount, ressourcesParFiltre) {
+
+		// En cochant la case "select All", on coche ou decoche les checkbox enfants
+		$(namespace + ' .caseSelectAll').on('click', function () {
+			var caseFilterACocher = $(namespace + ' input:checkbox.' + this.name + '.caseAutreFiltre');
+			if (this.checked) {
+				caseFilterACocher.prop('checked', true);
+			} else {
+				caseFilterACocher.prop('checked', false);
+			}
+			afficherRessources();
+		});
+
+
+		// En cochant une case enfant on coche ou décoche la Checkbox parent
+		$(namespace + ' .caseAutreFiltre').on('click', function (e) {
+			var categorie = $(this).closest('ul')[0].id;
+			var valeur = $(namespace + ' input:checkbox.' + categorie + '.caseAutreFiltre:checked').length == $(namespace + ' input:checkbox.' + categorie + '.caseAutreFiltre').length;
+			$(namespace + ' input:checkbox.' + categorie + '.caseSelectAll').prop('checked', valeur);
+			afficherRessources()
+		});
+
+		// Initialisation de la variable paramFavoris
+		for (var i in ressourcesParFiltre) {
+			if (ressourcesParFiltre[i].favoris) {
+				categorieFavoris = ressourcesParFiltre[i];
+				break;
+			}
 		}
+
+		$('.add-to-fav').on('click', changeFavoris);
+
+		$(namespace + ' input:radio.filtreMediacentre').on('click', afficherRessources);
 		afficherRessources();
-	});
-	
 
-	// En cochant une case enfant on coche ou décoche la Checkbox parent
-	$('.caseAutreFiltre').click(function(e) {
-		var categorie = $(this).closest('ul')[0].id;
-		var valeur = $('input:checkbox.' + categorie + '.caseAutreFiltre:checked').length == $('input:checkbox.' + categorie + '.caseAutreFiltre').length
-		$('input:checkbox.' + categorie + '.caseSelectAll').prop('checked', valeur);
-		afficherRessources()
-	});
-
-	// Initialisation de la variable paramFavoris
-	for (var i in ressourcesParFiltre) {
-		if (ressourcesParFiltre[i].favoris) {
-			categorieFavoris = ressourcesParFiltre[i];
-			break;
-		}
-	}
-
-	$('.add-to-fav').click(changeFavoris);
-	
-	$('input:radio.filtreMediacentre').click(afficherRessources);
-	afficherRessources();
-});
+	}($, namespace, refCount, ressourcesParFiltre));
 
 
 //---------------------------------------------------
 // fonction calculant l'intersection de tableaux
 //---------------------------------------------------
-function intersection() {
-	  return Array.from(arguments).reduce(function(previous, current){
-		return previous.filter(function(element){
-		  return current.indexOf(element) > -1;
+	function intersection() {
+		return Array.from(arguments).reduce(function (previous, current) {
+			return previous.filter(function (element) {
+				return current.indexOf(element) > -1;
+			});
 		});
-	  });
-	};
+	}
 
 //---------------------------------------------------
 // fonction calculant l'union de tableaux
 //---------------------------------------------------
-function union() {
-	var arr = [].concat.apply([], arguments);
-	return arr.filter(function (val, index) {
-	  return arr.indexOf(val) === index;
-	});
-}	
+	function union() {
+		var arr = [].concat.apply([], arguments);
+		return arr.filter(function (val, index) {
+			return arr.indexOf(val) === index;
+		});
+	}
 
 //---------------------------------------------------
 // fonction renvoyant l'id des ressources 
 // correspondant aux filtres
 //---------------------------------------------------
-function filtrer() {
-	var ressourcesCandidates = [];
-	for ( var categorie in ressourcesParFiltre) {
-		var ressourcesParCategories = [];	
-		// Recherche de toutes les ressources candidates pour une catégorie
-		for (var filtre in ressourcesParFiltre[categorie]) {
-			for (var i in arguments) {
-				if (filtre == arguments[i]) {
-					ressourcesParCategories = union (ressourcesParCategories, ressourcesParFiltre[categorie][filtre]);
+	function filtrer() {
+		var ressourcesCandidates = [];
+		for (var categorie in ressourcesParFiltre) {
+			var ressourcesParCategories = [];
+			// Recherche de toutes les ressources candidates pour une catégorie
+			for (var filtre in ressourcesParFiltre[categorie]) {
+				for (var i in arguments) {
+					if (filtre == arguments[i]) {
+						ressourcesParCategories = union(ressourcesParCategories, ressourcesParFiltre[categorie][filtre]);
+					}
 				}
 			}
+			ressourcesCandidates.push(ressourcesParCategories);
 		}
-		ressourcesCandidates.push(ressourcesParCategories);
+
+		return intersection.apply(null, ressourcesCandidates);
 	}
-	
-	return intersection.apply(null, ressourcesCandidates);
-}
 
 //---------------------------------------------------
 // fonction rafraichissant l'affichage des ressources 
 // qui correspondent aux filtres
 //---------------------------------------------------
-function afficherRessources() {
-	var tab = $(".filtreMediacentre:checked").toArray();
-	var filtres = tab.reduce(function(arr, elt) { arr.push(elt.id); return arr; }, []);
-	var ressourcesFiltrees = filtrer.apply(filtrer, filtres);
+	function afficherRessources() {
+		var tab = $(namespace + " .filtreMediacentre:checked").toArray();
+		var filtres = tab.reduce(function (arr, elt) {
+			arr.push(elt.id);
+			return arr;
+		}, []);
+		var ressourcesFiltrees = filtrer.apply(filtrer, filtres);
 
-	if (ressourcesFiltrees.length == 0) {
-		$("#msgAucuneRessource").show();
-	} else {
-		$("#msgAucuneRessource").hide();		
-	}
-
-	$(".ressource").each(function(){
-		if (ressourcesFiltrees.includes(parseInt(this.id))) {
-			$(this).show();
+		if (ressourcesFiltrees.length == 0) {
+			$(namespace + " #msgAucuneRessource").show();
 		} else {
-			$(this).hide();
+			$(namespace + " #msgAucuneRessource").hide();
 		}
-	});
-}
+
+		$(namespace + " .ressource").each(function () {
+			if (ressourcesFiltrees.includes(parseInt(this.id))) {
+				$(this).show();
+			} else {
+				$(this).hide();
+			}
+		});
+	}
 
 //---------------------------------------------------
 // fonction appelée lors d'une modification d'un 
 // favori
 //---------------------------------------------------
-function changeFavoris(event) {
-	event.stopPropagation();
+	function changeFavoris(event) {
+		event.stopPropagation();
 
-	var id = parseInt($(this).attr("id"));
-	var idRessource = $(this).parent(".action-zone").attr('id');
-	
-	if ($(this).hasClass('added')) {
-		$(this).removeClass('added');
-		supprimerFavori(idRessource);
-		if (categorieFavoris != null) {
-			categorieFavoris.favoris = categorieFavoris.favoris.filter(function(item) { return item != id});
-			if ($('input:radio#favoris').prop('checked')) {
-				afficherRessources();
+		var id = parseInt($(this).attr("id"));
+		var idRessource = $(this).parent(".action-zone").attr('id');
+
+		if ($(this).hasClass('added')) {
+			$(this).removeClass("added");
+			supprimerFavori(idRessource);
+			if (categorieFavoris != null) {
+				categorieFavoris.favoris = categorieFavoris.favoris.filter(function (item) {
+					return item != id
+				});
+				if ($(namespace + ' input:radio#favoris').prop('checked')) {
+					afficherRessources();
+				}
+			}
+		} else {
+			$(this).addClass("added");
+			ajouterFavori(idRessource);
+			if (categorieFavoris != null) {
+				categorieFavoris.favoris.push(id);
 			}
 		}
-	} else {
-		$(this).addClass('added');
-		ajouterFavori(idRessource);
-		if (categorieFavoris != null) {
-			categorieFavoris.favoris.push(id);
-		}
 	}
-}
 
 //---------------------------------------------------
 // fonction appelée pour ajouter un favori 
 //---------------------------------------------------
-function ajouterFavori(id){
-	$.ajax({
-        type: "POST",
-        url: urlAjouterFavori, 
-        dataType: 'json',
-         data: { 
-            "id": id
-        }
-    });
-}
+	function ajouterFavori(id) {
+		$.ajax({
+			type: "POST",
+			url: urlAjouterFavori,
+			dataType: 'json',
+			data: {
+				"id": id
+			}
+		});
+	}
 
 //---------------------------------------------------
 // fonction appelée pour supprimer un favori 
 //---------------------------------------------------
-function supprimerFavori(id){
-	$.ajax({
-     type: "POST",
-     url: urlRetirerFavori, 
-     dataType: 'json',
-      data: { 
-         "id": id
-     }
- });
-}
+	function supprimerFavori(id) {
+		$.ajax({
+			type: "POST",
+			url: urlRetirerFavori,
+			dataType: 'json',
+			data: {
+				"id": id
+			}
+		});
+	}
+};
+

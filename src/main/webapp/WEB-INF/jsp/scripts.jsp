@@ -39,7 +39,9 @@
 	 */
 	(function($, namespace, portletId) {
 		adaptiveBackgroundApp.init($);
-		mediacentre.init($, namespace, portletId);
+		dotdotdot.init($);
+		mediacentre.init($, namespace, portletId, ${ressourcesParFiltre}, '<portlet:resourceURL id="ajouterFavori" />', '<portlet:resourceURL id="retirerFavori" />');
+		mediacentre_plugin.init($, namespace, portletId);
 	})(${n}.jQuery, '#mediacentre_${n}', '${n}');
 
 </rs:compressJs></script>

@@ -13,162 +13,208 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+var mediacentre_plugin = mediacentre_plugin || {};
+
+mediacentre_plugin.init = function($, namespace, refCount) {
 // Avoid `console` errors in browsers that lack a console.
-(function() {
-    var method;
-    var noop = function () {};
-    var methods = [
-        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-        'timeStamp', 'trace', 'warn'
-    ];
-    var length = methods.length;
-    var console = (window.console = window.console || {});
+    (function () {
+        var method;
+        var noop = function () {
+        };
+        var methods = [
+            'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+            'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+            'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+            'timeStamp', 'trace', 'warn'
+        ];
+        var length = methods.length;
+        var console = (window.console = window.console || {});
 
-    while (length--) {
-        method = methods[length];
+        while (length--) {
+            method = methods[length];
 
-        // Only stub undefined methods.
-        if (!console[method]) {
-            console[method] = noop;
+            // Only stub undefined methods.
+            if (!console[method]) {
+                console[method] = noop;
+            }
         }
-    }
 
-}());
+    }());
 
-$(function() {
-    // init material design
-    //$.material.init();
+    (function ($, namespace, refCount) {
+        // init material design
+        //$.material.init();
+        $(document).ready(function () {
+            // Prevent block info to glitching up when launching a res
+            $(namespace + ' .launch-res').on('click', function (e) {
+                e.stopPropagation();
+            });
 
-    // Prevent block info to glitching up when launching a res
-    $('.launch-res').on('click',function (e) {
-        e.stopPropagation();
-    });
+            // Since the line-clamp only work in -webkit- based browsers
+            // & dotdotdot allow to dynamically ellipsis div w/ dynamic width
 
-    // Since the line-clamp only work in -webkit- based browsers
-    // & dotdotdot allow to dynamically ellipsis div w/ dynamic width
+            // Ellipsis block info title
+            $(namespace + " .res-title").dotdotdot({
+                watch: "window",
+                height: 48
+            });
+            // Ellipsis block info text
+            $(namespace + " .res-txt").dotdotdot({
+                watch: "window",
+                height: 96
+            });
 
-        // Ellipsis block info title
-        $(".res-title").dotdotdot({
-            watch: "window",
-            height: 48
-        });
-        // Ellipsis block info text
-        $(".res-txt").dotdotdot({
-            watch: "window",
-            height: 96
-        });
+            // Open block infos on click on ressource img
+            // $('.res-card').each(function(){
+            //     $('.res-img', $(this)).click(function(e) {
+            //         $('.res-card > .res-block-infos').removeClass('opened');
+            //         var $resblockinfo = $(this).prev('.res-block-infos');
+            //         if($resblockinfo.hasClass('opened')){
+            //             $resblockinfo.removeClass('opened');
+            //         }else{
+            //             $resblockinfo.addClass('opened');
+            //         }
+            //     });
+            // });
 
-    // Open block infos on click on ressource img
-    // $('.res-card').each(function(){
-    //     $('.res-img', $(this)).click(function(e) {
-    //         $('.res-card > .res-block-infos').removeClass('opened');
-    //         var $resblockinfo = $(this).prev('.res-block-infos');
-    //         if($resblockinfo.hasClass('opened')){
-    //             $resblockinfo.removeClass('opened');
-    //         }else{
-    //             $resblockinfo.addClass('opened');
-    //         }
-    //     });
-    // });
+            // show modal on fab click
+            var modalAffect = $('.modal.affectations');
+            var modalAffectationsHeight = modalAffect.height();
+            var openModalAffect = function () {
+                modalAffect.addClass('opened');
+                $('.overlay').addClass('is-visible');
+                modalAffect.css('moz-transform', 'translateY(0)').css('ms-transform', 'translateY(0)').css('-webkit-transform', 'translateY(0)').css('transform', 'translateY(0)');
+            };
+            var closeModalAffect = function () {
+                modalAffect.removeClass('opened');
+                $('.overlay').removeClass('is-visible');
+                modalAffect.css('moz-transform', 'translateY(' + modalAffectationsHeight + 'px)').css('ms-transform', 'translateY(' + modalAffectationsHeight + 'px)').css('-webkit-transform', 'translateY(' + modalAffectationsHeight + 'px)').css('transform', 'translateY(' + modalAffectationsHeight + 'px)');
+            };
 
-    // show modal on fab click
-    var modalAffect = $('.modal.affectations');
-    var modalAffectationsHeight = modalAffect.height();
-    var openModalAffect = function () {
-        modalAffect.addClass('opened');
-        $('.overlay').addClass('is-visible');
-        modalAffect.css('moz-transform', 'translateY(0)').css('ms-transform', 'translateY(0)').css('-webkit-transform', 'translateY(0)').css('transform', 'translateY(0)');
-    };
-    var closeModalAffect = function () {
-        modalAffect.removeClass('opened');
-        $('.overlay').removeClass('is-visible');
-        modalAffect.css('moz-transform', 'translateY('+ modalAffectationsHeight +'px)').css('ms-transform', 'translateY('+ modalAffectationsHeight +'px)').css('-webkit-transform', 'translateY('+ modalAffectationsHeight +'px)').css('transform', 'translateY('+ modalAffectationsHeight +'px)');
-    };
+            modalAffect.css('moz-transform', 'translateY(' + modalAffectationsHeight + 'px)').css('ms-transform', 'translateY(' + modalAffectationsHeight + 'px)').css('-webkit-transform', 'translateY(' + modalAffectationsHeight + 'px)').css('transform', 'translateY(' + modalAffectationsHeight + 'px)');
+            $(namespace + ' .fab-affectations').on('click', openModalAffect);
+            $('.modal .mdi-close, .overlay, .modal-footer .btn-primary').on('click', closeModalAffect);
 
-    modalAffect.css('moz-transform', 'translateY('+ modalAffectationsHeight +'px)').css('ms-transform', 'translateY('+ modalAffectationsHeight +'px)').css('-webkit-transform', 'translateY('+ modalAffectationsHeight +'px)').css('transform', 'translateY('+ modalAffectationsHeight +'px)');
-    $('.fab-affectations').on('click', openModalAffect);
-    $('.modal .mdi-close, .overlay, .modal-footer .btn-primary').on('click', closeModalAffect);
+            var isMobile = {
+                Android: function () {
+                    return navigator.userAgent.match(/Android/i);
+                },
+                BlackBerry: function () {
+                    return navigator.userAgent.match(/BlackBerry/i);
+                },
+                iOS: function () {
+                    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+                },
+                Opera: function () {
+                    return navigator.userAgent.match(/Opera Mini/i);
+                },
+                Windows: function () {
+                    return navigator.userAgent.match(/IEMobile/i);
+                },
+                any: function () {
+                    return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+                }
+            };
 
-    var isMobile = {
-        Android: function() {
-            return navigator.userAgent.match(/Android/i);
-        },
-        BlackBerry: function() {
-            return navigator.userAgent.match(/BlackBerry/i);
-        },
-        iOS: function() {
-            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-        },
-        Opera: function() {
-            return navigator.userAgent.match(/Opera Mini/i);
-        },
-        Windows: function() {
-            return navigator.userAgent.match(/IEMobile/i);
-        },
-        any: function() {
-            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-        }
-    };
+            if (isMobile.any()) {
 
-    if(isMobile.any()) {
+                $(namespace + ' .res-card', $(this)).click(function () {
 
-        $('.res-card', $(this)).click(function() {
+                    var $resblockinfo = $(this).find('.res-block-infos');
 
-            var $resblockinfo = $(this).find('.res-block-infos');
+                    $(namespace + ' .res-card > .res-block-infos').removeClass('opened');
 
-            $('.res-card > .res-block-infos').removeClass('opened');
+                    if ($resblockinfo.hasClass('opened')) {
+                        $resblockinfo.removeClass('opened');
+                    } else {
+                        $resblockinfo.addClass('opened');
+                    }
+                });
 
-            if($resblockinfo.hasClass('opened')){
-                $resblockinfo.removeClass('opened');
-            }else{
-                $resblockinfo.addClass('opened');
+            } else {
+                // Open block infos on hover
+                $(namespace + ' .res-card').on({
+                    mouseenter: function () {
+                        $(this).find('.res-block-infos').addClass('opened');
+                    },
+                    mouseleave: function () {
+                        $(this).find('.res-block-infos').removeClass('opened');
+                    }
+                });
             }
         });
 
-    }else{
-        // Open block infos on hover
-        $('.res-card').on({
-            mouseenter: function () {
-                $(this).find('.res-block-infos').addClass('opened');
-            },
-            mouseleave: function () {
-                $(this).find('.res-block-infos').removeClass('opened');
-            }
-        });
-    }
-
-});
+    }($,namespace, refCount));
 
 // Bootstrap Mediaquerie are here !
-(function($, viewport){
+    (function ($, namespace, refCount) {
 
-    // Execute only after document has fully loaded
-    $(document).ready(function() {
-        // Executes in MD+ breakpoints
-        if( viewport.is('>=md') ) {
-            $('.filters-list.collapse').addClass('in');
-        }
-        // Executes in MD- breakpoints
-        if( viewport.is('<md') ) {
-            $('.filters-list.collapse').removeClass('in');
-        }
-    });
+        function scrollFab($, namespace) {
+            var content = $(namespace);
+            var bottom = $(window).height() - content.position().top - content.height() + $('html, body').scrollTop();
 
-    // Execute code each time window is resized
-    $(window).resize(
-        viewport.changed(function() {
+            if (bottom < 24) {
+                $(namespace + ' .fab-affectations').css('bottom', '24px').removeClass('is-absolute');
+            } else {
+                $(namespace + ' .fab-affectations').css('bottom', '24px').addClass('is-absolute');
+            }
+        }
+
+        function viewPortChanged($, namespace) {
             // Executes in MD+ breakpoints
-            if( viewport.is('>=md') ) {
-                $('.filters-list.collapse').addClass('in');
-            }
-            // Executes in MD- breakpoints
-            if( viewport.is('<md') ) {
-                $('.filters-list.collapse').removeClass('in');
-            }
-        })
-    );
+            if (isDetectedDivs('md') || isDetectedDivs('lg')) {
+                // close filters by default
+                $(namespace + ' .filters-list.collapse').addClass('in');
 
-})(jQuery, ResponsiveBootstrapToolkit);
+            } else {
+                // Executes in MD- breakpoints
+                // open filters header by default
+                $(namespace + ' .filters-list.collapse').removeClass('in');
+            }
+            //this function runs every time you are scrolling
+            // set the position of filters and FAB to absolute when footer enter the viewport
+            $(window).scroll(function () {
+                scrollFab($, namespace);
+            });
+        }
+
+        var detectionDivs = {
+            'xs': $('<div class="device-xs visible-xs visible-xs-block"></div>'),
+            'sm': $('<div class="device-sm visible-sm visible-sm-block"></div>'),
+            'md': $('<div class="device-md visible-md visible-md-block"></div>'),
+            'lg': $('<div class="device-lg visible-lg visible-lg-block"></div>')
+        };
+
+        function applyDetectionDivs($, namespace) {
+            $('<div class="responsive-bootstrap-toolkit"></div>').appendTo('body ' + namespace);
+            $.each(detectionDivs, function(alias){
+                detectionDivs[alias].appendTo(namespace + ' .responsive-bootstrap-toolkit');
+            });
+        }
+
+        function isDetectedDivs(str) {
+            return detectionDivs[ str ] && detectionDivs[ str ].is(':visible');
+        }
+
+        // Execute only after document has fully loaded
+        $(document).ready(function () {
+            applyDetectionDivs($, namespace);
+            setTimeout(function() {
+                scrollFab($, namespace);
+                viewPortChanged($, namespace);
+                $(namespace + " .filter-options.collapse").on('shown.bs.collapse', function () {
+                    scrollFab($, namespace);
+                }).on('hidden.bs.collapse', function () {
+                    scrollFab($, namespace);
+                });
+            }, 300);
+        });
+
+        // Execute code each time window is resized
+        $(window).resize(function () {
+                viewPortChanged($, namespace);
+            }
+        );
+
+    }($, namespace, refCount));
+};

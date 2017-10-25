@@ -35,14 +35,10 @@
 		portlets.bootstrapjQuery || document.write('<script src="rs/bootstrap/3.3.5/bootstrap.min.js"><\/script>');
 		</c:otherwise>
 	</c:choose>
-
-	var ressourcesParFiltre = ${ressourcesParFiltre};
-	var urlAjouterFavori = '<portlet:resourceURL id="ajouterFavori" />';
-	var urlRetirerFavori = '<portlet:resourceURL id="retirerFavori" />';
 </script>
 
 
-<div id="mediacentre_${n}" class="col-md-10 col-md-offset-1 mediacentre">
+<div id="mediacentre_${n}" class="mediacentre">
 
 	<%-- FAB --%> 
 	<c:if test="${not empty gestionAffectation}">
@@ -130,7 +126,7 @@
 	            </div>
 	        </div>
 	
- 	        <div class="col-xs-12 col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10 grid">
+ 	        <div class="col-xs-12 col-md-9 col-lg-10 grid">
 	            
 	            <div class="container-fluid">
 	            	

@@ -30,8 +30,7 @@
 	
 	<!-- Order is important here, the log script needs to be the first thing
 		followed by the debug toggle -->
-	<js>js/jquery.dotdotdot.min.js</js>
-	<js>js/responsive-bootstrap-toolkit.min.js</js>
+	<js>js/jquery.dotdotdot.js</js>
 	<js>js/plugin.js</js>
 	<js>js/polyfill.js</js>
 	<js>js/mediacentre.js</js>

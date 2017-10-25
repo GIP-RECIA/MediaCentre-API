@@ -701,6 +701,10 @@
   width: 100%;
   height: 255px;
 }
+/* line 434, ../sass/_mediacentre.scss */
+.mediacentre .is-absolute {
+  position: absolute !important;
+}
 /* line 465, ../sass/styles.scss */
 .mediacentre .overlay {
   -webkit-transition: all 0.25s ease-in-out;
@@ -1533,15 +1537,14 @@
 @media (min-width: 992px) {
   /* line 683, ../sass/styles.scss */
   .mediacentre .filters {
-    left: 0;
-    top: calc(40px + 35px);
+
+    top: 0;
+    margin-top: 15px;
     padding-right: 0;
-    z-index: 1;
+
     height: auto;
-    max-height: calc(100vh - 24px);
-    overflow: auto;
-    overflow-x: hidden;
     background: #f3f3f3;
+    position: relative;
   }
   /* line 700, ../sass/styles.scss */
   .mediacentre .filters .filters-group {
@@ -1683,33 +1686,7 @@
 		top: 50%;
 		margin-left: 0;
 	}
-		
-	/*****************************************/
-	/*	 SURCHARGE A SUPPRIMER QUAND BS OK 	 */
-	/*****************************************/
-	#portalPageBodyColumns {
-		max-width: 100%;
-		min-width: inherit;
-		top: initial;
-		left: initial;
-		margin-left: initial;
-		margin-right: initial;
-	}
-	.mediacentre .filters {
-		width: 18%;
-	    padding-right: inherit;
-	    margin-left: 9.33333333%;
-	}
-	.col-md-offset-3 {
-		margin-left: 22%;
-	}
-	.col-md-9 {
-		width: 78%;
-	}
-}
 
-@media (min-width: 1200px) {
-    
 }
 
 	
