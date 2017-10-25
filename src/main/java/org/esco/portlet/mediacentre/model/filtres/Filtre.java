@@ -82,7 +82,7 @@ public class Filtre implements Cloneable{
 
 	/**
 	 * Setter de la propriété libelle
-	 * @param libelle 
+	 * @param libelle libellé
 	 */
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
@@ -90,7 +90,7 @@ public class Filtre implements Cloneable{
 
 	/**
 	 * Setter de la propriété actif
-	 * @param actif 
+	 * @param actif actif
 	 */
 	public void setActif(boolean actif) {
 		this.actif = actif;
@@ -120,7 +120,7 @@ public class Filtre implements Cloneable{
 
 	/**
 	 * Setter de la propriété id
-	 * @param id 
+	 * @param id identifiant
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -136,7 +136,7 @@ public class Filtre implements Cloneable{
 
 	/**
 	 * Setter de la propriété nomAttribut
-	 * @param nomAttribut 
+	 * @param nomAttribut nom Attribut
 	 */
 	public void setNomAttribut(String nomAttribut) {
 		this.nomAttribut = nomAttribut;
@@ -152,7 +152,7 @@ public class Filtre implements Cloneable{
 
 	/**
 	 * Setter de la propriété regexpAttribut
-	 * @param regexpAttribut 
+	 * @param regexpAttribut regexp Attribut
 	 */
 	public void setRegexpAttribut(String regexpAttribut) {
 		this.regexpAttribut = regexpAttribut;
@@ -168,7 +168,7 @@ public class Filtre implements Cloneable{
 
 	/**
 	 * Setter de la propriété population
-	 * @param population 
+	 * @param population population
 	 */
 	public void setPopulation(String population) {
 		this.population = population;
@@ -184,7 +184,7 @@ public class Filtre implements Cloneable{
 
 	/**
 	 * Setter de la propriété regexpPopulation
-	 * @param regexpPopulation 
+	 * @param regexpPopulation regexp Population
 	 */
 	public void setRegexpPopulation(String regexpPopulation) {
 		this.regexpPopulation = regexpPopulation;
@@ -203,9 +203,9 @@ public class Filtre implements Cloneable{
 	 * =============================================== 
 	 */
     /** 
-     * @param ressource
+     * @param ressource ressource
      * @return true si la ressource est passante pour le filtre, false sinon
-     * @throws Exception
+     * @throws Exception Exception
      */
     public boolean estPassante(Ressource ressource) throws Exception {
     	if (StringUtils.isEmpty(getRegexpAttribut())) {
@@ -231,7 +231,6 @@ public class Filtre implements Cloneable{
     /**
      * @param userInfoMap Map contenant le profil de l'utilisateur
      * @return true si le filtre concerne l'utilisateur, false Sinon
-     * @throws Exception
      */
     public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
     	String regexp = getRegexpPopulation();

@@ -59,7 +59,7 @@ public class CategorieFiltresUtilisateur extends CategorieFiltresCalcules {
 
 	/**
 	 * Setter de la propriété attributUtilisateur
-	 * @param attributUtilisateur 
+	 * @param attributUtilisateur attribut Utilisateur
 	 */
 	public void setAttributUtilisateur(String attributUtilisateur) {
 		AttributUtilisateur = attributUtilisateur;
@@ -75,7 +75,7 @@ public class CategorieFiltresUtilisateur extends CategorieFiltresCalcules {
 
 	/**
 	 * Setter de la propriété attributUtilisateurDefaut
-	 * @param attributUtilisateurDefaut 
+	 * @param attributUtilisateurDefaut attribut Utilisateur Defaut
 	 */
 	public void setAttributUtilisateurDefaut(String attributUtilisateurDefaut) {
 		AttributUtilisateurDefaut = attributUtilisateurDefaut;

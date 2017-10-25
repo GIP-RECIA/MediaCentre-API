@@ -76,7 +76,7 @@ public class CategorieFiltres implements Cloneable {
 
 	/**
 	 * Setter de la propriété id
-	 * @param id 
+	 * @param id identifiant
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -92,7 +92,7 @@ public class CategorieFiltres implements Cloneable {
 
 	/**
 	 * Setter de la propriété population
-	 * @param population 
+	 * @param population population
 	 */
 	public void setPopulation(String population) {
 		this.population = population;
@@ -108,7 +108,7 @@ public class CategorieFiltres implements Cloneable {
 
 	/**
 	 * Setter de la propriété regexpPopulation
-	 * @param regexpPopulation 
+	 * @param regexpPopulation regexpPopulation
 	 */
 	public void setRegexpPopulation(String regexpPopulation) {
 		this.regexpPopulation = regexpPopulation;
@@ -124,7 +124,7 @@ public class CategorieFiltres implements Cloneable {
 
 	/**
 	 * Setter de la propriété libelle
-	 * @param libelle 
+	 * @param libelle libelle
 	 */
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
@@ -132,7 +132,7 @@ public class CategorieFiltres implements Cloneable {
 
 	/**
 	 * Setter de la propriété valeursMultiples
-	 * @param valeursMultiples 
+	 * @param valeursMultiples valeursMultiples
 	 */
 	public void setValeursMultiples(boolean valeursMultiples) {
 		this.valeursMultiples = valeursMultiples;
@@ -153,16 +153,16 @@ public class CategorieFiltres implements Cloneable {
 	}
 
 	/**
-	 * Getter de la propriété filtre
-	 * @return la propriété filtre
+	 * Getter de la propriété filtres
+	 * @return la propriété filtres
 	 */
 	public List<Filtre> getFiltres() {
 		return filtres;
 	}
 	
 	/**
-	 * Setter de la propriété filtre
-	 * @param filtre 
+	 * Setter de la propriété filtres
+	 * @param filtres filtres
 	 */
 	public void setFiltres(List<Filtre> filtres) {
 		this.filtres = filtres;
@@ -221,7 +221,6 @@ public class CategorieFiltres implements Cloneable {
     /**
      * @param userInfoMap Map contenant le profil de l'utilisateur
      * @return true si le filtre concerne l'utilisateur, false Sinon
-     * @throws Exception
      */
     public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
     	String regexp = getRegexpPopulation();

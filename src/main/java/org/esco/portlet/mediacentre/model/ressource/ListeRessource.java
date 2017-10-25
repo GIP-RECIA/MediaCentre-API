@@ -35,7 +35,7 @@ public class ListeRessource extends AbstractJson {
 	 * =============================================== 
 	 */
 	/**
-	 * @param ressources
+	 * @param ressources Liste des ressources.
 	 */
 	public ListeRessource(List<Ressource> ressources) {
 		super();
@@ -57,7 +57,7 @@ public class ListeRessource extends AbstractJson {
 
 	/**
 	 * Setter de la propriété ressources
-	 * @param ressources 
+	 * @param ressources Liste des ressources.
 	 */
 	public void setRessources(List<Ressource> ressources) {
 		this.ressources = ressources;

@@ -38,10 +38,10 @@ public class HelpController {
     /**
      * Returns the help view.  The help view is a very simple JSP, so we don't
      * both returning a model.
-     * 
-     * @param request
-     * @param response
-     * @return
+     *
+     * @param request  RenderRequest
+     * @param response  RenderResponse
+     * @return ModelAndView
      */
     @RenderMapping
     public ModelAndView showHelpView(final RenderRequest request, final RenderResponse response) {

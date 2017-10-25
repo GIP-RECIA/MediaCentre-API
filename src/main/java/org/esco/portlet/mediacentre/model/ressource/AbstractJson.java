@@ -86,9 +86,9 @@ public abstract class AbstractJson {
 
 	/**
 	 * Methode de recuperation des valeurs d'un attribut d'un objet en utilisant une notation "pointee" pour retrouver l'attribut
-	 * @param chemin 
+	 * @param chemin json object path
 	 * @return la liste des valeurs de l'attribut
-	 * @throws Exception
+	 * @throws Exception Exceptions de parcours sur l'objet
 	 */
 	public List<String> getValeursAttribut(String chemin) throws Exception {
 		Class<? extends Object> objectClass = this.getClass();	

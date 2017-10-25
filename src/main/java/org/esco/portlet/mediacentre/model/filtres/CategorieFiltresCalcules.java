@@ -56,7 +56,7 @@ public abstract class CategorieFiltresCalcules extends CategorieFiltres {
 
 	/**
 	 * Setter de la propriété libelleTous
-	 * @param libelleTous 
+	 * @param libelleTous libelleTous
 	 */
 	public void setLibelleTous(String libelleTous) {
 		this.libelleTous = libelleTous;
@@ -72,7 +72,7 @@ public abstract class CategorieFiltresCalcules extends CategorieFiltres {
 
 	/**
 	 * Setter de la propriété nomAttributFiltre
-	 * @param nomAttributFiltre 
+	 * @param nomAttributFiltre nomAttributFiltre
 	 */
 	public void setNomAttributFiltre(String nomAttributFiltre) {
 		this.nomAttributFiltre = nomAttributFiltre;
@@ -111,8 +111,9 @@ public abstract class CategorieFiltresCalcules extends CategorieFiltres {
 
 	/**
 	 * Initialise la liste des filtres de la catégorie 
-	 * @param userInfoMap
-	 * @param ressources
+	 * @param userInfoMap Map contenant le profil de l'utilisateur
+	 * @param ressources Liste des ressources.
+	 * @throws Exception Exception
 	 */
 	public void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) throws Exception {
 		setFiltres(new ArrayList<Filtre>());

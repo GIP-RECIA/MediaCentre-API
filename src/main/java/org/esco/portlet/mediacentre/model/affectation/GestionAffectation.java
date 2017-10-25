@@ -67,7 +67,7 @@ public class GestionAffectation {
 
 	/**
 	 * Setter de la propriété id
-	 * @param id 
+	 * @param id identifiant.
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -83,7 +83,7 @@ public class GestionAffectation {
 
 	/**
 	 * Setter de la propriété nom
-	 * @param nom 
+	 * @param nom nom.
 	 */
 	public void setNom(String nom) {
 		this.nom = nom;
@@ -99,7 +99,7 @@ public class GestionAffectation {
 
 	/**
 	 * Setter de la propriété description
-	 * @param description 
+	 * @param description description.
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -115,7 +115,7 @@ public class GestionAffectation {
 
 	/**
 	 * Setter de la propriété lien
-	 * @param lien 
+	 * @param lien lien.
 	 */
 	public void setLien(String lien) {
 		this.lien = lien;
@@ -131,7 +131,7 @@ public class GestionAffectation {
 
 	/**
 	 * Setter de la propriété population
-	 * @param population 
+	 * @param population population.
 	 */
 	public void setPopulation(String population) {
 		this.population = population;
@@ -147,7 +147,7 @@ public class GestionAffectation {
 
 	/**
 	 * Setter de la propriété regexpPopulation
-	 * @param regexpPopulation 
+	 * @param regexpPopulation regexpPopulation
 	 */
 	public void setRegexpPopulation(String regexpPopulation) {
 		this.regexpPopulation = regexpPopulation;
@@ -178,7 +178,6 @@ public class GestionAffectation {
 	/**
      * @param userInfoMap Map contenant le profil de l'utilisateur
      * @return true si le filtre concerne l'utilisateur, false Sinon
-     * @throws Exception
      */
     public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
     	String regexp = getRegexpPopulation();

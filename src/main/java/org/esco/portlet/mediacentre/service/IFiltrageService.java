@@ -34,14 +34,14 @@ public interface IFiltrageService {
 	 * @param categoriesFiltresCandidats (en sortie) liste des filtres permettant d'afficher au moins une ressource
 	 * @param ressourcesCandidates (en sortie) liste des ressources pouvant être affichées par au moins un filtre
 	 * @return les ressources candidates par Filtre au format JSON à passer à la JSP  
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	String preparerFiltrage(Map<String, List<String>> userInfoMap, List<CategorieFiltres> categoriesFiltres,  List<Ressource> ressources, List<CategorieFiltres> categoriesFiltresCandidats, List<Ressource> ressourcesCandidates) throws Exception;
 	
 	
 	/**
-	 * @param listeGestionAffectation
-	 * @param userInfo
+	 * @param listeGestionAffectation Liste des Gestionnaires d'affectation
+	 * @param userInfo Map contenant le profil de l'utilisateur
 	 * @return la liste des objets GestionAffectation qui sont autorisés pour l'utilisateur
 	 */
 	List<GestionAffectation> filtrerGestionAffectation(List<GestionAffectation> listeGestionAffectation, Map<String, List<String>> userInfo);

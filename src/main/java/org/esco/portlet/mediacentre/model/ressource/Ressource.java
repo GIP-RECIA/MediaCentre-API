@@ -269,7 +269,7 @@ public class Ressource extends AbstractJson {
 
 	/**
 	 * Setter de la propriété idInterne
-	 * @param idInterne 
+	 * @param idInterne id interne
 	 */
     @JsonIgnore
 	public void setIdInterne(int idInterne) {

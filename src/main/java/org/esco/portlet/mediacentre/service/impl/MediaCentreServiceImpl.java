@@ -187,6 +187,9 @@ public class MediaCentreServiceImpl implements IMediaCentreService {
 		this.mediaUrlBuilder = mediaUrlBuilder;
 	}*/
 
+    /**
+     * @return the media Pref Url
+     */
 	public static String getPrefMediaUrl() {
     	return PREF_MEDIA_URL;
     }

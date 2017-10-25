@@ -38,10 +38,10 @@ public interface IMediaCentreService {
 
     List<String> getUserFavorites(@NotNull final PortletRequest portletRequest);
 
-    /** Best method call to obtain a user attribute value. */
+    /* Best method call to obtain a user attribute value. */
     List<String> getUserInfoOnAttribute(@NotNull final PortletRequest portletRequest, @NotNull final String attributeKey);
 
-    /** Should be used to share user info. */
+    /* Should be used to share user info. */
     Map<String, List<String>> getUserInfos(@NotNull final PortletRequest portletRequest);
 
     void setAndSaveUserFavorites(@NotNull final PortletRequest portletRequest, @NotNull final List<String> favorites);
