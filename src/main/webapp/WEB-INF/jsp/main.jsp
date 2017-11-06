@@ -161,12 +161,12 @@
 		                        </div>
 		                        <c:choose>
 									<c:when test="${(not empty ressource.urlVignette) and (ressource.urlVignette!='')}">			                        
-				                        <div class="res-img img-placeholder" style="background: url(${ressource.urlVignette}) no-repeat 50%;background-size:cover;">
+				                        <div class="res-img img-placeholder" style="background-image: url(${ressource.urlVignette});">
 				                            <i class="mdi ${ressource.urlVignette=='' ? 'mdi-file-outline' : ''}"></i>
 				                        </div>
 			                        </c:when>
 			                        <c:otherwise>
-				                        <div class="res-img img-placeholder">
+				                        <div class="res-img img-placeholder no-vignette">
 				                            <i class="mdi ${ressource.urlVignette=='' ? 'mdi-file-outline' : ''}"></i>
 				                        </div>
 			                        </c:otherwise>

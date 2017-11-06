@@ -441,7 +441,7 @@
   border-radius: 0;
   display: block;
   padding: 0;
-  height: 255px;
+  height: 230px;
   margin: 7px 0;
   overflow: hidden;
   position: relative;
@@ -470,8 +470,8 @@
 }
 /* line 306, ../sass/styles.scss */
 .mediacentre .grid > .container-fluid .res-card .action-zone a {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+  opacity: 0.75;
+  filter: alpha(opacity=75);
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -682,15 +682,13 @@
   -webkit-transition-delay: 0.3s;
   transition-delay: 0.3s;
 }
-/* line 435, ../sass/styles.scss */
-.mediacentre .grid > .container-fluid .res-card .res-img {
-  height: 100%;
-  background-size: cover;
-}
 /* line 438, ../sass/styles.scss */
 .mediacentre .grid > .container-fluid .res-card .res-img.img-placeholder {
-  background: url("../img/bg_card_placeholder.jpg") no-repeat 50%;
-  background-size: cover;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center left;
+  background-size: contain;
+  background-color: rgba(243,243,243,1);
 }
 /* line 441, ../sass/styles.scss */
 .mediacentre .grid > .container-fluid .res-card .res-img.img-placeholder i {
@@ -699,7 +697,7 @@
   text-align: center;
   display: inline-block;
   width: 100%;
-  height: 255px;
+  height: 230px;
 }
 /* line 434, ../sass/_mediacentre.scss */
 .mediacentre .is-absolute {
