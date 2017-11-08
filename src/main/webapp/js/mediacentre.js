@@ -67,7 +67,7 @@ mediacentre.init = function($, namespace, refCount, ressourcesParFiltre, urlAjou
 			return previous.filter(function (element) {
 				return current.indexOf(element) > -1;
 			});
-		});
+		}, []);
 	}
 
 //---------------------------------------------------
