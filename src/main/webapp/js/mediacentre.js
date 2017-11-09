@@ -63,11 +63,12 @@ mediacentre.init = function($, namespace, refCount, ressourcesParFiltre, urlAjou
 // fonction calculant l'intersection de tableaux
 //---------------------------------------------------
 	function intersection() {
+		if (Array.from(arguments).length <= 0) return [];
 		return Array.from(arguments).reduce(function (previous, current) {
 			return previous.filter(function (element) {
 				return current.indexOf(element) > -1;
 			});
-		}, []);
+		});
 	}
 
 //---------------------------------------------------
