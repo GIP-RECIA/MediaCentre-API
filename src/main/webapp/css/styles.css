@@ -125,7 +125,7 @@
 }
 /* line 114, ../sass/styles.scss */
 .mediacentre .filters .filters-group .filters-list ul.form-group.filter .filter-title {
-  padding: 0 10px;
+  padding: 0 0 0 15px;
   display: block;
   height: 58px;
   line-height: 58px;
@@ -1587,10 +1587,10 @@
   }
   /* line 729, ../sass/styles.scss */
   .mediacentre .filters .filters-group .filters-list ul.form-group.filter li.radio label, .mediacentre .filters .filters-group .filters-list ul.form-group.filter li.checkbox label {
-    padding-right: 25px;
-    padding-left: 58px;
+    padding-right: 5px;
+    padding-left: 50px;
     font-size: 15px;
-    position: absolute;
+   /* position: absolute;*/
     left: 0;
     line-height: 58px;
     height: 100%;
