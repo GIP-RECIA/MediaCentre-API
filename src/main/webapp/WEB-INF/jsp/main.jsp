@@ -64,7 +64,7 @@
 		</div>
 		<div class="overlay"></div>
 
-		<a href="javascript:void(0)" class="btn btn-primary btn-fab fab-affectations">
+		<a href="javascript:void(0)" class="btn btn-primary btn-fab fab-affectations" title="<spring:message code="site.affectation.titre" />">
 		    <i class="mdi mdi-settings"></i>
 		</a>	
 	</c:if>
@@ -102,19 +102,19 @@
 		                        	
 		                        	<c:forEach var="filtre" items="${categorie.filtres}" varStatus="loop">
 		                        		<c:if test="${not categorie.valeursMultiples}">
-				                            <li class="radio withripple">
+				                            <li class="radio withripple" title="<spring:message code="${filtre.libelle}" />">
 				                                <label>
-				                                	<input type="radio" name="${categorie.id}" id="${filtre.id}" value="" ${filtre.actif ? 'checked' : ''} class="filtreMediacentre"> 
-		                        					<spring:message code="${filtre.libelle}" />
+				                                	<input type="radio" name="${categorie.id}" id="${filtre.id}" value="" ${filtre.actif ? 'checked' : ''} class="filtreMediacentre">
+													<span><spring:message code="${filtre.libelle}" /></span>
 				                                </label>
 				                            </li>
 			                            </c:if>
 			                            
 			                            <c:if test="${categorie.valeursMultiples}">
-											<li class="checkbox withripple">
+											<li class="checkbox withripple" title="<spring:message code="${filtre.libelle}" />">
 		                                		<label>
-		                                			<input type="checkbox" name="${filtre.id}" id="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="${categorie.id}  ${filtre.caseSelectAll ? 'caseSelectAll' : 'filtreMediacentre caseAutreFiltre'}" >  
-		                        					<spring:message code="${filtre.libelle}" />
+		                                			<input type="checkbox" name="${filtre.id}" id="${filtre.id}" ${filtre.actif ? 'checked' : ''} class="${categorie.id}  ${filtre.caseSelectAll ? 'caseSelectAll' : 'filtreMediacentre caseAutreFiltre'}" >
+													<span><spring:message code="${filtre.libelle}" /></span>
 		                                		</label>
 		                                	</li>
 	                                	</c:if>                      
