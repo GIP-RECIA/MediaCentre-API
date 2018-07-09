@@ -49,13 +49,20 @@
 		        </div>
 		        <div class="modal-body">
 		           	<c:forEach var="gestionAffectation" items="${gestionAffectation}" >
-			            <div class="website">
-			                <a href="<spring:message code="${gestionAffectation.lien}" />" title="<spring:message code="site.affectation.titre" />" target="_blank">
-			                    <div class="website-name"><spring:message code="${gestionAffectation.nom}" /><i class="mdi mdi-24px mdi-launch"></i></div>
-			                </a>
-							<div class="website-description"><spring:message code="${gestionAffectation.description}" /></div>
-			            </div>
-					</c:forEach>
+                        <div class="website">
+                            <c:choose>
+                                <c:when test="${not empty gestionAffectation.lien}">
+                                    <a href="<spring:message code="${gestionAffectation.lien}" />" title="<spring:message code="site.affectation.titre" />" target="_blank">
+                                        <div class="website-name"><spring:message code="${gestionAffectation.nom}" /><i class="mdi mdi-24px mdi-launch"></i></div>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="website-name"><spring:message code="${gestionAffectation.nom}" /></div>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="website-description"><spring:message code="${gestionAffectation.description}" /></div>
+                        </div>
+                    </c:forEach>
 		        </div>
 		        <div class="modal-footer">
 		            <a class="btn btn-primary"><spring:message code="site.affectation.fermer" /></a>
