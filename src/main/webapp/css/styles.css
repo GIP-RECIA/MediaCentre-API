@@ -745,10 +745,10 @@
   -webkit-transition: all 0.35s ease-in-out;
   -o-transition: all 0.35s ease-in-out;
   transition: all 0.35s ease-in-out;
-  -moz-transform: translate(-12px, -12px) rotate(0deg);
-  -ms-transform: translate(-12px, -12px) rotate(0deg);
-  -webkit-transform: translate(-12px, -12px) rotate(0deg);
-  transform: translate(-12px, -12px) rotate(0deg);
+  -moz-transform: translate(-50%, -50%) rotate(0deg);
+  -ms-transform: translate(-50%, -50%) rotate(0deg);
+  -webkit-transform: translate(-50%, -50%) rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 /* line 497, ../sass/styles.scss */
 .mediacentre .btn:not(.btn-raised):not(.btn-link):hover.btn-fab {
@@ -763,10 +763,10 @@
   -webkit-transition: all 0.25s ease-in-out;
   -o-transition: all 0.25s ease-in-out;
   transition: all 0.25s ease-in-out;
-  -moz-transform: translate(-12px, -12px) rotate(180deg);
-  -ms-transform: translate(-12px, -12px) rotate(180deg);
-  -webkit-transform: translate(-12px, -12px) rotate(180deg);
-  transform: translate(-12px, -12px) rotate(180deg);
+  -moz-transform: translate(-50%, -50%) rotate(180deg);
+  -ms-transform: translate(-50%, -50%) rotate(180deg);
+  -webkit-transform: translate(-50%, -50%) rotate(180deg);
+  transform: translate(-50%, -50%) rotate(180deg);
   color: white;
 }
 /* line 519, ../sass/styles.scss */
