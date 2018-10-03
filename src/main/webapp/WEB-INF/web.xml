@@ -45,19 +45,4 @@
     <url-pattern>/WEB-INF/servlet/view</url-pattern>
   </servlet-mapping>
   
-  <!-- A UTILISER EN DEV AVEC PLUTO -->
-  <servlet>
-    <servlet-name>mediacentre</servlet-name>
-    <servlet-class>org.apache.pluto.container.driver.PortletServlet</servlet-class>
-    <init-param>
-      <param-name>portlet-name</param-name>
-      <param-value>mediacentre</param-value>
-    </init-param>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>mediacentre</servlet-name>
-    <url-pattern>/PlutoInvoker/mediacentre</url-pattern>
-  </servlet-mapping>
-  
 </web-app>

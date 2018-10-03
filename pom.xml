@@ -410,14 +410,6 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>dev/*.*</exclude>
-					<exclude>prod/*.*</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/resources/${resources.dir}</directory>
-				<filtering>true</filtering>
 			</resource>
 		</resources>
 
@@ -510,8 +502,6 @@
 							<displayJsWarnings>false</displayJsWarnings>
 							<includes>
 								<include>skin.xml</include>
-								<!-- <include>skin-shared.xml</include> <include>skin-mobile.xml</include> 
-									<include>skin-mobile-shared.xml</include> -->
 							</includes>
 							<sharedJavaScriptDirectory>scripts/</sharedJavaScriptDirectory>
 						</configuration>
@@ -540,29 +530,8 @@
 							<includes>
 								<include>**/portlet.xml</include>
 							</includes>
-							<excludes>
-								<exclude>context-dev/</exclude>
-								<exclude>context-prod/*.*</exclude>
-							</excludes>
-						</resource>
-						<resource>
-							<directory>src/main/webapp/WEB-INF/${context.dir}</directory>
-							<targetPath>WEB-INF/context</targetPath>
-							<includes>
-								<include>*.xml</include>
-							</includes>
-							<filtering>true</filtering>
-						</resource>
-						<resource>
-							<directory>src/main/webapp/WEB-INF/${web.dir}</directory>
-							<targetPath>WEB-INF</targetPath>
-							<filtering>true</filtering>
 						</resource>
 					</webResources>
-					<webXml>src/main/webapp/WEB-INF/${web.dir}/web.xml</webXml>
-					<packagingExcludes>WEB-INF/*-*/</packagingExcludes>
-					
-					
 				</configuration>
 			</plugin>
 			<plugin>
@@ -665,9 +634,6 @@
 			<properties>
 				<logback.loglevel>INFO</logback.loglevel>
 				<portlet.usePortalJsLibs>true</portlet.usePortalJsLibs>
-				<context.dir>context-prod</context.dir>
-				<web.dir>web-prod</web.dir>
-				<resources.dir>prod</resources.dir>
 			</properties>
 		</profile>
 		<profile>
@@ -675,9 +641,6 @@
 			<properties>
 				<logback.loglevel>DEBUG</logback.loglevel>
 				<portlet.usePortalJsLibs>true</portlet.usePortalJsLibs>
-				<context.dir>context-dev</context.dir>
-				<web.dir>web-dev</web.dir>
-				<resources.dir>dev</resources.dir>
 			</properties>
 		</profile>
 		<profile>
@@ -690,8 +653,7 @@
 			</activation>
 			<properties>
 				<logback.loglevel>DEBUG</logback.loglevel>
-				<portlet.usePortalJsLibs>true</portlet.usePortalJsLibs>
-				<context.dir>context-dev</context.dir>
+				<portlet.usePortalJsLibs>false</portlet.usePortalJsLibs>
 			</properties>
 		</profile>
 	</profiles>

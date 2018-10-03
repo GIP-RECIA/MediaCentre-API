@@ -26,9 +26,6 @@
   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
   http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-
-<!-- DEV -->
-
 	<!-- This is the root Spring WebApplicationContext. Place in this context 
 		the service, dao, and utility-level beans the web tier will access. NOTE: 
 		If you have multiple portlets in portlet.xml, you can move beans from the 
@@ -79,29 +76,14 @@
 
 	<context:component-scan base-package="org.esco.portlet.mediacentre.dao" />
 
-
-<!-- 	<bean id="userResource" class="org.esco.portlet.mediacentre.dao.impl.UserResourceImpl"> -->
-		<!--<property name="currentEtabCodeInfoKey" value="${userInfo.key.currentEtabId}" />-->
-<!-- 		<property name="mockedUserResource" ref="userResourceMock"/> -->
-<!-- 	</bean> -->
+	<bean id="userResource" class="org.esco.portlet.mediacentre.dao.impl.UserResourceImpl"/>
+	<!--<bean id="userResource" class="org.esco.portlet.mediacentre.dao.impl.MockUserResourceImpl" />-->
 	<!--<bean id="mediaCentreResource" class="org.esco.portlet.mediacentre.dao.impl.MediaCentreResourceGsonImpl" />-->
 	<bean id="mediaCentreResource" class="org.esco.portlet.mediacentre.dao.impl.MediaCentreResourceJacksonImpl" />
+	<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.PreferenceResourceImpl" />
+	<!--<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.MockPreferenceResourceImpl" />-->
 
-	<bean id="userResource" class="org.esco.portlet.mediacentre.dao.impl.MockUserResourceImpl">
-<!-- 		<property name="uidInfoKey" value="${userInfo.key.uid}"></property> -->
-<!-- 		<property name="etabCodesInfoKey" value="${userInfo.key.etabIds}"></property> -->
-<!-- 		<property name="currentEtabCodeInfoKey" value="${userInfo.key.currentEtabId}"></property> -->
-<!-- 		<property name="profilsInfoKey" value="${userInfo.key.profils}"></property> -->
-<!-- 		<property name="userGroupsInfokey" value="${userInfo.key.groups}"></property> -->
-	</bean>
-<!-- 	<bean id="mediaCentreResourceMock" class="org.esco.portlet.mediacentre.dao.impl.MockHelpInfoResourceImpl" /> -->
-
-	<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.MockPreferenceResourceImpl" />
-<!-- 	<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.PreferenceResourceImpl" /> -->
-
-
-	<bean id="jsonHttpMessageConverter"
-				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 		<property name="supportedMediaTypes">
 			<list>
 				<value>application/json</value>
@@ -114,9 +96,8 @@
 	<!--<bean id="hostnameVerifier" class="org.esco.portlet.mediacentre.dao.util.EscoHostnameVerifier" p:trustedDomains="${hostnames.trusted}" />-->
 
 	<!-- 	based on org.apache.http.impl.client.HttpClients.createSystem -->
-	<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder"
-				factory-method="create">
-		<!--<property name="SSLHostnameVerifier" ref="hostnameVerifier" />-->
+	<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create">
+	<!--<property name="SSLHostnameVerifier" ref="hostnameVerifier" />-->
 	</bean>
 
 	<bean name="httpClient" factory-bean="httpClientBuilder" factory-method="build" />
@@ -135,8 +116,7 @@
 		</property>
 	</bean>
 
-	<bean id="cacheManager"
-				class="org.springframework.cache.ehcache.EhCacheCacheManager">
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
 		<property name="cacheManager" ref="ehcache"/>
 	</bean>
 
