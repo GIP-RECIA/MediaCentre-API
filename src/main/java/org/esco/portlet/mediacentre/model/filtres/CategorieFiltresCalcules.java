@@ -15,7 +15,6 @@
  */
 package org.esco.portlet.mediacentre.model.filtres;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -110,12 +109,10 @@ public abstract class CategorieFiltresCalcules extends CategorieFiltres {
 	}
 
 	/**
-	 * Initialise la liste des filtres de la catégorie 
+	 * Initialise la liste des filtres de la catégorie
 	 * @param userInfoMap Map contenant le profil de l'utilisateur
 	 * @param ressources Liste des ressources.
 	 * @throws Exception Exception
 	 */
-	public void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) throws Exception {
-		setFiltres(new ArrayList<Filtre>());
-	}
+	public abstract void initialiser(Map<String, List<String>> userInfoMap, List<Ressource> ressources) throws Exception;
 }

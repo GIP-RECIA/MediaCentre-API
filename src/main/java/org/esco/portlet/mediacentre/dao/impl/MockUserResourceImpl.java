@@ -25,7 +25,6 @@ import javax.portlet.PortletRequest;
 import javax.validation.constraints.NotNull;
 
 import lombok.NonNull;
-import lombok.Setter;
 import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +100,7 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
         return attributeValues;
     }
     
-    public Map<String, List<String>> getUserInfoMap(@NotNull final PortletRequest request) {
+    public Map<String, List<String>> getUserInfoMap(final PortletRequest request) {
         return userInfoMap;
     }
 
@@ -113,7 +112,7 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
 
         final String[] etabs = System.getProperty("mediacentre.userEtabs", "0450822X,0333333Y,0377777U,0291595B")
                 .split(SPLIT_SEP);
-        final String[] current = System.getProperty("mediacentre.userCurrentEtab", "0450822X,0291595B").split(SPLIT_SEP);
+        final String current = System.getProperty("mediacentre.userCurrentEtab", "0450822X");
 
         final String[] groups = System.getProperty("mediacentre.userMemberOf",
                 "esco:Applications:MediaCentre:GAR:RespAff:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0333333Y"

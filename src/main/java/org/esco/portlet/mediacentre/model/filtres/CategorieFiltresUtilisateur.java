@@ -27,6 +27,7 @@ import org.esco.portlet.mediacentre.model.ressource.Ressource;
  * @author elecaude
  *
  */
+@Deprecated
 public class CategorieFiltresUtilisateur extends CategorieFiltresCalcules {
 
 	/* 

@@ -72,21 +72,28 @@
 				<value>text/plain;charset=UTF-8</value>
 			</list>
 		</property>
-	</bean>	
-	
+	</bean>
+
+	<bean id="resourceGood1" class="org.springframework.core.io.ClassPathResource">
+		<constructor-arg value="json/flux.json"/>
+	</bean>
+	<bean id="resourceGood2" class="org.springframework.core.io.ClassPathResource">
+		<constructor-arg value="json/flux2etab.json"/>
+	</bean>
+
 	<util:list id="categoriesFiltres" value-type="org.esco.portlet.mediacentre.model.filtres.CategorieFiltres">
-		
+
 		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement">
 			<property name="id" value="etablissements"/>
 			<property name="libelle" value="filter.establishments"/>
 			<property name="libelleTous" value="filter.establishments.all"/>
 			<property name="nomAttributFiltre" value="idEtablissement.UAI"/>
 			<property name="attributUtilisateurDefaut" value="ESCOUAICourant"/>
-			<property name="valeursMultiples" value="true"/>
+			<property name="valeursMultiples" value="false"/>
 			<property name="population" value="ENTPersonProfils"/>
-			<property name="regexpPopulation" value="National_ENS"/>
+			<property name="regexpPopulation" value="((National_ENS)|(National_DOC)|(National_EVS))"/>
 		</bean>
-			
+
 		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltres">
 			<property name="id" value="ressources"/>
 			<property name="libelle" value="filter.resources"/>
@@ -107,7 +114,7 @@
 						<property name="actif" value="false"/>
 						<property name="population" value=""/>
 						<property name="regexpPopulation" value=""/>
-					</bean>					
+					</bean>
 				</list>
 			</property>
 		</bean>
@@ -118,15 +125,32 @@
 			<property name="libelleTous" value="filter.level.all"/>
 			<property name="nomAttributFiltre" value="niveauEducatif.nom"/>
 			<property name="valeursMultiples" value="true"/>
-		</bean>	
-		
+			<property name="defaultEmptyValue" value="Indéterminé"/>
+			<property name="population" value="ENTPersonProfils"/>
+			<property name="regexpPopulation" value="((National_ENS)|(National_DOC)|(National_EVS))"/>
+		</bean>
+
+		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresRessource">
+			<property name="id" value="typeMedia"/>
+			<property name="libelle" value="filter.type"/>
+			<property name="libelleTous" value="filter.type.all"/>
+			<property name="nomAttributFiltre" value="typePresentation.nom"/>
+			<property name="valeursMultiples" value="true"/>
+			<property name="defaultEmptyValue" value="Indéterminé"/>
+			<property name="population" value=""/>
+			<property name="regexpPopulation" value=""/>
+		</bean>
+
 		<bean class="org.esco.portlet.mediacentre.model.filtres.CategorieFiltresRessource">
 			<property name="id" value="discipline"/>
 			<property name="libelle" value="filter.subject"/>
 			<property name="libelleTous" value="filter.subject.all"/>
 			<property name="nomAttributFiltre" value="domaineEnseignement.nom"/>
 			<property name="valeursMultiples" value="true"/>
-		</bean>	
+			<property name="defaultEmptyValue" value="Indéterminé"/>
+			<property name="population" value="ENTPersonProfils"/>
+			<property name="regexpPopulation" value="National_ELV"/>
+		</bean>
 
 	</util:list>
 </beans>

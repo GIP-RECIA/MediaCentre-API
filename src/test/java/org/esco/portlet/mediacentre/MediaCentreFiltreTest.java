@@ -15,20 +15,17 @@
  */
 package org.esco.portlet.mediacentre;
 
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import javax.portlet.PortletRequest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
+import lombok.Setter;
 import org.esco.portlet.mediacentre.dao.IUserResource;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresEtablissement;
@@ -36,13 +33,24 @@ import org.esco.portlet.mediacentre.model.filtres.Filtre;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
 import org.esco.portlet.mediacentre.service.IMediaCentreService;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by jgribonvald on 14/09/16.
@@ -54,7 +62,7 @@ public class MediaCentreFiltreTest {
     @SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Resource 
+    @Resource
     List<CategorieFiltres> categoriesFiltres;
     
     @Autowired
@@ -64,199 +72,230 @@ public class MediaCentreFiltreTest {
     private IUserResource userResource;    
     
     @Autowired
-    private IMediaCentreService mediaCentreService;    
-    
+    private IMediaCentreService mediaCentreService;
+
+	@Autowired
+	@Qualifier("resourceGood1")
+	private org.springframework.core.io.Resource resource;
+	@Autowired
+	@Qualifier("resourceGood2")
+	private org.springframework.core.io.Resource resource2Etab;
+
+	@NonNull
+	@Value("${url.ressources.mediacentre}")
+	@Setter
+	private String urlRessources;
+
+	@Autowired
+	private RestTemplate restTemplate;
+
+	private MockRestServiceServer mockServer;
+
+	@Mock
+	PortletRequest request;
+
+	@Before
+	public void init() {
+		MockitoAnnotations.initMocks(this);
+		Assert.assertNotNull(categoriesFiltres);
+		this.mockServer = MockRestServiceServer.createServer(restTemplate);
+
+		Map<String, List<String>> userInfos = userResource.getUserInfoMap(this.request);
+
+		when(request.getAttribute(PortletRequest.USER_INFO)).thenReturn(userInfos);
+	}
+
     @Test
     public void testFiltre() throws Exception {
-    	
+		Assert.assertNotNull(categoriesFiltres);
+		Assert.assertFalse(categoriesFiltres.isEmpty());
     	for (CategorieFiltres categorie : categoriesFiltres) {
-    		System.out.println(categorie);
-    	}
-    	System.out.println("Ok");
+    		log.debug(categorie.toString());
+    		Assert.assertNotNull(categorie);
+    		Assert.assertNotNull(categorie.getId());
+    		Assert.assertNotNull(categorie.getLibelle());
+    	};
     }
-    
-    
-    //@Test
-    public void testFiltrageRessourceGET() throws Exception {
-    	
-		String urlWS = "http://localhost:8090/mediacentre-web/json/mediacentre.json";
-		List<Ressource> ressources = null; 
-				
-		Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(urlWS);
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        
-        if (response != null && Status.Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
-        	ressources = response.readEntity(new GenericType<List<Ressource>>(){});	
 
-        	List<Ressource> ressourcesFiltrees = filtrerRessources(categoriesFiltres, ressources);
-        	System.out.println("Ressources filtrées : " + ressourcesFiltrees.size());
-        	System.out.println(ressourcesFiltrees);
-        	
-        }    	
-    	
-    	System.out.println("Ok");
-    }    
-    
-    
-    public List<Ressource> filtrerRessources(List<CategorieFiltres> categoriesFiltres,  List<Ressource> ressources) throws Exception {
-    	List<Ressource> ressourcesFiltrees = new ArrayList<Ressource>();
-    	
-    	for (Ressource ressource : ressources) {
-    		boolean categoriePassant = true;
-    		
-    		// Verifie si la ressource correspond à toutes les catégories
-	    	for (CategorieFiltres categorie : categoriesFiltres ) {
-	    		
-	    		// Verifie si la ressource correspond à au moins un filtre de la categorie
-	    		boolean filtrePassant = false;
-	    		for (Filtre filtre : categorie.getFiltres()) {
-	    			if (filtre.estPassante(ressource)) {
-	    				filtrePassant = true;
-	    				break;
-	    			}
-	    		}
-	    		categoriePassant = categoriePassant && filtrePassant;
-	    		if (!categoriePassant) {
-	    			break;
-	    		}
-	    	}
-	    	if (categoriePassant) {
-	    		ressourcesFiltrees.add(ressource);
-	    	}
-    	}
-    	
-    	return ressourcesFiltrees;
-    }
-    
-    //@Test
-    public void testFiltrageCategorieFiltresGET() throws Exception {
-    	
-		String urlWS = "http://localhost:8090/mediacentre-web/json/mediacentre.json";
-		List<Ressource> ressources = null; 
-				
-		Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(urlWS);
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        
-        if (response != null && Status.Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
-        	ressources = response.readEntity(new GenericType<List<Ressource>>(){});	
+	@Test
+	public void testFiltrage() throws Exception {
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource, MediaType.APPLICATION_OCTET_STREAM));
 
-        	List<CategorieFiltres> categorieFiltresFiltrees = filtrerCategorieFiltre(categoriesFiltres, ressources);
-        	System.out.println("CategorieFiltres filtrées : " + categorieFiltresFiltrees.size());
-        	System.out.println(categorieFiltresFiltrees);
-        	
-        }    	
-    	
-    	System.out.println("Ok");
-    }    
-    
-    public List<CategorieFiltres> filtrerCategorieFiltre(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception {
-		List<CategorieFiltres> categoriesFiltresFiltrees = new ArrayList<CategorieFiltres>();
-		
-		for(CategorieFiltres categorieFiltres : categoriesFiltres){
-			CategorieFiltres categorie = (CategorieFiltres) categorieFiltres.clone();
-			
-			List<Filtre> listFiltre = new ArrayList<Filtre>();
-			
-			for(Filtre filtre : categorieFiltres.getFiltres()){
-				
-				boolean filtreMatchWithRessource = false;
-				
-				for(Ressource ressource : ressources){
-					
-					if(filtre.estPassante(ressource)){
-						filtreMatchWithRessource = true;
-						break;
-					}
-				}
-				if(filtreMatchWithRessource){
-					//categorieFiltres.getFiltres().remove(filtre);
-					listFiltre.add((Filtre) filtre.clone());
-				}
-			}
-			categorie.setFiltres(listFiltre);
-			
-			if(categorie.getFiltres().size() > 1){
-				categoriesFiltresFiltrees.add(categorie);
-			}
-		}
-		
-		return categoriesFiltresFiltrees;
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertFalse(ressources.isEmpty());
+
+		int nbRessources = ressources.size();
+		log.debug("filtres " + categoriesFiltres.toString());
+		log.debug("nb ressources " + nbRessources);
+
+		List<Ressource> ressourcesFiltrees = filtrerRessources(categoriesFiltres, ressources);
+		log.debug("Ressources filtrées : " + ressourcesFiltrees.size());
+
+		Assert.assertEquals(nbRessources, ressourcesFiltrees.size());
 	}
-    
-    
-    //@Test
+
+    public List<Ressource> filtrerRessources(List<CategorieFiltres> categoriesFiltres,  List<Ressource> ressources) throws Exception {
+    	List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<>();
+    	List<Ressource> ressourcesCandidates = new ArrayList<>();
+    	Map<String, List<String>> userInfos = userResource.getUserInfoMap(this.request);
+
+    	log.debug("userInfos {}", userInfos);
+
+		String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfos, categoriesFiltres, ressources, categoriesFiltresCandidats, ressourcesCandidates);
+
+    	return ressourcesCandidates;
+    }
+
+    @Test
+    public void testFiltrageCategorieFiltresEtabElv() throws Exception {
+
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource, MediaType.APPLICATION_OCTET_STREAM));
+
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertFalse(ressources.isEmpty());
+
+		List<CategorieFiltres> categorieFiltresFiltrees = filtrerCategorieFiltre(categoriesFiltres, ressources);
+		log.debug("CategorieFiltres filtrées : " + categorieFiltresFiltrees.size());
+		log.debug(categorieFiltresFiltrees.toString());
+		for (CategorieFiltres cat: categorieFiltresFiltrees) {
+			log.debug("keep {}", cat.getId());
+		}
+
+		// cat supprimée id=etablissement car un seul étab et id=discipline car pour les élèves
+		Assert.assertEquals(3, categorieFiltresFiltrees.size());
+    }
+
+	@Test
+	public void testFiltrageCategorieFiltresElv() throws Exception {
+
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource2Etab, MediaType.APPLICATION_OCTET_STREAM));
+
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertFalse(ressources.isEmpty());
+
+		List<CategorieFiltres> categorieFiltresFiltrees = filtrerCategorieFiltre(categoriesFiltres, ressources);
+		log.debug("CategorieFiltres filtrées : " + categorieFiltresFiltrees.size());
+		log.debug(categorieFiltresFiltrees.toString());
+		for (CategorieFiltres cat: categorieFiltresFiltrees) {
+			log.debug("keep {}", cat.getId());
+		}
+
+		// cat supprimée id=discipline car pour les élèves
+		Assert.assertEquals(4, categorieFiltresFiltrees.size());
+	}
+
+    public List<CategorieFiltres> filtrerCategorieFiltre(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception {
+		List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<>();
+		List<Ressource> ressourcesCandidates = new ArrayList<>();
+		Map<String, List<String>> userInfos = userResource.getUserInfoMap(this.request);
+
+		log.debug("userInfos {}", userInfos);
+
+		String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfos, categoriesFiltres, ressources, categoriesFiltresCandidats, ressourcesCandidates);
+
+		return categoriesFiltresCandidats;
+	}
+
+
+    @Test
     public void testReflect() throws Exception {
-    	
-		String urlWS = "http://localhost:8090/mediacentre-web/json/mediacentre.json";
-		List<Ressource> ressources = null; 
-				
-		Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(urlWS);
-        Response response = target.request(MediaType.APPLICATION_JSON).get();
-        
-        if (response != null && Status.Family.SUCCESSFUL == response.getStatusInfo().getFamily()) {
-        	ressources = response.readEntity(new GenericType<List<Ressource>>(){});	
-        	
-        	Ressource ressource =  ressources.get(0);
-        	
-        	List<String> valeurs = ressource.getValeursAttribut("domaineEnseignement.nom");
-        	
-        	System.out.println("=> " + valeurs);
-        }    	
-    	
-    	System.out.println("Ok");
-    }     
+
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource, MediaType.APPLICATION_OCTET_STREAM));
+
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertFalse(ressources.isEmpty());
+
+		Ressource ressource =  ressources.get(0);
+
+		List<String> valeurs = ressource.getValeursAttribut("domaineEnseignement.nom");
+
+		log.debug("Valeur de l'attribut domaineEnseignement.nom {}", valeurs);
+
+		Assert.assertTrue(valeurs.size() > 0);
+    }
 
     @Test
     public void testFiltrageRessource() throws Exception {
-    	
-    	List<Ressource> ressources = mediaCentreService.retrieveListRessource(null);
-    	
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource, MediaType.APPLICATION_OCTET_STREAM));
+
+    	List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertFalse(ressources.isEmpty());
+
     	List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<CategorieFiltres>();
     	List<Ressource> ressourcesCandidates = new ArrayList<Ressource>();
-    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
-    	
+    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(this.request);
+
     	String parametrage = filtrageService.preparerFiltrage(userInfoMap, categoriesFiltres, ressources, categoriesFiltresCandidats, ressourcesCandidates);
-        	
-        	
-//        	ObjectMapper mapper = new ObjectMapper();
-//        	String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(categoriesFiltresCandidats);
-        	//System.out.println(json);
-        	
-        	
-        	//---------------------------------
-        	
-//        	System.out.println(ressourcesFiltrees);
-        	
-    	System.out.println("Ok");
-    }     
-    
-    @Test
-    public void testFiltreUser() {
-    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
-    	
-    	
-    	for (Filtre filtre : categoriesFiltres.get(1).getFiltres()) {
-    		System.out.println(filtre.getId() + " : " + filtre.concerneUtilisateur(userInfoMap));
-    	}
-    	
-    	System.out.println("Ok");
+
+
+    	Assert.assertEquals(ressourcesCandidates.size(), ressources.size());
     }
-    
-    
+
+//    @Test
+//    public void testFiltreUser() {
+//		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource, MediaType.APPLICATION_OCTET_STREAM));
+//
+//		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+//		Assert.assertNotNull(ressources);
+//		Assert.assertFalse(ressources.isEmpty());
+//
+//		CategorieFiltresUtilisateur filtreUser = null;
+//		for (CategorieFiltres catFiltre: categoriesFiltres) {
+//			if (catFiltre instanceof CategorieFiltresUtilisateur) {
+//				filtreUser = (CategorieFiltresUtilisateur) catFiltre;
+//			}
+//		}
+//
+//		Assert.assertNotNull(filtreUser);
+//
+//    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(this.request);
+//		filtreUser.initialiser(userInfoMap, ressources );
+//
+//		boolean filtreIsApplied = false;
+//    	for (Filtre filtre : filtreUser.getFiltres()) {
+//    		if (filtre.concerneUtilisateur(userInfoMap)) filtreIsApplied = true;
+//    		log.debug(filtre.getId() + " : " + filtre.concerneUtilisateur(userInfoMap));
+//    	}
+//
+//    	Assert.assertTrue(filtreIsApplied);
+//    }
+
+
     @Test
     public void testFiltreEtab() throws Exception {
-    	Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(null);
-    	
-    	CategorieFiltresEtablissement categorie = (CategorieFiltresEtablissement)categoriesFiltres.get(0);
-    	categorie.initialiser(userInfoMap, null );
-    	
-    	ObjectMapper mapper = new ObjectMapper();
-    	String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(categorie);
-    	System.out.println(json);
-    	System.out.println("Ok");
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource, MediaType.APPLICATION_OCTET_STREAM));
+		
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertFalse(ressources.isEmpty());
+
+    	CategorieFiltresEtablissement filtreEtab = null;
+		for (CategorieFiltres catFiltre: categoriesFiltres) {
+			if (catFiltre instanceof CategorieFiltresEtablissement) {
+				filtreEtab = (CategorieFiltresEtablissement)catFiltre;
+			}
+		}
+
+		Assert.assertNotNull(filtreEtab);
+
+		Map<String, List<String>> userInfoMap = userResource.getUserInfoMap(this.request);
+		filtreEtab.initialiser(userInfoMap, ressources );
+
+		Assert.assertTrue(filtreEtab.getFiltres().size() > 0);
+
+		boolean filtreIsApplied = false;
+		for (Filtre filtre : filtreEtab.getFiltres()) {
+			log.debug("filtre {}", filtre);
+			if (filtre.concerneUtilisateur(userInfoMap)) filtreIsApplied = true;
+			log.debug(filtre.getId() + " : " + filtre.concerneUtilisateur(userInfoMap));
+		}
+
+		Assert.assertTrue(filtreIsApplied);
     }    
 }
 

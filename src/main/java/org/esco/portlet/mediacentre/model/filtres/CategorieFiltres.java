@@ -37,10 +37,12 @@ public class CategorieFiltres implements Cloneable {
 	private String libelle;
 
 	private boolean valeursMultiples;
+
+	private String defaultEmptyValue;
 	
 	private boolean categorieExpended = false;
 
-	private List<Filtre> filtres;
+	private List<Filtre> filtres = new ArrayList<>();
 
 	private String population;
 	
@@ -139,6 +141,22 @@ public class CategorieFiltres implements Cloneable {
 	}
 
 	/**
+	 * Getter de la propriété defaultEmptyValue
+	 * @return defaultEmptyValue defaultEmptyValue
+	 */
+	public String getDefaultEmptyValue() {
+		return defaultEmptyValue;
+	}
+
+	/**
+	 * Setter de la propriété defaultEmptyValue
+	 * @param defaultEmptyValue defaultEmptyValue
+	 */
+	public void setDefaultEmptyValue(String defaultEmptyValue) {
+		this.defaultEmptyValue = defaultEmptyValue;
+	}
+
+	/**
 	 * @return the categorieExpended
 	 */
 	public boolean isCategorieExpended() {
@@ -186,8 +204,8 @@ public class CategorieFiltres implements Cloneable {
 	@Override
 	public String toString() {
 		return "CategorieFiltres [id=" + id + ", libelle=" + libelle + ", valeursMultiples=" + valeursMultiples
-				+ ", categorieExpended=" + categorieExpended + ", filtres=" + filtres + ", population=" + population
-				+ ", regexpPopulation=" + regexpPopulation + "]";
+				+ ", defaultEmptyValue=" + defaultEmptyValue + ", categorieExpended=" + categorieExpended
+				+ ", filtres=" + filtres + ", population=" + population + ", regexpPopulation=" + regexpPopulation + "]";
 	}
 	
 	@Override
@@ -198,6 +216,7 @@ public class CategorieFiltres implements Cloneable {
 			categorieFiltres.setId(this.getId());
 			categorieFiltres.setLibelle(this.getLibelle());
 			categorieFiltres.setValeursMultiples(this.isValeursMultiples());
+			categorieFiltres.setDefaultEmptyValue(this.getDefaultEmptyValue());
 			categorieFiltres.setCategorieExpended(this.isCategorieExpended());
 			categorieFiltres.setPopulation(getPopulation());
 			categorieFiltres.setRegexpPopulation(getRegexpPopulation());
@@ -224,7 +243,10 @@ public class CategorieFiltres implements Cloneable {
      */
     public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
     	String regexp = getRegexpPopulation();
-    	if (userInfoMap == null || StringUtils.isBlank(getPopulation()) || StringUtils.isBlank(regexp)) {
+    	if (userInfoMap == null) {
+    		return false;
+		}
+    	if (StringUtils.isBlank(getPopulation()) || StringUtils.isBlank(regexp)) {
     		return true;
     	}
     	

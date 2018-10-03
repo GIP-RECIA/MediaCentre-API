@@ -71,7 +71,16 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 		}
 		
 		ListeRessource listeRessource = new ListeRessource(ressources); 
-    	List<String> listeValeurs = listeRessource.getValeursAttribut("ressources." + getNomAttributFiltre());
+    	List<String> listeValeurs = new ArrayList<>();
+    	for (Ressource rs: listeRessource.getRessources()) {
+    		final List<String> values = rs.getValeursAttribut(getNomAttributFiltre());
+    		if (!values.isEmpty()) {
+    			listeValeurs.addAll(values);
+			} else {
+				listeValeurs.add(this.getDefaultEmptyValue());
+			}
+		}
+
     	List<Filtre> filtres = new ArrayList<Filtre>();
     	Collections.sort(listeValeurs);
     	
@@ -90,6 +99,7 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 			Filtre filtre = new Filtre();
 			filtre.setId(getId() + "_" + i);
 			filtre.setLibelle(valeur);
+			filtre.setDefaultEmptyValue(this.getDefaultEmptyValue());
     		filtre.setNomAttribut(getNomAttributFiltre());
     		filtre.setRegexpAttribut(Pattern.quote(valeur));
     		filtres.add(filtre);			

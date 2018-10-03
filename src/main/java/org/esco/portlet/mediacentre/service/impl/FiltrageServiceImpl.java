@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules;
@@ -33,8 +34,6 @@ import org.esco.portlet.mediacentre.service.IFiltrageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class FiltrageServiceImpl implements IFiltrageService {
@@ -88,19 +87,22 @@ public class FiltrageServiceImpl implements IFiltrageService {
     	
     	Map<String, Map<String, List<Integer>>> mapCategories = new HashMap<>();
     	if (log.isDebugEnabled()) {
-    		log.debug("Ressources avant filtrage");
+    		log.debug("Ressources avant filtrage nb {}", ressources.size());
     		ObjectMapper mapper = new ObjectMapper();
         	log.debug(mapper.writeValueAsString(ressources));
     	}
     	
     	for (CategorieFiltres categorie : categoriesFiltres ) {
     		if ( !categorie.concerneUtilisateur(userInfoMap)) {
+    			log.debug("La catégorie de filtre {} ne concerne pas l'utilisateur {}", categorie, userInfoMap);
     			continue;
     		}
+			log.debug("Traitement de la catégorie de filtre {}", categorie);
     				
     		if (categorie.estCategorieCalculee()) {
     			categorie = (CategorieFiltres)categorie.clone();
-    			((CategorieFiltresCalcules)categorie).initialiser(userInfoMap, ressources);	
+    			((CategorieFiltresCalcules)categorie).initialiser(userInfoMap, ressources);
+				log.debug("La catégorie de filtre est calculée {}", categorie);
     		} 
     		
     		Map<String, List<Integer>> mapFiltre = new HashMap<String, List<Integer>>();
@@ -110,6 +112,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
     		int nbFiltreSelectAll=0;
     		for (Filtre filtre : categorie.getFiltres()) {
     			if (!filtre.concerneUtilisateur(userInfoMap)) {
+					log.debug("Le filtre {} ne concerne pas l'utilisateur {}", filtre, userInfoMap);
     				continue;
     			}
     			
@@ -119,7 +122,9 @@ public class FiltrageServiceImpl implements IFiltrageService {
         				if (filtre.estPassante(ressource)) {
         					listeRessources.add(ressource.getIdInterne());
         					mapRessourcesCandidates.put(ressource.getIdInterne(), ressource);
-        				}
+        				} else if (log.isDebugEnabled()) {
+        					log.debug("La ressource {} n'est pas passante pour le filtre {}", ressource.getNomRessource(), filtre);
+						}
         			}
     			} else {
     				nbFiltreSelectAll++;
@@ -128,7 +133,6 @@ public class FiltrageServiceImpl implements IFiltrageService {
     			// S'il existe au moins une ressource passante, on conserve le filtre
     			if (!listeRessources.isEmpty() || filtre.isCaseSelectAll() || FiltreFavoris.DEFAULT_ID.equalsIgnoreCase(filtre.getId())) {
     				mapFiltre.put(filtre.getId(), listeRessources);
-    				
     				filtresClone.add((Filtre)filtre.clone());
     			}
     		}
@@ -216,7 +220,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
     	}
     	
     	if (log.isDebugEnabled()) {
-    		log.debug("Ressources filtrées");
+    		log.debug("Ressources filtrées restantes nb {}", ressourcesCandidates.size());
     		ObjectMapper mapper = new ObjectMapper();
         	log.debug(mapper.writeValueAsString(ressourcesCandidates));
     	}    	

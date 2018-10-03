@@ -61,4 +61,7 @@
   <logger name="org.esco.portlet.mediacentre" additivity="false" level="TRACE">
     <appender-ref ref="C"/>
   </logger>
+  <logger name="org.esco.portlet.mediacentre.model.filtres.Filtre" additivity="false" level="INFO">
+    <appender-ref ref="C"/>
+  </logger>
 </configuration>

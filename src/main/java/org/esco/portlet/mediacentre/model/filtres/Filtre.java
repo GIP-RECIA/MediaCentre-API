@@ -37,11 +37,13 @@ public class Filtre implements Cloneable{
 	private String id;
 	
 	private String libelle;
-	
+
+	private String defaultEmptyValue;
+
 	private String nomAttribut;
-	
+
 	private String regexpAttribut;
-	
+
 	private String population;
 	
 	private String regexpPopulation;
@@ -87,6 +89,23 @@ public class Filtre implements Cloneable{
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
+
+	/**
+	 * Getter de la propriété defaultEmptyValue
+	 * @return defaultEmptyValue defaultEmptyValue
+	 */
+	public String getDefaultEmptyValue() {
+		return defaultEmptyValue;
+	}
+
+	/**
+	 * Setter de la propriété defaultEmptyValue
+	 * @param defaultEmptyValue defaultEmptyValue
+	 */
+	public void setDefaultEmptyValue(String defaultEmptyValue) {
+		this.defaultEmptyValue = defaultEmptyValue;
+	}
+
 
 	/**
 	 * Setter de la propriété actif
@@ -214,6 +233,9 @@ public class Filtre implements Cloneable{
     	}
     	
     	List<String> valeurs = ressource.getValeursAttribut(getNomAttribut());
+    	if (valeurs.isEmpty()) {
+    		valeurs.add(this.getDefaultEmptyValue());
+		}
     	
     	for (Object valeur : valeurs) {
     		if (valeur == null) {
@@ -221,10 +243,11 @@ public class Filtre implements Cloneable{
     		}
     		String valeurStr = valeur.toString();
     		if (valeurStr.matches(getRegexpAttribut())) {
+				log.debug("return estPassante {} on filter {}", true, this);
     			return true;
     		}
     	}
-    	
+    	log.debug("return estPassante {} on filter {}", false, this);
     	return false;
     }
 
@@ -234,21 +257,24 @@ public class Filtre implements Cloneable{
      */
     public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
     	String regexp = getRegexpPopulation();
-    	if (userInfoMap == null || StringUtils.isBlank(getPopulation()) || StringUtils.isBlank(regexp)) {
-    		return true;
-    	}
-    	
+		if (userInfoMap == null) {
+			return false;
+		}
+		if (StringUtils.isBlank(getPopulation()) || StringUtils.isBlank(regexp)) {
+			return true;
+		}
+
     	List<String> valeurs = userInfoMap.get(getPopulation());
     	if (valeurs == null) {
     		return false;
     	}
-    	
+
     	for (String valeur : valeurs) {
     		if (valeur.matches(regexp)) {
     			return true;
     		}
     	}
-    	
+
     	return false;
     }    
     
@@ -257,9 +283,9 @@ public class Filtre implements Cloneable{
 	 */
 	@Override
 	public String toString() {
-		return "Filtre [id=" + id + ", libelle=" + libelle + ", nomAttribut=" + nomAttribut + ", regexpAttribut="
-				+ regexpAttribut + ", population=" + population + ", regexpPopulation=" + regexpPopulation + ", actif="
-				+ actif + "]";
+		return "Filtre [id=" + id + ", libelle=" + libelle + ", defaultEmptyValue=" + defaultEmptyValue
+				+ ", nomAttribut=" + nomAttribut + ", regexpAttribut=" + regexpAttribut + ", population="
+				+ population + ", regexpPopulation=" + regexpPopulation + ", actif=" + actif + "]";
 	}
 	
 	/* (non-Javadoc)
@@ -272,6 +298,7 @@ public class Filtre implements Cloneable{
 			filtre = (Filtre) super.clone();
 			filtre.setId(this.getId());
 			filtre.setLibelle(this.getLibelle());
+			filtre.setDefaultEmptyValue(this.getDefaultEmptyValue());
 			filtre.setNomAttribut(this.getNomAttribut());
 			filtre.setRegexpAttribut(this.getRegexpAttribut());
 			filtre.setPopulation(this.getPopulation());
