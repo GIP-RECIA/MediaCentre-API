@@ -17,12 +17,11 @@ package org.esco.portlet.mediacentre.model.filtres;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.lang.StringUtils;
+import org.esco.portlet.mediacentre.model.IFilterUserRight;
 
 /**
  * @author elecaude
@@ -30,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
  */
 @Data
 @NoArgsConstructor
-public class CategorieFiltres implements Cloneable {
+public class CategorieFiltres implements IFilterUserRight, Cloneable {
 
 	@NonNull
 	private String id;
@@ -77,32 +76,4 @@ public class CategorieFiltres implements Cloneable {
 	public boolean estCategorieCalculee() {
 		return false;
 	}
-
-    /**
-     * @param userInfoMap Map contenant le profil de l'utilisateur
-     * @return true si le filtre concerne l'utilisateur, false Sinon
-     */
-    public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
-    	String regexp = getRegexpPopulation();
-    	if (userInfoMap == null) {
-    		return false;
-		}
-    	if (StringUtils.isBlank(getPopulation()) || StringUtils.isBlank(regexp)) {
-    		return true;
-    	}
-    	
-    	List<String> valeurs = userInfoMap.get(getPopulation());
-    	if (valeurs == null) {
-    		return false;
-    	}
-    	
-    	for (String valeur : valeurs) {
-    		if (valeur.matches(regexp)) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
-    }    
-
 }

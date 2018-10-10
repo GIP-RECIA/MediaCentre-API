@@ -15,17 +15,14 @@
  */
 package org.esco.portlet.mediacentre.model.affectation;
 
-import java.util.List;
-import java.util.Map;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.lang.StringUtils;
+import org.esco.portlet.mediacentre.model.IFilterUserRight;
 
 @Data
 @NoArgsConstructor
-public class GestionAffectation {
+public class GestionAffectation implements IFilterUserRight {
 
 	@NonNull
 	private String id;
@@ -39,28 +36,4 @@ public class GestionAffectation {
 	private String population;
 	@NonNull
 	private String regexpPopulation;
-
-	/**
-     * @param userInfoMap Map contenant le profil de l'utilisateur
-     * @return true si le filtre concerne l'utilisateur, false Sinon
-     */
-    public boolean concerneUtilisateur(Map<String, List<String>> userInfoMap) {
-    	String regexp = getRegexpPopulation();
-    	if (userInfoMap == null || StringUtils.isBlank(getPopulation()) || StringUtils.isBlank(regexp)) {
-    		return true;
-    	}
-    	
-    	List<String> valeurs = userInfoMap.get(getPopulation());
-    	if (valeurs == null) {
-    		return false;
-    	}
-    	
-    	for (String valeur : valeurs) {
-    		if (valeur.matches(regexp)) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
-    } 	
 }

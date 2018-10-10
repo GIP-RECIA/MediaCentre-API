@@ -291,8 +291,8 @@ public class MediaCentreFiltreTest {
 		boolean filtreIsApplied = false;
 		for (Filtre filtre : filtreEtab.getFiltres()) {
 			log.debug("filtre {}", filtre);
-			if (filtre.concerneUtilisateur(userInfoMap)) filtreIsApplied = true;
-			log.debug(filtre.getId() + " : " + filtre.concerneUtilisateur(userInfoMap));
+			if (filtrageService.concerneUtilisateur(filtre, userInfoMap)) filtreIsApplied = true;
+			log.debug(filtre.getId() + " : " + filtreIsApplied);
 		}
 
 		Assert.assertTrue(filtreIsApplied);

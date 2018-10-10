@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.esco.portlet.mediacentre.model.IFilterUserRight;
 import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules;
@@ -34,6 +35,7 @@ import org.esco.portlet.mediacentre.service.IFiltrageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class FiltrageServiceImpl implements IFiltrageService {
@@ -64,7 +66,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
     	}
     	
     	for (CategorieFiltres categorie : categoriesFiltres ) {
-    		if ( !categorie.concerneUtilisateur(userInfoMap)) {
+    		if ( !this.concerneUtilisateur(categorie, userInfoMap)) {
     			log.debug("La catégorie de filtre {} ne concerne pas l'utilisateur {}", categorie, userInfoMap);
     			continue;
     		}
@@ -82,7 +84,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
     		// Pour chaque filtre de la catégorie, on vérifie s'il existe des ressources passantes 
     		int nbFiltreSelectAll=0;
     		for (Filtre filtre : categorie.getFiltres()) {
-    			if (!filtre.concerneUtilisateur(userInfoMap)) {
+    			if (!this.concerneUtilisateur(filtre, userInfoMap)) {
 					log.debug("Le filtre {} ne concerne pas l'utilisateur {}", filtre, userInfoMap);
     				continue;
     			}
@@ -90,7 +92,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
     			List<Integer> listeRessources = new ArrayList<Integer>();
     			if (!filtre.isCaseSelectAll()) {
         			for (Ressource ressource : ressources) {
-        				if (filtre.estPassante(ressource)) {
+        				if (this.ressourcePasseFiltre(filtre,ressource)) {
         					listeRessources.add(ressource.getIdInterne());
         					mapRessourcesCandidates.put(ressource.getIdInterne(), ressource);
         				} else if (log.isDebugEnabled()) {
@@ -211,11 +213,72 @@ public class FiltrageServiceImpl implements IFiltrageService {
 	public List<GestionAffectation> filtrerGestionAffectation(List<GestionAffectation> listeGestionAffectation, Map<String, List<String>> userInfo) {
 		List<GestionAffectation> gestionAffectationFiltrees = new ArrayList<GestionAffectation>();
 		for (GestionAffectation gestionAffectation: listeGestionAffectation) {
-			if (gestionAffectation.concerneUtilisateur(userInfo)) {
+			if (this.concerneUtilisateur(gestionAffectation, userInfo)) {
 				gestionAffectationFiltrees.add(gestionAffectation);
 			}
 		}
 		return gestionAffectationFiltrees;
+	}
+
+	/**
+	 * Teste si l'objet concerne l'utilisateur
+	 * @param filter Filtre à tester
+	 * @param userInfoMap Map contenant le profil de l'utilisateur
+	 * @return true si le filtre concerne l'utilisateur, false Sinon
+	 */
+	public boolean concerneUtilisateur(final IFilterUserRight filter, final Map<String, List<String>> userInfoMap) {
+		String regexp = filter.getRegexpPopulation();
+		if (userInfoMap == null) {
+			return false;
+		}
+		if (StringUtils.isEmpty(filter.getPopulation()) || StringUtils.isEmpty(regexp)) {
+			return true;
+		}
+
+		List<String> valeurs = userInfoMap.get(filter.getPopulation());
+		if (valeurs == null) {
+			return false;
+		}
+
+		for (String valeur : valeurs) {
+			if (valeur.matches(regexp)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Teste si la ressource passe le filtre.
+	 * @param filtre Filtre utilisé pour la vérification.
+	 * @param ressource ressource à tester.
+	 * @return true si la ressource est passante pour le filtre, false sinon
+	 * @throws Exception Exception
+	 */
+	private boolean ressourcePasseFiltre(final Filtre filtre, final Ressource ressource) throws Exception {
+		if (StringUtils.isEmpty(filtre.getRegexpAttribut())) {
+			log.warn("L'expression regulière du filtre \"" + filtre.getId() + "\" n'est pas renseignée pour l'attribut");
+			return false;
+		}
+
+		List<String> valeurs = ressource.getValeursAttribut(filtre.getNomAttribut());
+		if (valeurs.isEmpty()) {
+			valeurs.add(filtre.getDefaultEmptyValue());
+		}
+
+		for (Object valeur : valeurs) {
+			if (valeur == null) {
+				continue;
+			}
+			String valeurStr = valeur.toString();
+			if (valeurStr.matches(filtre.getRegexpAttribut())) {
+				log.debug("return estPassante {} on filter {}", true, this);
+				return true;
+			}
+		}
+		log.debug("return estPassante {} on filter {}", false, this);
+		return false;
 	}
 }
 
