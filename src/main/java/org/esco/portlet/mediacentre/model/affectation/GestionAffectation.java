@@ -18,162 +18,27 @@ package org.esco.portlet.mediacentre.model.affectation;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Data
+@NoArgsConstructor
 public class GestionAffectation {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
+	@NonNull
 	private String id;
-	
+	@NonNull
 	private String nom;
-	
+	@NonNull
 	private String description;
-	
+	@NonNull
 	private String lien;
-	
+	@NonNull
 	private String population;
-	
+	@NonNull
 	private String regexpPopulation;
-	
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
-	public GestionAffectation() {
-
-	}
-	
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
-    /**
-	 * Getter de la propriété id
-	 * @return la propriété id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Setter de la propriété id
-	 * @param id identifiant.
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * Getter de la propriété nom
-	 * @return la propriété nom
-	 */
-	public String getNom() {
-		return nom;
-	}
-
-	/**
-	 * Setter de la propriété nom
-	 * @param nom nom.
-	 */
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	/**
-	 * Getter de la propriété description
-	 * @return la propriété description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Setter de la propriété description
-	 * @param description description.
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Getter de la propriété lien
-	 * @return la propriété lien
-	 */
-	public String getLien() {
-		return lien;
-	}
-
-	/**
-	 * Setter de la propriété lien
-	 * @param lien lien.
-	 */
-	public void setLien(String lien) {
-		this.lien = lien;
-	}
-
-	/**
-	 * Getter de la propriété population
-	 * @return la propriété population
-	 */
-	public String getPopulation() {
-		return population;
-	}
-
-	/**
-	 * Setter de la propriété population
-	 * @param population population.
-	 */
-	public void setPopulation(String population) {
-		this.population = population;
-	}
-
-	/**
-	 * Getter de la propriété regexpPopulation
-	 * @return la propriété regexpPopulation
-	 */
-	public String getRegexpPopulation() {
-		return regexpPopulation;
-	}
-
-	/**
-	 * Setter de la propriété regexpPopulation
-	 * @param regexpPopulation regexpPopulation
-	 */
-	public void setRegexpPopulation(String regexpPopulation) {
-		this.regexpPopulation = regexpPopulation;
-	}
-
-
-	/* 
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
- 
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "GestionAffectation [log=" + log + ", id=" + id + ", nom=" + nom + ", description=" + description
-				+ ", lien=" + lien + ", population=" + population + ", regexpPopulation=" + regexpPopulation + "]";
-	}
 
 	/**
      * @param userInfoMap Map contenant le profil de l'utilisateur

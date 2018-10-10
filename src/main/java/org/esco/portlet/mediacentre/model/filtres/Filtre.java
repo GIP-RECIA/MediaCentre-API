@@ -18,6 +18,9 @@ package org.esco.portlet.mediacentre.model.filtres;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.apache.commons.lang.StringUtils;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.slf4j.Logger;
@@ -27,25 +30,23 @@ import org.slf4j.LoggerFactory;
  * @author elecaude
  *
  */
+@Data
+@NoArgsConstructor
 public class Filtre implements Cloneable{
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
 
+	@NonNull
 	private String id;
-	
+	@NonNull
 	private String libelle;
-
+	@NonNull
 	private String defaultEmptyValue;
-
+	@NonNull
 	private String nomAttribut;
-
+	@NonNull
 	private String regexpAttribut;
-
+	@NonNull
 	private String population;
-	
+	@NonNull
 	private String regexpPopulation;
 	
 	private boolean actif = true;
@@ -53,174 +54,7 @@ public class Filtre implements Cloneable{
 	private boolean caseSelectAll = false;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
 
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
-
-	/**
-	 * Getter de la propriété actif
-	 * @return la propriété actif
-	 */
-	public boolean isActif() {
-		return actif;
-	}
-
-	/**
-	 * Getter de la propriété libelle
-	 * @return la propriété libelle
-	 */
-	public String getLibelle() {
-		return libelle;
-	}
-
-	/**
-	 * Setter de la propriété libelle
-	 * @param libelle libellé
-	 */
-	public void setLibelle(String libelle) {
-		this.libelle = libelle;
-	}
-
-	/**
-	 * Getter de la propriété defaultEmptyValue
-	 * @return defaultEmptyValue defaultEmptyValue
-	 */
-	public String getDefaultEmptyValue() {
-		return defaultEmptyValue;
-	}
-
-	/**
-	 * Setter de la propriété defaultEmptyValue
-	 * @param defaultEmptyValue defaultEmptyValue
-	 */
-	public void setDefaultEmptyValue(String defaultEmptyValue) {
-		this.defaultEmptyValue = defaultEmptyValue;
-	}
-
-
-	/**
-	 * Setter de la propriété actif
-	 * @param actif actif
-	 */
-	public void setActif(boolean actif) {
-		this.actif = actif;
-	}
-
-	/**
-	 * @return the caseSelectAll
-	 */
-	public boolean isCaseSelectAll() {
-		return caseSelectAll;
-	}
-
-	/**
-	 * @param caseSelectAll the caseSelectAll to set
-	 */
-	public void setCaseSelectAll(boolean caseSelectAll) {
-		this.caseSelectAll = caseSelectAll;
-	}
-
-	/**
-	 * Getter de la propriété id
-	 * @return la propriété id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Setter de la propriété id
-	 * @param id identifiant
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * Getter de la propriété nomAttribut
-	 * @return la propriété nomAttribut
-	 */
-	public String getNomAttribut() {
-		return nomAttribut;
-	}
-
-	/**
-	 * Setter de la propriété nomAttribut
-	 * @param nomAttribut nom Attribut
-	 */
-	public void setNomAttribut(String nomAttribut) {
-		this.nomAttribut = nomAttribut;
-	}
-
-	/**
-	 * Getter de la propriété regexpAttribut
-	 * @return la propriété regexpAttribut
-	 */
-	public String getRegexpAttribut() {
-		return regexpAttribut;
-	}
-
-	/**
-	 * Setter de la propriété regexpAttribut
-	 * @param regexpAttribut regexp Attribut
-	 */
-	public void setRegexpAttribut(String regexpAttribut) {
-		this.regexpAttribut = regexpAttribut;
-	}
-
-	/**
-	 * Getter de la propriété population
-	 * @return la propriété population
-	 */
-	public String getPopulation() {
-		return population;
-	}
-
-	/**
-	 * Setter de la propriété population
-	 * @param population population
-	 */
-	public void setPopulation(String population) {
-		this.population = population;
-	}
-
-	/**
-	 * Getter de la propriété regexpPopulation
-	 * @return la propriété regexpPopulation
-	 */
-	public String getRegexpPopulation() {
-		return regexpPopulation;
-	}
-
-	/**
-	 * Setter de la propriété regexpPopulation
-	 * @param regexpPopulation regexp Population
-	 */
-	public void setRegexpPopulation(String regexpPopulation) {
-		this.regexpPopulation = regexpPopulation;
-	}
-
-
-	/* 
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */
     /** 
      * @param ressource ressource
      * @return true si la ressource est passante pour le filtre, false sinon
@@ -276,17 +110,7 @@ public class Filtre implements Cloneable{
     	}
 
     	return false;
-    }    
-    
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Filtre [id=" + id + ", libelle=" + libelle + ", defaultEmptyValue=" + defaultEmptyValue
-				+ ", nomAttribut=" + nomAttribut + ", regexpAttribut=" + regexpAttribut + ", population="
-				+ population + ", regexpPopulation=" + regexpPopulation + ", actif=" + actif + "]";
-	}
+    }
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()

@@ -38,37 +38,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class FiltrageServiceImpl implements IFiltrageService {
 
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
 
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */	
-	
 	/* (non-Javadoc)
 	 * @see org.esco.portlet.mediacentre.service.IFiltrageService#preparerFiltrage(java.util.Map, java.util.List, java.util.List, java.util.List, java.util.List)
 	 */
@@ -100,7 +71,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
 			log.debug("Traitement de la catégorie de filtre {}", categorie);
     				
     		if (categorie.estCategorieCalculee()) {
-    			categorie = (CategorieFiltres)categorie.clone();
+    			categorie = (CategorieFiltresCalcules)categorie.clone();
     			((CategorieFiltresCalcules)categorie).initialiser(userInfoMap, ressources);
 				log.debug("La catégorie de filtre est calculée {}", categorie);
     		} 

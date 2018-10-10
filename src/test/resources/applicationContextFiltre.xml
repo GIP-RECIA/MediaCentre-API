@@ -90,6 +90,7 @@
 			<property name="nomAttributFiltre" value="idEtablissement.UAI"/>
 			<property name="attributUtilisateurDefaut" value="ESCOUAICourant"/>
 			<property name="valeursMultiples" value="false"/>
+			<property name="defaultEmptyValue" value="Indéterminé"/>
 			<property name="population" value="ENTPersonProfils"/>
 			<property name="regexpPopulation" value="((National_ENS)|(National_DOC)|(National_EVS))"/>
 		</bean>
@@ -98,12 +99,16 @@
 			<property name="id" value="ressources"/>
 			<property name="libelle" value="filter.resources"/>
 			<property name="valeursMultiples" value="false"/>
+			<property name="defaultEmptyValue" value="Indéterminé"/>
+			<property name="population" value=""/>
+			<property name="regexpPopulation" value=""/>
 			<property name="filtres">
 				<list>
 					<bean class="org.esco.portlet.mediacentre.model.filtres.Filtre">
 						<property name="id" value="filter.resources"/>
 						<property name="libelle" value="filter.resources.all"/>
 						<property name="actif" value="true"/>
+						<property name="defaultEmptyValue" value="Indéterminé"/>
 						<property name="nomAttribut" value="idRessource"/>
 						<property name="regexpAttribut" value=".*"/>
 						<property name="population" value=""/>
@@ -112,6 +117,7 @@
 					<bean class="org.esco.portlet.mediacentre.model.filtres.FiltreFavoris">
 						<property name="libelle" value="filter.resources.favoris"/>
 						<property name="actif" value="false"/>
+						<property name="defaultEmptyValue" value="Indéterminé"/>
 						<property name="population" value=""/>
 						<property name="regexpPopulation" value=""/>
 					</bean>

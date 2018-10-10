@@ -18,76 +18,27 @@ package org.esco.portlet.mediacentre.model.filtres;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.ToString;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 
 /**
  * @author elecaude
  *
  */
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public abstract class CategorieFiltresCalcules extends CategorieFiltres {
 
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
+	@NonNull
 	private String libelleTous;
+	@NonNull
 	private String nomAttributFiltre;
-	
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
-	/**
-	 * Getter de la propriété libelleTous
-	 * @return la propriété libelleTous
-	 */
-	public String getLibelleTous() {
-		return libelleTous;
-	}
-
-	/**
-	 * Setter de la propriété libelleTous
-	 * @param libelleTous libelleTous
-	 */
-	public void setLibelleTous(String libelleTous) {
-		this.libelleTous = libelleTous;
-	}
-
-	/**
-	 * Getter de la propriété nomAttributFiltre
-	 * @return la propriété nomAttributFiltre
-	 */
-	public String getNomAttributFiltre() {
-		return nomAttributFiltre;
-	}
-
-	/**
-	 * Setter de la propriété nomAttributFiltre
-	 * @param nomAttributFiltre nomAttributFiltre
-	 */
-	public void setNomAttributFiltre(String nomAttributFiltre) {
-		this.nomAttributFiltre = nomAttributFiltre;
-	}
-
-	/* 
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */
 
 	/* (non-Javadoc)
 	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltres#estCategorieCalculee()

@@ -15,27 +15,21 @@
  */
 package org.esco.portlet.mediacentre.model.filtres;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 /**
  * @author elecaude
  *
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class FiltreFavoris extends Filtre {
 
 	public static final String DEFAULT_ID = "favoris";
 	public static final String DEFAULT_NOM_ATTR = "favorite";
 	public static final String DEFAULT_REGEX_ATTR = "true";
-
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
+	
 
 	public FiltreFavoris() {
 		super.setId(DEFAULT_ID);
@@ -43,24 +37,7 @@ public class FiltreFavoris extends Filtre {
 		super.setRegexpAttribut(DEFAULT_REGEX_ATTR);
 		super.setCaseSelectAll(false);
 	}
-	
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
 
-	/* 
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */
 
 	/* (non-Javadoc)
 	 * @see org.esco.portlet.mediacentre.model.filtres.Filtre#setCaseSelectAll(boolean)
@@ -102,6 +79,7 @@ public class FiltreFavoris extends Filtre {
 	public Object clone(){
 		Filtre filtre = new FiltreFavoris();
 		filtre.setLibelle(this.getLibelle());
+		filtre.setDefaultEmptyValue(this.getDefaultEmptyValue());
 		filtre.setPopulation(this.getPopulation());
 		filtre.setRegexpPopulation(this.getRegexpPopulation());
 		filtre.setActif(this.isActif());

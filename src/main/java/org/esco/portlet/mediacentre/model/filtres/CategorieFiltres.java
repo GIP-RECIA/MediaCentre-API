@@ -19,25 +19,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.apache.commons.lang.StringUtils;
 
 /**
  * @author elecaude
  *
  */
+@Data
+@NoArgsConstructor
 public class CategorieFiltres implements Cloneable {
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
 
+	@NonNull
 	private String id;
-	
+	@NonNull
 	private String libelle;
 
 	private boolean valeursMultiples;
-
+	@NonNull
 	private String defaultEmptyValue;
 	
 	private boolean categorieExpended = false;
@@ -46,167 +47,7 @@ public class CategorieFiltres implements Cloneable {
 
 	private String population;
 	
-	private String regexpPopulation;	
-	
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
-	
-	/**
-	 * Getter de la propriété valeursMultiples
-	 * @return la propriété valeursMultiples
-	 */
-	public boolean isValeursMultiples() {
-		return valeursMultiples;
-	}
-
-	/**
-	 * Getter de la propriété id
-	 * @return la propriété id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Setter de la propriété id
-	 * @param id identifiant
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * Getter de la propriété population
-	 * @return la propriété population
-	 */
-	public String getPopulation() {
-		return population;
-	}
-
-	/**
-	 * Setter de la propriété population
-	 * @param population population
-	 */
-	public void setPopulation(String population) {
-		this.population = population;
-	}
-
-	/**
-	 * Getter de la propriété regexpPopulation
-	 * @return la propriété regexpPopulation
-	 */
-	public String getRegexpPopulation() {
-		return regexpPopulation;
-	}
-
-	/**
-	 * Setter de la propriété regexpPopulation
-	 * @param regexpPopulation regexpPopulation
-	 */
-	public void setRegexpPopulation(String regexpPopulation) {
-		this.regexpPopulation = regexpPopulation;
-	}
-
-	/**
-	 * Getter de la propriété libelle
-	 * @return la propriété libelle
-	 */
-	public String getLibelle() {
-		return libelle;
-	}
-
-	/**
-	 * Setter de la propriété libelle
-	 * @param libelle libelle
-	 */
-	public void setLibelle(String libelle) {
-		this.libelle = libelle;
-	}
-
-	/**
-	 * Setter de la propriété valeursMultiples
-	 * @param valeursMultiples valeursMultiples
-	 */
-	public void setValeursMultiples(boolean valeursMultiples) {
-		this.valeursMultiples = valeursMultiples;
-	}
-
-	/**
-	 * Getter de la propriété defaultEmptyValue
-	 * @return defaultEmptyValue defaultEmptyValue
-	 */
-	public String getDefaultEmptyValue() {
-		return defaultEmptyValue;
-	}
-
-	/**
-	 * Setter de la propriété defaultEmptyValue
-	 * @param defaultEmptyValue defaultEmptyValue
-	 */
-	public void setDefaultEmptyValue(String defaultEmptyValue) {
-		this.defaultEmptyValue = defaultEmptyValue;
-	}
-
-	/**
-	 * @return the categorieExpended
-	 */
-	public boolean isCategorieExpended() {
-		return categorieExpended;
-	}
-
-	/**
-	 * @param categorieExpended the categorieExpended to set
-	 */
-	public void setCategorieExpended(boolean categorieExpended) {
-		this.categorieExpended = categorieExpended;
-	}
-
-	/**
-	 * Getter de la propriété filtres
-	 * @return la propriété filtres
-	 */
-	public List<Filtre> getFiltres() {
-		return filtres;
-	}
-	
-	/**
-	 * Setter de la propriété filtres
-	 * @param filtres filtres
-	 */
-	public void setFiltres(List<Filtre> filtres) {
-		this.filtres = filtres;
-	}
-	
-	/* 
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-	
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "CategorieFiltres [id=" + id + ", libelle=" + libelle + ", valeursMultiples=" + valeursMultiples
-				+ ", defaultEmptyValue=" + defaultEmptyValue + ", categorieExpended=" + categorieExpended
-				+ ", filtres=" + filtres + ", population=" + population + ", regexpPopulation=" + regexpPopulation + "]";
-	}
+	private String regexpPopulation;
 	
 	@Override
 	public Object clone(){

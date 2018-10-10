@@ -23,6 +23,11 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 import org.esco.portlet.mediacentre.model.ressource.IdEtablissement;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
@@ -31,46 +36,16 @@ import org.esco.portlet.mediacentre.model.ressource.Ressource;
  * @author elecaude
  *
  */
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
 	@NotNull
+	@NonNull
 	private String attributUtilisateurDefaut;
-    
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
 
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
-
-	public String getAttributUtilisateurDefaut() {
-		return attributUtilisateurDefaut;
-	}
-
-	public void setAttributUtilisateurDefaut(final String attributUtilisateurDefaut) {
-		this.attributUtilisateurDefaut = attributUtilisateurDefaut;
-	}
-	/*
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */
 
 	/* (non-Javadoc)
 	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules#initialiser(java.util.Map, java.util.List)
@@ -101,8 +76,12 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 			Filtre filtre = new Filtre();
     		filtre.setId(getId());
     		filtre.setLibelle(getLibelleTous());
+    		filtre.setDefaultEmptyValue(getDefaultEmptyValue());
+			filtre.setNomAttribut(getNomAttributFiltre());
     		filtre.setActif(false);
     		filtre.setCaseSelectAll(true);
+			filtre.setPopulation(getPopulation());
+			filtre.setRegexpPopulation(this.getRegexpPopulation());
     		filtres.add(filtre);
 		}
 		
@@ -111,7 +90,10 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 			filtre.setActif(false);
 			filtre.setId(etablissement.getUAI());
 			filtre.setLibelle(etablissement.getNom());
+			filtre.setDefaultEmptyValue(getDefaultEmptyValue());
 			filtre.setNomAttribut(getNomAttributFiltre());
+			filtre.setPopulation(getPopulation());
+			filtre.setRegexpPopulation(this.getRegexpPopulation());
 			filtre.setRegexpAttribut(etablissement.getUAI());
 			if (etablissement.getUAI().equalsIgnoreCase(etablissementCourant)) {
 				filtre.setActif(true);

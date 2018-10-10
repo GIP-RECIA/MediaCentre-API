@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 import org.esco.portlet.mediacentre.model.ressource.ListeRessource;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
@@ -29,37 +33,11 @@ import org.esco.portlet.mediacentre.model.ressource.Ressource;
  * @author elecaude
  *
  */
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class CategorieFiltresRessource extends CategorieFiltresCalcules {
-
-	/* 
-	 * ===============================================
-	 * Propriétés de la classe 
-	 * =============================================== 
-	 */
-	
-	/* 
-	 * ===============================================
-	 * Constructeurs de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Getter / Setter de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes privées de la classe 
-	 * =============================================== 
-	 */
-
-	/* 
-	 * ===============================================
-	 * Méthodes publiques de la classe 
-	 * =============================================== 
-	 */
 
 	/* (non-Javadoc)
 	 * @see org.esco.portlet.mediacentre.model.filtres.CategorieFiltresCalcules#initialiser(java.util.List, java.util.List)
@@ -71,12 +49,12 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 		}
 		
 		ListeRessource listeRessource = new ListeRessource(ressources); 
-    	List<String> listeValeurs = new ArrayList<>();
+    	List<String> listeValeurs = new ArrayList<String>();
     	for (Ressource rs: listeRessource.getRessources()) {
     		final List<String> values = rs.getValeursAttribut(getNomAttributFiltre());
     		if (!values.isEmpty()) {
     			listeValeurs.addAll(values);
-			} else {
+			} else if (this.getDefaultEmptyValue() != null){
 				listeValeurs.add(this.getDefaultEmptyValue());
 			}
 		}
@@ -87,8 +65,12 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 		if (StringUtils.isNotBlank(getLibelleTous())) {
 			Filtre filtre = new Filtre();
 			filtre.setId(getId());
-			filtre.setLibelle(getLibelleTous());			
+			filtre.setLibelle(getLibelleTous());
+			filtre.setDefaultEmptyValue(this.getDefaultEmptyValue());
+			filtre.setNomAttribut(getNomAttributFiltre());
 			filtre.setCaseSelectAll(true);
+			filtre.setPopulation(getPopulation());
+			filtre.setRegexpPopulation(this.getRegexpPopulation());
 			filtre.setRegexpAttribut(".*");
 			filtres.add(filtre);
 		}
@@ -101,6 +83,8 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 			filtre.setLibelle(valeur);
 			filtre.setDefaultEmptyValue(this.getDefaultEmptyValue());
     		filtre.setNomAttribut(getNomAttributFiltre());
+			filtre.setPopulation(getPopulation());
+			filtre.setRegexpPopulation(this.getRegexpPopulation());
     		filtre.setRegexpAttribut(Pattern.quote(valeur));
     		filtres.add(filtre);			
 		}
