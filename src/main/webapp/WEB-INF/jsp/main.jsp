@@ -89,6 +89,7 @@
 	<div class="container-fluid">
 	    <!-- copy from here -->
 	    <div class="row">
+			<c:if test="${not empty categoriesFiltres}">
 	        <div class="col-xs-12 col-md-3 col-lg-2 filters">
 	            <div class="filters-group">
 	                <div class="filters-heading">
@@ -132,9 +133,13 @@
 	                </div>
 	            </div>
 	        </div>
-	
- 	        <div class="col-xs-12 col-md-9 col-lg-10 grid">
-	            
+			</c:if>
+			<c:if test="${not empty categoriesFiltres}">
+ 	          <div class="col-xs-12 col-md-9 col-lg-10 grid">
+	        </c:if>
+			<c:if test="${empty categoriesFiltres}">
+ 	          <div class="col-xs-12 col-md-12 col-lg-12 grid">
+	        </c:if>	
 	            <div class="container-fluid">
 	            	
             		<div id="msgAucuneRessource" style="display:none;"><spring:message code="${empty ressources ? 'resource.error.empty' : 'resource.error.filter'}" /></div>
@@ -183,6 +188,12 @@
 	            	</c:forEach>
 	            </div>
 	        </div>
+			<c:if test="${not empty gestionAffectation}">
+				<div class="footer">
+					<p class="help"><a href="<spring:message code="help.url" />" target="_blank"><span><spring:message code="help.title" /></span></a></p>
+				</div>
+			</c:if>
+
 	    </div> <!-- /row -->
 	</div> <!-- /container -->
 

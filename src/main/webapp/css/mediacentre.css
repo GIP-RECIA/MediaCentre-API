@@ -24,3 +24,7 @@
 .mediacentre .actionCache {
 	display: none;
 }
+
+.mediacentre > .container-fluid > .row > .footer {
+	text-align: center;
+}
