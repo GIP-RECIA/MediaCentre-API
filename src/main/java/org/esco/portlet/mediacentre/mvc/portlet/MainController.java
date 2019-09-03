@@ -95,6 +95,12 @@ public class MainController {
     @RenderMapping
     public ModelAndView showMainView(final RenderRequest request, final RenderResponse response) throws Exception {
         ModelAndView mav = new ModelAndView("main");
+
+        // case to request to redirect to a ressource directly
+        final String redirectParam = request.getParameter("redirect");
+        if (redirectParam != null) {
+            mav = new ModelAndView("redirect");
+        }
         
         if(log.isDebugEnabled()) {
             log.debug("Using view name " + mav.getViewName() + " for main view");
@@ -103,18 +109,34 @@ public class MainController {
         Map<String, List<String>> userInfo = mediaCentreService.getUserInfos(request);
         List<Ressource> listeRessources = mediaCentreService.retrieveListRessource(request);
 
-        List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<CategorieFiltres>();
-    	List<Ressource> ressourcesCandidates = new ArrayList<Ressource>();
-    	
-    	String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfo, categoriesFiltres, listeRessources, categoriesFiltresCandidats, ressourcesCandidates);
-    	
-        mav.addObject("ressourcesParFiltre", ressourcesParFiltre);
-        mav.addObject("ressources", ressourcesCandidates);
-        mav.addObject("categoriesFiltres", categoriesFiltresCandidats);
-        mav.addObject("gestionAffectation", filtrageService.filtrerGestionAffectation(gestionAffectation, userInfo));
+        if (redirectParam != null) {
+            String redirectUrl = null;
+            for (Ressource rs : listeRessources) {
+                if (rs.getNomRessource().equalsIgnoreCase(redirectParam)) {
+                    redirectUrl = rs.getUrlAccesRessource();
+                    break;
+                }
+            }
+            mav.addObject("redirectTo", redirectUrl);
+            if(log.isDebugEnabled()) {
+                log.debug("Entering on case redirecting to resource url " + redirectUrl);
+            }
+
+        } else {
+
+            List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<CategorieFiltres>();
+            List<Ressource> ressourcesCandidates = new ArrayList<Ressource>();
+
+            String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfo, categoriesFiltres, listeRessources, categoriesFiltresCandidats, ressourcesCandidates);
+
+            mav.addObject("ressourcesParFiltre", ressourcesParFiltre);
+            mav.addObject("ressources", ressourcesCandidates);
+            mav.addObject("categoriesFiltres", categoriesFiltresCandidats);
+            mav.addObject("gestionAffectation", filtrageService.filtrerGestionAffectation(gestionAffectation, userInfo));
+        }
         
         if(log.isDebugEnabled()) {
-            log.debug("Rendering main view");
+            log.debug("Rendering " + mav.getViewName() + " view");
         }
 
         response.getCacheControl().setExpirationTime(0);
