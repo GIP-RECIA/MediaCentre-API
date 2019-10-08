@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import org.esco.portlet.mediacentre.model.IFilterUserRight;
 import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
@@ -262,7 +263,8 @@ public class FiltrageServiceImpl implements IFiltrageService {
 			return false;
 		}
 
-		List<String> valeurs = ressource.getValeursAttribut(filtre.getNomAttribut());
+		Set<String> valeurs = Sets.newHashSet();
+		valeurs.addAll(ressource.getValeursAttribut(filtre.getNomAttribut()));
 		if (valeurs.isEmpty()) {
 			valeurs.add(filtre.getDefaultEmptyValue());
 		}

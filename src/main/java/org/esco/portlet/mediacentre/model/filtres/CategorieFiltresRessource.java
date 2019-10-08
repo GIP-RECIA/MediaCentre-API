@@ -17,8 +17,10 @@ package org.esco.portlet.mediacentre.model.filtres;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import lombok.Data;
@@ -49,7 +51,7 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 		}
 		
 		ListeRessource listeRessource = new ListeRessource(ressources); 
-    	List<String> listeValeurs = new ArrayList<String>();
+    	Set<String> listeValeurs = new HashSet<String>();
     	for (Ressource rs: listeRessource.getRessources()) {
     		final List<String> values = rs.getValeursAttribut(getNomAttributFiltre());
     		if (!values.isEmpty()) {
@@ -60,7 +62,6 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 		}
 
     	List<Filtre> filtres = new ArrayList<Filtre>();
-    	Collections.sort(listeValeurs);
     	
 		if (StringUtils.isNotBlank(getLibelleTous())) {
 			Filtre filtre = new Filtre();
@@ -74,10 +75,9 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 			filtre.setRegexpAttribut(".*");
 			filtres.add(filtre);
 		}
-		
-		for (int i=0 ; i<listeValeurs.size() ; i++) {
-			String valeur = listeValeurs.get(i);
-			
+
+		int i = 0;
+		for (String valeur: listeValeurs) {
 			Filtre filtre = new Filtre();
 			filtre.setId(getId() + "_" + i);
 			filtre.setLibelle(valeur);
@@ -86,7 +86,8 @@ public class CategorieFiltresRessource extends CategorieFiltresCalcules {
 			filtre.setPopulation(getPopulation());
 			filtre.setRegexpPopulation(this.getRegexpPopulation());
     		filtre.setRegexpAttribut(Pattern.quote(valeur));
-    		filtres.add(filtre);			
+    		filtres.add(filtre);
+    		i++;
 		}
 				
 		setFiltres(filtres);
