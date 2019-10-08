@@ -14,6 +14,7 @@
         "idEditeur": "editeurId1",
         "idEtablissement": [
             {
+                "id": "0111111111111",
                 "UAI": "0450822X"
             }
         ],
@@ -82,9 +83,11 @@
         "idEditeur": "editeurId2",
         "idEtablissement": [
             {
+                "id": "0111111111111",
                 "UAI": "0450822X"
             },
             {
+                "id": "0111111111122",
                 "UAI": "0377777U"
             }
         ],
@@ -157,6 +160,7 @@
         "idEditeur": "editeurId2",
         "idEtablissement": [
             {
+                "id": "0111111111122",
                 "UAI": "0377777U"
             }
         ],

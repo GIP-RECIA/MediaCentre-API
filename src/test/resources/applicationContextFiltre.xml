@@ -80,6 +80,9 @@
 	<bean id="resourceGood2" class="org.springframework.core.io.ClassPathResource">
 		<constructor-arg value="json/flux2etab.json"/>
 	</bean>
+	<bean id="resourceError" class="org.springframework.core.io.ClassPathResource">
+		<constructor-arg value="json/error.json"/>
+	</bean>
 
 	<util:list id="categoriesFiltres" value-type="org.esco.portlet.mediacentre.model.filtres.CategorieFiltres">
 
@@ -87,8 +90,8 @@
 			<property name="id" value="etablissements"/>
 			<property name="libelle" value="filter.establishments"/>
 			<property name="libelleTous" value="filter.establishments.all"/>
-			<property name="nomAttributFiltre" value="idEtablissement.UAI"/>
-			<property name="attributUtilisateurDefaut" value="ESCOUAICourant"/>
+			<property name="nomAttributFiltre" value="idEtablissement.id"/>
+			<property name="attributUtilisateurDefaut" value="ESCOSIRENCourant"/>
 			<property name="valeursMultiples" value="false"/>
 			<property name="defaultEmptyValue" value="Indéterminé"/>
 			<property name="population" value="ENTPersonProfils"/>

@@ -32,8 +32,8 @@
 			<property name="id" value="etablissements"/>
 			<property name="libelle" value="filter.establishments"/>
 			<property name="libelleTous" value="filter.establishments.all"/>
-			<property name="nomAttributFiltre" value="idEtablissement.UAI"/>
-			<property name="attributUtilisateurDefaut" value="ESCOUAICourant"/>
+			<property name="nomAttributFiltre" value="idEtablissement.id"/>
+			<property name="attributUtilisateurDefaut" value="ESCOSIRENCourant"/>
 			<property name="valeursMultiples" value="false"/>
 			<property name="defaultEmptyValue" value="Indéterminé"/>
 			<property name="population" value="ENTPersonProfils"/>

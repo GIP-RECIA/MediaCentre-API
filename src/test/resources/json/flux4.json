@@ -182,7 +182,8 @@
       "idEditeur":"819056409_0000000073624720",
       "idRessource":"http://n2t.net/ark:/99999/RSF000001",
       "idEtablissement":[  
-         {  
+         {
+            "id": "0111111111144",
             "UAI":"0291595B",
             "nom":"CLG-DE L'IROISE-ac-RENNES"
          }
@@ -262,7 +263,8 @@
       "idEditeur":"819056409_0000000073624720",
       "idRessource":"http://n2t.net/ark:/99999/RSF000002",
       "idEtablissement":[  
-         {  
+         {
+            "id": "0111111111144",
             "UAI":"0291595B",
             "nom":"CLG-DE L'IROISE-ac-RENNES"
          }

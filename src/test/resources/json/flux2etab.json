@@ -38,6 +38,7 @@
       "idEditeur": "302421193_0000000122433761",
       "idEtablissement": [
          {
+            "id": "0111111111111",
             "UAI": "0450822X",
             "nom": "LGT JEAN MONNET"
          }
@@ -118,6 +119,7 @@
       "idEditeur": "448552851_0000000000000000",
       "idEtablissement": [
          {
+            "id": "0111111111100",
             "UAI": "0377777U",
             "nom": "CLG JEAN MONNET"
          }

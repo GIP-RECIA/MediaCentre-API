@@ -17,13 +17,21 @@ package org.esco.portlet.mediacentre;
 
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.portlet.PortletRequest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.io.Files;
 import lombok.NonNull;
 import lombok.Setter;
 import org.esco.portlet.mediacentre.dao.IUserResource;
@@ -37,14 +45,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -60,7 +72,7 @@ import org.springframework.web.client.RestTemplate;
 public class MediaCentreFiltreTest {
 
     @SuppressWarnings("unused")
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(MediaCentreFiltreTest.class);
 
     @Resource
     List<CategorieFiltres> categoriesFiltres;
@@ -80,6 +92,9 @@ public class MediaCentreFiltreTest {
 	@Autowired
 	@Qualifier("resourceGood2")
 	private org.springframework.core.io.Resource resource2Etab;
+	@Autowired
+	@Qualifier("resourceError")
+	private org.springframework.core.io.Resource resourceError;
 
 	@NonNull
 	@Value("${url.ressources.mediacentre}")
@@ -102,7 +117,67 @@ public class MediaCentreFiltreTest {
 
 		Map<String, List<String>> userInfos = userResource.getUserInfoMap(this.request);
 
+		log.debug("UserInfos used {}", userInfos);
+
 		when(request.getAttribute(PortletRequest.USER_INFO)).thenReturn(userInfos);
+	}
+
+	public static List<Ressource> getRessourcesFromFile(org.springframework.core.io.Resource rs) {
+		ObjectMapper xmlMapper = new ObjectMapper();
+		String ressourceContent = null;
+		try {
+			ressourceContent = Files.asCharSource(rs.getFile(), Charset.forName("UTF-8")).read();
+			Assert.assertTrue("file in classPath 'gar_ressourcesDiffusables_response.xml' doesn't exist!", ressourceContent != null);
+			Assert.assertTrue("file in classPath 'gar_ressourcesDiffusables_response.xml' is Empty!", !ressourceContent.isEmpty());
+			log.debug("File content is : {}", Files.asCharSource(rs.getFile(), Charset.forName("UTF-8")).read());
+
+			TypeReference<Ressource[]> typeRef = new TypeReference<Ressource[]>(){};
+
+			Ressource[] ressources = xmlMapper.readValue(rs.getFile(), typeRef);
+
+			log.debug("Json File to object gives {}", ressources);
+
+			return Arrays.asList(ressources);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Test
+	public void testErreurRessource() {
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resourceError, MediaType.APPLICATION_OCTET_STREAM));
+
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertTrue(ressources.isEmpty());
+	}
+
+	@Test
+	public void testErreurBadRequest() {
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withBadRequest());
+
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertTrue(ressources.isEmpty());
+	}
+
+	@Test
+	public void testErreurUnauthorizedRequest() {
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withUnauthorizedRequest());
+
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertTrue(ressources.isEmpty());
+	}
+
+	@Test
+	public void testErreurServerError() {
+		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withServerError());
+
+		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
+		Assert.assertNotNull(ressources);
+		Assert.assertTrue(ressources.isEmpty());
 	}
 
     @Test
@@ -110,7 +185,7 @@ public class MediaCentreFiltreTest {
 		Assert.assertNotNull(categoriesFiltres);
 		Assert.assertFalse(categoriesFiltres.isEmpty());
     	for (CategorieFiltres categorie : categoriesFiltres) {
-    		log.debug(categorie.toString());
+    		log.debug("CategorieFiltre {}", categorie.toString());
     		Assert.assertNotNull(categorie);
     		Assert.assertNotNull(categorie.getId());
     		Assert.assertNotNull(categorie.getLibelle());
@@ -148,7 +223,7 @@ public class MediaCentreFiltreTest {
     }
 
     @Test
-    public void testFiltrageCategorieFiltresEtabElv() throws Exception {
+    public void testFiltrageCategorieFiltresEtabEns() throws Exception {
 
 		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource, MediaType.APPLICATION_OCTET_STREAM));
 
@@ -162,19 +237,22 @@ public class MediaCentreFiltreTest {
 		for (CategorieFiltres cat: categorieFiltresFiltrees) {
 			log.debug("keep {}", cat.getId());
 		}
-
-		// cat supprimée id=etablissement car un seul étab et id=discipline car pour les élèves
-		Assert.assertEquals(3, categorieFiltresFiltrees.size());
+		
+		Assert.assertEquals(2, categorieFiltresFiltrees.size());
     }
 
 	@Test
-	public void testFiltrageCategorieFiltresElv() throws Exception {
+	public void testFiltrageCategorieFiltresEns() throws Exception {
 
 		mockServer.expect(MockRestRequestMatchers.requestTo(this.urlRessources)).andRespond(MockRestResponseCreators.withSuccess(this.resource2Etab, MediaType.APPLICATION_OCTET_STREAM));
 
 		List<Ressource> ressources = mediaCentreService.retrieveListRessource(this.request);
 		Assert.assertNotNull(ressources);
 		Assert.assertFalse(ressources.isEmpty());
+
+		for (CategorieFiltres cat: categoriesFiltres) {
+			log.debug("CategorieFiltres en entrée {}", cat.getId());
+		}
 
 		List<CategorieFiltres> categorieFiltresFiltrees = filtrerCategorieFiltre(categoriesFiltres, ressources);
 		log.debug("CategorieFiltres filtrées : " + categorieFiltresFiltrees.size());
@@ -183,8 +261,30 @@ public class MediaCentreFiltreTest {
 			log.debug("keep {}", cat.getId());
 		}
 
+		// cat supprimée id=typeMedia car 1 seule valeur
 		// cat supprimée id=discipline car pour les élèves
-		Assert.assertEquals(4, categorieFiltresFiltrees.size());
+		Assert.assertEquals(3, categorieFiltresFiltrees.size());
+	}
+
+	@Test
+	public void testFiltrageCategorieFiltresEns2() throws Exception {
+		List<Ressource> ressources = getRessourcesFromFile(this.resource2Etab);
+		Assert.assertNotNull(ressources);
+		Assert.assertFalse(ressources.isEmpty());
+
+		for (CategorieFiltres cat: categoriesFiltres) {
+			log.debug("CategorieFiltres en entrée {}", cat.getId());
+		}
+
+		List<CategorieFiltres> categorieFiltresFiltrees = filtrerCategorieFiltre(categoriesFiltres, ressources);
+		log.debug("CategorieFiltres filtrées : " + categorieFiltresFiltrees.size());
+		log.debug(categorieFiltresFiltrees.toString());
+		for (CategorieFiltres cat: categorieFiltresFiltrees) {
+			log.debug("keep {}", cat.getId());
+		}
+
+		// cat supprimée id=établissement car pour les profs
+		Assert.assertEquals(3, categorieFiltresFiltrees.size());
 	}
 
     public List<CategorieFiltres> filtrerCategorieFiltre(List<CategorieFiltres> categoriesFiltres, List<Ressource> ressources) throws Exception {

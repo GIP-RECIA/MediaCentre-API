@@ -78,8 +78,18 @@
   </user-attribute>
 
   <user-attribute>
+    <description>User SIREN</description>
+    <name>ESCOSIREN</name>
+  </user-attribute>
+
+  <user-attribute>
     <description>User current uai</description>
     <name>ESCOUAICourant</name>
+  </user-attribute>
+
+  <user-attribute>
+    <description>User current SIREN</description>
+    <name>ESCOSIRENCourant</name>
   </user-attribute>
 
   <user-attribute>

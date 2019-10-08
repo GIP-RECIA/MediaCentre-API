@@ -22,25 +22,39 @@ import lombok.EqualsAndHashCode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+    "id",
     "UAI",
     "nom"
 })
-@EqualsAndHashCode(of = "uAI", callSuper = false)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class IdEtablissement extends AbstractJson {
 
+    @JsonProperty("id")
+    private String id;
+
     @JsonProperty("UAI")
-    private String uAI;
+    private String UAI;
     @JsonProperty("nom")
     private String nom;
 
-    @JsonProperty("UAI")
-    public String getUAI() {
-        return uAI;
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
+        this.id = id;
     }
 
     @JsonProperty("UAI")
-    public void setUAI(String uAI) {
-        this.uAI = uAI;
+    public String getUAI() {
+        return UAI;
+    }
+
+    @JsonProperty("UAI")
+    public void setUAI(String UAI) {
+        this.UAI = UAI;
     }
 
     @JsonProperty("nom")

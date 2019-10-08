@@ -110,9 +110,12 @@ public class MockUserResourceImpl implements IUserResource, InitializingBean {
         Assert.hasText(this.currentEtabCodeInfoKey, "No Current Etab Code user info key configured !");
         Assert.hasText(this.userGroupsInfokey, "No Group user info key configured !");
 
-        final String[] etabs = System.getProperty("mediacentre.userEtabs", "0450822X,0333333Y,0377777U,0291595B")
-                .split(SPLIT_SEP);
-        final String current = System.getProperty("mediacentre.userCurrentEtab", "0450822X");
+//        final String[] etabs = System.getProperty("mediacentre.userEtabs", "0450822X,0333333Y,0377777U,0291595B")
+//                .split(SPLIT_SEP);
+//        final String current = System.getProperty("mediacentre.userCurrentEtab", "0450822X");
+
+        final String[] etabs = System.getProperty("mediacentre.userEtabs", "0111111111100,0111111111111,0111111111122,0111111111133").split(SPLIT_SEP);
+        final String current = System.getProperty("mediacentre.userCurrentEtab", "0111111111111");
 
         final String[] groups = System.getProperty("mediacentre.userMemberOf",
                 "esco:Applications:MediaCentre:GAR:RespAff:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0450822X,esco:Applications:MediaCentre:GAR:user:Etab_0333333Y"

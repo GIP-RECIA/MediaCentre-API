@@ -88,14 +88,14 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 		for (IdEtablissement etablissement : etablissements) {
 			Filtre filtre = new Filtre();
 			filtre.setActif(false);
-			filtre.setId(etablissement.getUAI());
+			filtre.setId(etablissement.getId());
 			filtre.setLibelle(etablissement.getNom());
 			filtre.setDefaultEmptyValue(getDefaultEmptyValue());
 			filtre.setNomAttribut(getNomAttributFiltre());
 			filtre.setPopulation(getPopulation());
 			filtre.setRegexpPopulation(this.getRegexpPopulation());
-			filtre.setRegexpAttribut(etablissement.getUAI());
-			if (etablissement.getUAI().equalsIgnoreCase(etablissementCourant)) {
+			filtre.setRegexpAttribut(etablissement.getId());
+			if (etablissement.getId().equalsIgnoreCase(etablissementCourant)) {
 				filtre.setActif(true);
 			}
 			filtres.add(filtre);
