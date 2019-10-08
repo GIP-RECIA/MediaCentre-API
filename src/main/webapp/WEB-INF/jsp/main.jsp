@@ -163,16 +163,18 @@
 		                        </div>
 		                        <div class="res-block-infos">
 		                            <span class="res-title">${ressource.nomRessource}</span>
-		                            <span class="res-txt">
-		                            	<c:if test="${not empty ressource.typePresentation}" >
-		                            		<span class="sautLigne">${ressource.typePresentation.nom}</span>
-		                            	</c:if>
-		                            	<span class="sautLigne">${ressource.nomEditeur}</span>
-		                            </span>
-		                            
+                                    <span class="res-txt">
+                                        <c:if test="${not empty ressource.typePresentation}" >
+                                            <span class="sautLigne">${ressource.typePresentation.nom}</span>
+                                        </c:if>
+                                        <c:if test="${not empty ressource.description}" >
+                                            <span class="sautLigne">${ressource.description}</span>
+                                        </c:if>
+                                        <span class="sautLigne">${ressource.nomEditeur}</span>
+                                    </span>
 		                        </div>
 		                        <c:choose>
-									<c:when test="${(not empty ressource.urlVignette) and (ressource.urlVignette!='')}">			                        
+									<c:when test="${(not empty ressource.urlVignette) and (ressource.urlVignette!='')}">
 				                        <div class="res-img img-placeholder" style="background-image: url(${ressource.urlVignette});">
 				                            <i class="mdi ${ressource.urlVignette=='' ? 'mdi-file-outline' : ''}"></i>
 				                        </div>

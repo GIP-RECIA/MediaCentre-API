@@ -39,7 +39,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "typologieDocument",
     "urlAccesRessource",
     "urlVignette",
-    "validateurTech"
+    "validateurTech",
+    "description"
 })
 public class Ressource extends AbstractJson {
 
@@ -75,6 +76,8 @@ public class Ressource extends AbstractJson {
     private String urlVignette;
     @JsonProperty("validateurTech")
     private String validateurTech;
+    @JsonProperty("description")
+    private String description;
 
     @JsonIgnore
     private boolean favorite;
@@ -240,6 +243,16 @@ public class Ressource extends AbstractJson {
     @JsonProperty("validateurTech")
     public void setValidateurTech(String validateurTech) {
         this.validateurTech = validateurTech;
+    }
+
+    @JsonProperty("description")
+    public String getDescription() {
+        return description;
+    }
+
+    @JsonProperty("description")
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 	/**
