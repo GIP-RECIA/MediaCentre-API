@@ -59,19 +59,21 @@ public class MediaCentreResourceJacksonImpl implements IMediaCentreResource {
         List<Ressource> listRessourceMediaCentre = new ArrayList<>();
 
         try {
-        	HttpHeaders requestHeaders = new HttpHeaders();
-        	requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        	HttpEntity<Map<String, List<String>>> requestEntity = new HttpEntity<Map<String, List<String>>>(userInfos, requestHeaders);
-        	
-        	ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
-        	
-        	listRessourceMediaCentre = Lists.newArrayList(response.getBody());
-        	
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+            HttpEntity<Map<String, List<String>>> requestEntity = new HttpEntity<Map<String, List<String>>>(userInfos, requestHeaders);
+            ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
+
+            listRessourceMediaCentre = Lists.newArrayList(response.getBody());
+//        } catch (HttpClientErrorException e) {
+//            // providing the error stacktrace only on debug as the custom logged error should be suffisant.
+//            log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(),e);
+//            return Lists.newArrayList();
         } catch (RestClientException ex) {
-            log.warn("Error getting MediaCentre from url '{}'", url, ex);
+            log.warn("Error getting MediaCentre from url '{}'", url, ex.getLocalizedMessage(), ex);
             return Lists.newArrayList();
         } catch (HttpMessageNotReadableException ex) {
-            log.warn("Error getting MediaCentre from url '{}' the object doesn't map MediaCentre Object properties", url, ex);
+            log.warn("Error getting MediaCentre from url '{}' the object doesn't map MediaCentre Object properties with a such response {}", url, ex.getLocalizedMessage(), ex);
             return Lists.newArrayList();
         }
 
