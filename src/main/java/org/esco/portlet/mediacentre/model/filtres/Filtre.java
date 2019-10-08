@@ -48,6 +48,8 @@ public class Filtre implements IFilterUserRight, Cloneable{
 	private boolean actif = true;
 	
 	private boolean caseSelectAll = false;
+
+	private boolean addEmptyFilteredValues = false;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -68,6 +70,7 @@ public class Filtre implements IFilterUserRight, Cloneable{
 			filtre.setRegexpPopulation(this.getRegexpPopulation());
 			filtre.setActif(this.isActif());
 			filtre.setCaseSelectAll(this.isCaseSelectAll());
+			filtre.setAddEmptyFilteredValues(this.addEmptyFilteredValues);
 			
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();

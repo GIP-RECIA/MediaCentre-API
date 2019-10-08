@@ -82,6 +82,7 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
     		filtre.setCaseSelectAll(true);
 			filtre.setPopulation(getPopulation());
 			filtre.setRegexpPopulation(this.getRegexpPopulation());
+			filtre.setAddEmptyFilteredValues(true);
     		filtres.add(filtre);
 		}
 		
@@ -98,6 +99,7 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalcules {
 			if (etablissement.getId().equalsIgnoreCase(etablissementCourant)) {
 				filtre.setActif(true);
 			}
+			filtre.setAddEmptyFilteredValues(true);
 			filtres.add(filtre);
 	    }
 		setFiltres(filtres);

@@ -271,6 +271,7 @@ public class FiltrageServiceImpl implements IFiltrageService {
 			if (valeur == null) {
 				continue;
 			}
+			if (filtre.isAddEmptyFilteredValues() && filtre.getDefaultEmptyValue().equals(valeur)) return true;
 			String valeurStr = valeur.toString();
 			if (valeurStr.matches(filtre.getRegexpAttribut())) {
 				log.debug("return estPassante {} on filter {}", true, this);
