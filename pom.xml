@@ -460,6 +460,7 @@
 						<exclude>src/main/webapp/rs/**</exclude>
 						<exclude>src/test/resources/json/**</exclude>
 						<exclude>src/main/webapp/js/jquery.dotdotdot.js</exclude>
+						<exclude>.mvn/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
