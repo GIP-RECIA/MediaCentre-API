@@ -237,7 +237,7 @@ public class MediaCentreFiltreTest {
 		for (CategorieFiltres cat: categorieFiltresFiltrees) {
 			log.debug("keep {}", cat.getId());
 		}
-		
+
 		Assert.assertEquals(2, categorieFiltresFiltrees.size());
     }
 
