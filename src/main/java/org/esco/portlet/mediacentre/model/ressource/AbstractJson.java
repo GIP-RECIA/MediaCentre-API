@@ -15,24 +15,20 @@
  */
 package org.esco.portlet.mediacentre.model.ressource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.util.StringUtils;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlTransient;
-
-import org.springframework.util.StringUtils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * @author elecaude
  *
  */
-@XmlTransient
 public abstract class AbstractJson {
 	/* 
 	 * ===============================================
