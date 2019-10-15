@@ -100,7 +100,10 @@ public abstract class AbstractJson {
 		}
 		Method getter = objectClass.getMethod(methodeGetter(nomAttribut), (Class[]) null);
 		Object valeurAttribut = getter.invoke(this, (Object[]) null);
-		
+
+		if (valeurAttribut == null) {
+			return new ArrayList<String>(valeurs);
+		}
 		
 		if (estAttributFinal) {
 			valeurs.add(valeurAttribut.toString());
