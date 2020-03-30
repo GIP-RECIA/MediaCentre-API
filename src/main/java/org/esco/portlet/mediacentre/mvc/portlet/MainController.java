@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.portlet.CacheControl;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -29,6 +28,7 @@ import javax.portlet.ResourceResponse;
 
 import org.esco.portlet.mediacentre.model.affectation.GestionAffectation;
 import org.esco.portlet.mediacentre.model.filtres.CategorieFiltres;
+import org.esco.portlet.mediacentre.model.ressource.IdEtablissement;
 import org.esco.portlet.mediacentre.model.ressource.Ressource;
 import org.esco.portlet.mediacentre.service.IFiltrageService;
 import org.esco.portlet.mediacentre.service.IMediaCentreService;
@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
@@ -106,13 +107,31 @@ public class MainController {
             log.debug("Using view name " + mav.getViewName() + " for main view");
         }
         
-        Map<String, List<String>> userInfo = mediaCentreService.getUserInfos(request);
+        final Map<String, List<String>> userInfo = mediaCentreService.getUserInfos(request);
         List<Ressource> listeRessources = mediaCentreService.retrieveListRessource(request);
 
         if (redirectParam != null) {
+            final List<String> etablissementsCourants = mediaCentreService.getUserCurrentEtablissement(request);
+            String etablissementCourant = null;
+            if (etablissementsCourants != null && !etablissementsCourants.isEmpty()) {
+                etablissementCourant = etablissementsCourants.get(0);
+            }
+
             String redirectUrl = null;
             for (Ressource rs : listeRessources) {
-                if (rs.getNomRessource().equalsIgnoreCase(redirectParam)) {
+                // On cherche à associer la ressource qui correspond à l'établissement courant
+                if (rs.getNomRessource().equalsIgnoreCase(redirectParam) && !StringUtils.isEmpty(etablissementCourant)
+                        && !StringUtils.isEmpty(rs.getIdEtablissement())) {
+                    for (IdEtablissement etab : rs.getIdEtablissement()) {
+                        if (etablissementCourant.equals(etab.getId())) {
+                            redirectUrl = rs.getUrlAccesRessource();
+                            break;
+                        }
+                    }
+                    if (redirectUrl != null) break;
+                } else if (rs.getNomRessource().equalsIgnoreCase(redirectParam) && StringUtils.isEmpty(rs.getIdEtablissement())) {
+                    // quand la ressource est globale sans établissement associé
+                    log.warn("Redirect to resource without organization associated {}", rs);
                     redirectUrl = rs.getUrlAccesRessource();
                     break;
                 }
@@ -121,13 +140,12 @@ public class MainController {
             if(log.isDebugEnabled()) {
                 log.debug("Entering on case redirecting to resource url " + redirectUrl);
             }
-
         } else {
 
             List<CategorieFiltres> categoriesFiltresCandidats = new ArrayList<CategorieFiltres>();
             List<Ressource> ressourcesCandidates = new ArrayList<Ressource>();
 
-            String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfo, categoriesFiltres, listeRessources, categoriesFiltresCandidats, ressourcesCandidates);
+            final String ressourcesParFiltre = filtrageService.preparerFiltrage(userInfo, categoriesFiltres, listeRessources, categoriesFiltresCandidats, ressourcesCandidates);
 
             mav.addObject("ressourcesParFiltre", ressourcesParFiltre);
             mav.addObject("ressources", ressourcesCandidates);
