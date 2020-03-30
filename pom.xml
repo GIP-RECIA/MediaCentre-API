@@ -10,7 +10,7 @@
 	<groupId>org.esco.portlet</groupId>
 	<artifactId>mediacentre</artifactId>
 	<packaging>war</packaging>
-	<version>0.2.2-SNAPSHOT</version>
+	<version>0.2.3-SNAPSHOT</version>
 	<name>mediacentre</name>
 	<inceptionYear>2017</inceptionYear>
 	<description>
