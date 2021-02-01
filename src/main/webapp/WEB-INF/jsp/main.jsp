@@ -165,12 +165,15 @@
 		                            <span class="res-title">${ressource.nomRessource}</span>
                                     <span class="res-txt">
                                         <c:if test="${not empty ressource.typePresentation}" >
-                                            <span class="sautLigne">${ressource.typePresentation.nom}</span>
+                                            <span class="sautLigne typePresentation">${ressource.typePresentation.nom}</span>
                                         </c:if>
                                         <c:if test="${not empty ressource.description}" >
-                                            <span class="sautLigne">${ressource.description}</span>
+                                            <span class="sautLigne description">${ressource.description}</span>
                                         </c:if>
-                                        <span class="sautLigne">${ressource.nomEditeur}</span>
+                                    </span>
+                                    <span class="res-footer">
+                                        <span class="nomEditeur">${ressource.nomEditeur}</span>
+                                        <span class="idRessource">${ressource.idRessource}</span>
                                     </span>
 		                        </div>
 		                        <c:choose>

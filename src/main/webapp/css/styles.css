@@ -595,7 +595,8 @@
   margin-top: 6px;
 }
 /* line 387, ../sass/styles.scss */
-.mediacentre .grid > .container-fluid .res-card .res-block-infos .res-txt {
+.mediacentre .grid > .container-fluid .res-card .res-block-infos .res-txt,
+.mediacentre .grid > .container-fluid .res-card .res-block-infos .res-footer{
   opacity: 0;
   filter: alpha(opacity=0);
   -moz-transform: translateY(12px);
@@ -655,7 +656,8 @@
   margin-top: 48px;
 }
 /* line 421, ../sass/styles.scss */
-.mediacentre .grid > .container-fluid .res-card .res-block-infos.opened .res-txt {
+.mediacentre .grid > .container-fluid .res-card .res-block-infos.opened .res-txt,
+.mediacentre .grid > .container-fluid .res-card .res-block-infos.opened .res-footer {
   opacity: 1;
   filter: alpha(opacity=100);
   -moz-transform: translateY(0);

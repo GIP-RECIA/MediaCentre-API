@@ -28,3 +28,25 @@
 .mediacentre > .container-fluid > .row > .footer {
 	text-align: center;
 }
+
+.mediacentre .grid > .container-fluid .res-card .res-block-infos {
+  display: flex;
+  flex-flow: column;
+}
+.mediacentre .grid > .container-fluid .res-card .res-block-infos .res-footer{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: end;
+  margin-top: auto;
+}
+.mediacentre .res-card > .res-block-infos .idRessource {
+  font-size: 9px;
+  color: #000000;
+}
+.mediacentre .res-card > .res-block-infos .idRessource::before {
+  content: "Ref: ";
+}
+.mediacentre .res-card > .res-block-infos .typePresentation {
+  font-style: italic;
+}

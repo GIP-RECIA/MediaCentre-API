@@ -63,7 +63,11 @@ mediacentre_plugin.init = function($, namespace, refCount) {
                 watch: "window",
                 height: 96
             });
-
+            // Ellipsis block info footer
+            $(namespace + " .res-footer").dotdotdot({
+                watch: "window",
+                height: 48
+            });
             // Open block infos on click on ressource img
             // $('.res-card').each(function(){
             //     $('.res-img', $(this)).click(function(e) {
