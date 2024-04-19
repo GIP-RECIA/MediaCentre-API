@@ -35,11 +35,20 @@ import javax.annotation.PostConstruct;
 public class MediaCentreProperties {
 
   private CorsProperties cors = new CorsProperties();
+  private SecurityProperties security = new SecurityProperties();
+  private SoffitProperties soffit = new SoffitProperties();
+
+  @PostConstruct
+  private void init() throws JsonProcessingException {
+    log.info("Loaded properties: {}", this);
+  }
 
   @Override
   public String toString() {
     return "{\n"
       + cors + ",\n"
+            + security + ",\n"
+            + soffit + "\n"
       + "\n}";
   }
 }
