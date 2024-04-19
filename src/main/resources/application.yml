@@ -1,0 +1,85 @@
+spring:
+  config:
+    activate:
+      on-profile: 'default-config'
+
+---
+
+server:
+  port: 8090
+  servlet:
+    context-path: /manon
+
+#logging:
+#  config: 'classpath:logback.xml'
+
+spring:
+  application:
+    name: MediaCentre
+
+#  profiles:
+#    active: @spring.profiles.active@
+#    group:
+#      dev: dev
+#      test: test
+#      prod: prod
+#      ci: test
+
+app:
+  cors:
+    enable: true
+    allow-credentials: true
+    allowed-origins:
+#        port def de vite
+      - http://localhost:5173
+      - https://*.giprecia.net
+    exposed-headers:
+      - x-auth-token
+      - x-requested-with
+      - x-xsrf-token
+    allowed-headers:
+      - content-type
+      - authorization
+      - x-com-persist
+      - X-Auth-Token
+      - x-auth-token
+      - x-requested-with
+      - x-xsrf-token
+    allowed-methods:
+      - GET
+      - PUT
+      - POST
+      - DELETE
+
+  soffit:
+    jwt-signature-key: ''
+
+
+viewResCache: false
+
+hostnames.trusted:
+  - "test.reciacas.fr"
+  - "test-lycee.reciaent.fr"
+  - "test-cfa.reciaent.fr"
+  - "test.reciaclg.fr"
+
+userInfo:
+  key:
+    currenEtabId:
+      ESCOSIRENCourant
+    etabIds:
+      ESCOSIREN
+    groups:
+      isMemberOf
+    uid:
+      ENTPersonGARIdentifiant
+    profils:
+      ENTPersonProfils
+  mediacentre:
+    favorites:
+      mediacentreFavorites
+
+url:
+  ressources:
+    mediacentre:
+      "http://vanneau:8080/mediacentre-ws/api/ressources/"
