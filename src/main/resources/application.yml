@@ -17,13 +17,13 @@ spring:
   application:
     name: MediaCentre
 
-#  profiles:
-#    active: @spring.profiles.active@
-#    group:
-#      dev: dev
-#      test: test
-#      prod: prod
-#      ci: test
+  profiles:
+    active: @spring.profiles.active@
+    group:
+      dev: dev
+
+
+
 
 app:
   cors:
