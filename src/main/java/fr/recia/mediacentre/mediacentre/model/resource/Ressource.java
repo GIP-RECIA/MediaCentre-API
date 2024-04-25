@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,10 +80,10 @@ public class Ressource extends AbstractJson {
     private String sourceEtiquette;
 
     @JsonProperty("typePedagogique")
-    private List<Object> typePedagogique = null;
+    private List<TypePedagogique> typePedagogique = null;
 
     @JsonProperty("typePresentation")
-    private TypePresentation typePresentation;
+    private List<TypePresentation> typePresentation = null;
 
     @JsonProperty("typologieDocument")
     private List<TypologieDocument> typologieDocument = null;
