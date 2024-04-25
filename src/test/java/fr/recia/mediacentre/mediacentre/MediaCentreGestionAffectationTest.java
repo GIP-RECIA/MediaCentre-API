@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import javax.annotation.Resource;
 import java.util.List;
 

@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,11 @@
 package fr.recia.mediacentre.mediacentre.model.filter.category;
 
 import fr.recia.mediacentre.mediacentre.model.resource.Ressource;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.ToString;
 
 import javax.annotation.Resource;
 import java.util.List;

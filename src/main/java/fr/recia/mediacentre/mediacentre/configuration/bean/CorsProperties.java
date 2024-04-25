@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ import lombok.Data;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static fr.recia.mediacentre.mediacentre.configuration.Constants.*;
+import static fr.recia.mediacentre.mediacentre.configuration.Constants.PROPERTIES_TO_JSON_DELIMITER;
+import static fr.recia.mediacentre.mediacentre.configuration.Constants.PROPERTIES_TO_JSON_PREFIX;
+import static fr.recia.mediacentre.mediacentre.configuration.Constants.PROPERTIES_TO_JSON_SUFFIX;
+
 
 @Data
 public class CorsProperties {

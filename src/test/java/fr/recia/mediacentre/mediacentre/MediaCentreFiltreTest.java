@@ -51,7 +51,11 @@ import javax.portlet.PortletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.when;
 
@@ -65,7 +69,7 @@ import static org.mockito.Mockito.when;
 public class MediaCentreFiltreTest {
 
     @Resource
-    List<CategorieFiltres> categoriesFiltres;
+	List<CategorieFiltres> categoriesFiltres;
 
     @Autowired
     private FiltrageService filtrageService;
