@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>mediacentre</name>
+	<inceptionYear>2017</inceptionYear>
 
 	<scm>
 		<connection>scm:git:ssh://git@github.com/GIP-RECIA/mediacentre.git</connection>
@@ -241,5 +242,17 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>
