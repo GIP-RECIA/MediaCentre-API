@@ -22,17 +22,12 @@ spring:
     group:
       dev: dev
 
-
-
-
 app:
   cors:
     enable: true
     allow-credentials: true
     allowed-origins:
-#        port def de vite
-      - http://localhost:5173
-      - https://*.giprecia.net
+
     exposed-headers:
       - x-auth-token
       - x-requested-with
@@ -52,16 +47,13 @@ app:
       - DELETE
 
   soffit:
-    jwt-signature-key: ''
+    jwtSignatureKey: ''
 
 
 viewResCache: false
 
-hostnames.trusted:
-  - "test.reciacas.fr"
-  - "test-lycee.reciaent.fr"
-  - "test-cfa.reciaent.fr"
-  - "test.reciaclg.fr"
+hostnames:
+  trusted:
 
 userInfo:
   key:
@@ -77,9 +69,10 @@ userInfo:
       ENTPersonProfils
   mediacentre:
     favorites:
+#      a remplacer par l'url de l'api
       mediacentreFavorites
 
 url:
   ressources:
     mediacentre:
-      "http://vanneau:8080/mediacentre-ws/api/ressources/"
+
