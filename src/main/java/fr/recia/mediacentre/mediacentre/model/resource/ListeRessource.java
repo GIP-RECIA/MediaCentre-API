@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package fr.recia.mediacentre.mediacentre.model.resource;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@Resource
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ListeRessource extends AbstractJson {
 
 	private List<Ressource> ressources;

@@ -15,6 +15,8 @@
  */
 package fr.recia.mediacentre.mediacentre.model.resource;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,8 +24,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.annotation.Generated;
 import javax.annotation.Resource;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -43,17 +48,19 @@ import java.util.List;
     "urlAccesRessource",
     "urlVignette",
     "validateurTech",
-    "description"
+    "description",
+        "filtreDroit",
+        "extractEtablissement"
 })
 @Getter
-@Resource
+@Generated("jsonschema2pojo")
 public class Ressource extends AbstractJson {
 
     @JsonProperty("distributeurTech")
     private String distributeurTech;
 
     @JsonProperty("domaineEnseignement")
-    private List<DomaineEnseignement> domaineEnseignement = null;
+    private List<DomaineEnseignement> domaineEnseignement;
 
     @JsonProperty("idEditeur")
     private String idEditeur;
@@ -62,13 +69,13 @@ public class Ressource extends AbstractJson {
     private String idRessource;
 
     @JsonProperty("idEtablissement")
-    private List<IdEtablissement> idEtablissement = null;
+    private List<IdEtablissement> idEtablissement;
 
     @JsonProperty("idType")
     private String idType;
 
     @JsonProperty("niveauEducatif")
-    private List<NiveauEducatif> niveauEducatif = null;
+    private List<NiveauEducatif> niveauEducatif;
 
     @JsonProperty("nomEditeur")
     private String nomEditeur;
@@ -80,13 +87,13 @@ public class Ressource extends AbstractJson {
     private String sourceEtiquette;
 
     @JsonProperty("typePedagogique")
-    private List<TypePedagogique> typePedagogique = null;
+    private List<TypePedagogique> typePedagogique;
 
     @JsonProperty("typePresentation")
-    private List<TypePresentation> typePresentation = null;
+    private TypePresentation typePresentation;
 
     @JsonProperty("typologieDocument")
-    private List<TypologieDocument> typologieDocument = null;
+    private List<TypologieDocument> typologieDocument;
 
     @JsonProperty("urlAccesRessource")
     private String urlAccesRessource;
@@ -100,6 +107,9 @@ public class Ressource extends AbstractJson {
     @JsonProperty("description")
     private String description;
 
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
+
     @Setter
     @JsonIgnore
     private boolean favorite;
@@ -108,5 +118,14 @@ public class Ressource extends AbstractJson {
     @JsonIgnore
     private int idInterne;
 
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
 }
 

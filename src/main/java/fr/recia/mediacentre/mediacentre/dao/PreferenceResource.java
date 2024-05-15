@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package fr.recia.mediacentre.mediacentre.dao;
 
 import fr.recia.mediacentre.mediacentre.interceptor.bean.SoffitHolder;
+import fr.recia.mediacentre.mediacentre.model.resource.Ressource;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -27,7 +28,7 @@ import java.util.List;
 @Service
 public interface PreferenceResource {
 
-    List<String> getUserFavorites(SoffitHolder soffit);
+    List<Ressource> getUserFavorites(SoffitHolder soffit);
 
     void addToUserFavorites(SoffitHolder soffit, @NotNull final String idFavorite);
 

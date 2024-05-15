@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import fr.recia.mediacentre.mediacentre.model.FilterUserRight;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ import javax.annotation.Resource;
 @Data
 @NoArgsConstructor
 @Resource
+@Slf4j
 public class Filtre implements FilterUserRight, Cloneable{
 
 	@NonNull
@@ -53,8 +55,6 @@ public class Filtre implements FilterUserRight, Cloneable{
 	private boolean caseSelectAll = false;
 
 	private boolean addEmptyFilteredValues = false;
-
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public Object clone(){

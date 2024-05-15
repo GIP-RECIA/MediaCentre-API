@@ -51,6 +51,8 @@ public class CategorieFiltresEtablissement extends CategorieFiltresCalculees {
 		if (ressources == null) {
 			return;
 		}
+
+		// a remplacer par appel a API pour récuperation isMemberOf
 		Set<IdEtablissement> etablissements = new HashSet<IdEtablissement>();
 		for (Ressource ressource: ressources) {
 			if (ressource.getIdEtablissement() != null && !ressource.getIdEtablissement().isEmpty()) {
