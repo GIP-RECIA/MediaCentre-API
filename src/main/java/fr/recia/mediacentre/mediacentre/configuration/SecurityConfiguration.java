@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,6 @@ public class SecurityConfiguration {
             mediaCentreProperties.getSoffit().getJwtSignatureKey());
         filter.setAuthenticationManager(authenticationManager());
         http.addFilter(filter);
-
     http
       .csrf(csrf ->
                 csrf
@@ -62,8 +61,7 @@ public class SecurityConfiguration {
       .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .antMatchers("/api/**").permitAll()
       .antMatchers("/health-check").permitAll()
-//      soffit a passer en param côté front
-//      .antMatchers("/api/**").authenticated()
+      .antMatchers("/api/**").authenticated()
       .anyRequest().denyAll()
     );
 
