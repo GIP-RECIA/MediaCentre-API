@@ -15,21 +15,12 @@
  */
 package fr.recia.mediacentre.mediacentre.model.resource;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.annotation.Generated;
-import javax.annotation.Resource;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "distributeurTech",
@@ -48,13 +39,11 @@ import java.util.Map;
     "urlAccesRessource",
     "urlVignette",
     "validateurTech",
-    "description",
-        "filtreDroit",
-        "extractEtablissement"
+    "description"
 })
 @Getter
-@Generated("jsonschema2pojo")
-public class Ressource extends AbstractJson {
+@Setter
+public class Ressource {
 
     @JsonProperty("distributeurTech")
     private String distributeurTech;
@@ -107,8 +96,7 @@ public class Ressource extends AbstractJson {
     @JsonProperty("description")
     private String description;
 
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
+    private boolean estAffichable = true;
 
     @Setter
     @JsonIgnore
@@ -117,15 +105,5 @@ public class Ressource extends AbstractJson {
     @Setter
     @JsonIgnore
     private int idInterne;
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 }
 

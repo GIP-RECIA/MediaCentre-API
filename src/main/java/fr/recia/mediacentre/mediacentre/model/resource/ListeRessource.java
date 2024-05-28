@@ -20,15 +20,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ListeRessource extends AbstractJson {
+public class ListeRessource{
 
 	private List<Ressource> ressources;
-
 }

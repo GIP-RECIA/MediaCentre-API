@@ -25,7 +25,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.annotation.Generated;
-import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -36,26 +35,12 @@ import java.util.Map;
 })
 @Getter
 @Setter
-@Generated("jsonschema2pojo")
-public class NiveauEducatif extends AbstractJson {
+public class NiveauEducatif {
 
     @JsonProperty("nom")
     private String nom;
 
     @JsonProperty("uri")
     private String uri;
-
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 }
 

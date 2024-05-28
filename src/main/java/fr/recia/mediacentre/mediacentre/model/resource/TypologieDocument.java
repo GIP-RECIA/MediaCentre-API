@@ -21,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Resource;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "nom",
@@ -30,8 +28,7 @@ import javax.annotation.Resource;
 })
 @Getter
 @Setter
-@Resource
-public class TypologieDocument extends AbstractJson {
+public class TypologieDocument {
 
     @JsonProperty("nom")
     private String nom;
