@@ -49,7 +49,6 @@ app:
   soffit:
     jwtSignatureKey: ''
 
-
 viewResCache: false
 
 hostnames:
@@ -72,7 +71,11 @@ userInfo:
 #      a remplacer par l'url de l'api
       mediacentreFavorites
 
+filters:
+  categoriesByProfiles:
+
 url:
   ressources:
     mediacentre:
+
 
