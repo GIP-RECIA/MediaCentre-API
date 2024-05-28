@@ -2,6 +2,8 @@
 
 ----
 
+### For more information on the resources retrieved by the web service, please consult the GAR documentation: https://gar.education.fr/wp-content/uploads/2024/02/GAR-RTFS_V7.2-Referentiel_technique_FR1.pdf
+
 # mvn commands :
 
 ## To add NOTICE
