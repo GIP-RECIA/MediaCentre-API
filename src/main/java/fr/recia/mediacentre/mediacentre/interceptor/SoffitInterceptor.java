@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,17 @@
  */
 package fr.recia.mediacentre.mediacentre.interceptor;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.mediacentre.interceptor.bean.SoffitHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -52,30 +51,22 @@ public class SoffitInterceptor implements HandlerInterceptor {
     Base64.Decoder decoder = Base64.getUrlDecoder();
     String payload = new String(decoder.decode(token.replace("Bearer ", "").split("\\.")[1]));
 
-    Map<String, String> soffit = null;
     ObjectMapper objectMapper = new ObjectMapper();
+    Map<String,Object> soffit = new HashMap<>();
     try {
-      soffit = objectMapper.readValue(payload, new TypeReference<>() {
-      });
-      soffitHolder.setSub(soffit.get("sub"));
+      soffit = objectMapper.readValue(payload,Map.class);
 
-      soffitHolder.getUserInfos().put("currentEtabId", List.of(soffit.get("ESCOSIRENCourant")));
-
-      soffitHolder.getUserInfos().put("etabIds", List.of(soffit.get("ESCOSIREN")));
-
-      soffitHolder.getUserInfos().put("groups", List.of(soffit.get("isMemberOf")));
-
-      soffitHolder.getUserInfos().put("uid", List.of(soffit.get("ENTPersonGARIdentifiant")));
-
-      soffitHolder.getUserInfos().put("profils", List.of(soffit.get("ENTPersonProfils")));
-
-      soffitHolder.getUserInfos().put("favorites", List.of(soffit.get("mediacentreFavorites")));
+      soffitHolder.setSub(soffit.get("sub").toString());
+      soffitHolder.setEtabIds(Collections.singletonList(soffit.get("ESCOSIREN").toString()));
+      soffitHolder.setCurrentEtabId(Collections.singletonList((soffit.get("ESCOSIRENCourant").toString())));
+      soffitHolder.setUid(Collections.singletonList((soffit.get("ENTPersonGARIdentifiant").toString())));
+      soffitHolder.setProfil((soffit.get("profile").toString()));
+//    soffitHolder.addUserInfo("favorites", List.of(soffit.get("mediacentreFavorites")));
 
     } catch (IOException ignored) {
-      log.error("Unable to read soffit");
+      log.error("Unable to read soffit" + soffit);
     }
     log.debug("Soffit : {}", soffit);
     return true;
   }
-
 }
