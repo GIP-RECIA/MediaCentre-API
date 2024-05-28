@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.mediacentre.model;
+package fr.recia.mediacentre.mediacentre.service;
 
-public interface FilterUserRight {
+import java.io.IOException;
+import java.util.List;
 
-    String getPopulation();
+public interface LdapService {
 
-    String getRegexpPopulation();
+    public List<String> getIsMemberOf() throws IOException;
+
+
 }
-
