@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 public class MediaCentreConfiguration {
 
     @Bean
-    public RestTemplate restTesmplate() {
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 }

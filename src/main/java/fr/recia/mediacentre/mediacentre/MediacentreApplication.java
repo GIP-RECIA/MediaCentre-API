@@ -15,21 +15,18 @@
  */
 package fr.recia.mediacentre.mediacentre;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import java.net.UnknownHostException;
 
 @Slf4j
 @SpringBootApplication
 @EnableAutoConfiguration
 public class MediacentreApplication {
 
-	public static void main(String[] args) throws UnknownHostException {
+	public static void main(String[] args) {
     SpringApplication app = new SpringApplication(MediacentreApplication.class);
 
     Environment env = app.run(args).getEnvironment();
@@ -43,9 +40,4 @@ public class MediacentreApplication {
       env.getProperty("server.port")
     );
 	}
-
-    @Bean
-    public ObjectMapper getObjectMapper() {
-        return new ObjectMapper();
-    }
 }
