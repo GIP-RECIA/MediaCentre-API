@@ -1,5 +1,5 @@
 /**
- * Copyright © ${project.inceptionYear} GIP-RECIA (https://www.recia.fr/)
+ * Copyright © 2017 GIP-RECIA (https://www.recia.fr/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,13 @@
  */
 package fr.recia.mediacentre.mediacentre.service.impl;
 
+import fr.recia.mediacentre.mediacentre.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.mediacentre.dao.PreferenceResource;
 import fr.recia.mediacentre.mediacentre.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.mediacentre.interceptor.bean.SoffitHolder;
+import fr.recia.mediacentre.mediacentre.model.filter.FilterEnum;
 import fr.recia.mediacentre.mediacentre.model.resource.Ressource;
+import fr.recia.mediacentre.mediacentre.service.LdapService;
 import fr.recia.mediacentre.mediacentre.service.MediaCentreService;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -27,10 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -49,8 +55,8 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     @Autowired
     private PreferenceResource preferenceResource;
 
-//    @Autowired
-//    private MediaUrlBuilder mediaUrlBuilder;
+    @Autowired
+    LdapService ldapService;
 
     @Autowired
     private MediaCentreResourceJacksonImpl mediaCentreResource;
@@ -58,14 +64,17 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     @Autowired
     private SoffitHolder soffit;
 
+    @Autowired
+    private CategoriesByProfilesProperties categoriesByFilters;
+
     @Override
     public List<String> getUserLinkedEtablissements() {
-        return soffit.getUserInfo("etabIds");
+        return soffit.getEtabIds();
     }
 
     @Override
-    public List<String> getUserCurrentEtablissement() {
-        List<String> currentEtabId = soffit.getUserInfo("currentEtabId" );
+    public String getUserCurrentEtablissement() {
+        String currentEtabId = soffit.getCurrentEtabId().get(0);
         /**if (currentEtabId.size() > 1) {
          // should not happen
          log.warn("User info has more than one value, the service will return only the first one !");
@@ -75,12 +84,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     }
 
     @Override
-    public List<String> getUserGroups() {
-        return soffit.getUserInfo("groups");
-    }
-
-    @Override
-    public List<String> getUserFavorites() {
+    public List<Ressource> getUserFavorites() {
         return preferenceResource.getUserFavorites(soffit);
     }
 
@@ -106,64 +110,62 @@ public class MediaCentreServiceImpl implements MediaCentreService {
         }
     }
 
-    /**
-     * @return the mediaUrlBuilder
-     */
-    /**public MediaUrlBuilder getMediaUrlBuilder() {
-     return mediaUrlBuilder;
-     }*/
-
-    /**
-     * @param mediaUrlBuilder the mediaUrlBuilder to set
-     */
-    /**public void setMediaUrlBuilder(MediaUrlBuilder mediaUrlBuilder) {
-     this.mediaUrlBuilder = mediaUrlBuilder;
-     }*/
-
-//    /**
-//     * @return the media Pref Url
-//     */
-//    public static String getPrefMediaUrl() {
-//        return PREF_MEDIA_URL;
-//    }
-
     @Override
-    public List<Ressource> retrieveListRessource() {
+    public List<Ressource> retrieveListRessource() throws IOException {
 
         if (log.isDebugEnabled()) {
             log.debug("Preference mediacentre url is {}", urlRessources);
         }
 
-        if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty() ) {
+        if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty()) {
+            // a changer par une exception
             return new ArrayList<>();
         }
 
-        // case of url is relative
-        /**String rewroteUrl = mediaUrlBuilder.transform(request, urlRessources);
-         if (rewroteUrl == null || rewroteUrl.trim().isEmpty()) {
-         return Lists.newArrayList();
-         }
+        List<String> isMemberOf = ldapService.getIsMemberOf();
 
-         if (log.isDebugEnabled()) {
-         log.debug("After url completion mediacentreUrl is {}", urlRessources);
-         }*/
+        Map<String,List<String>> userInfos = new HashMap<>();
 
-        List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources,soffit.getUserInfos());
+        userInfos.put("etabIds",soffit.getEtabIds());
+        userInfos.put("currentEtabId",soffit.getCurrentEtabId());
+        userInfos.put("uid",soffit.getUid());
+        userInfos.put("profils", Collections.singletonList(soffit.getProfil()));
+        userInfos.put("isMemberOf",isMemberOf);
 
-        List<String> listeFavoris = this.getUserFavorites();
+        List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, userInfos);
 
-        int id=1;
-        for(Ressource ressource : listRessources) {
-            ressource.setIdInterne(id++);
-            String idRessource = ressource.getIdRessource();
-            if(!idRessource.isBlank()){
-                if ((listeFavoris.contains(idRessource))) {
-                    ressource.setFavorite(true);
-                } else {
-                    ressource.setFavorite(false);
-                }
+//        List<String> listeFavoris = this.getUserFavorites();
+
+//        int id = 1;
+//        for (Ressource ressource : listRessources) {
+//            ressource.setIdInterne(id++);
+//            String idRessource = ressource.getIdRessource();
+//            if (!idRessource.isBlank()) {
+//                if ((listeFavoris.contains(idRessource))) {
+//                    ressource.setFavorite(true);
+//                } else {
+//                    ressource.setFavorite(false);
+//                }
+//            }
+//        }
+        return listRessources;
+    }
+
+    @Override
+    public List<FilterEnum> retrieveFiltersList() {
+        String userProfile = soffit.getProfil();
+        return getFiltersByProfile(userProfile);
+    }
+
+    private List<FilterEnum> getFiltersByProfile(String profile){
+        List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
+        for(CategoriesByProfilesProperties.ProfilesMap item : profilesMapList){
+            log.info("profile mappé : {}", item);
+            if(item.getProfiles().contains(profile)){
+                log.info("les filtres : {}",item.getFilters());
+                return item.getFilters();
             }
         }
-        return listRessources;
+        return new ArrayList<>();
     }
 }
