@@ -18,6 +18,7 @@ package fr.recia.mediacentre.mediacentre.interceptor.bean;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class SoffitHolder {
@@ -31,5 +32,7 @@ public class SoffitHolder {
   private List<String> uid;
 
   private String profil;
+
+  private Set<String> isMemberOf;
 
 }

@@ -24,31 +24,6 @@ import java.util.List;
 
 public interface MediaCentreService {
 
-
-    /***
-     * Function that returns the list of etablishment ids of the user.
-     *
-     * @return a list of etablishment ids of the user.
-     */
-	List<String> getUserLinkedEtablissements();
-
-
-    /***
-     * Function that returns the current etablishment id of the user.
-     *
-     * @return currentEtabId - the current etablishment id of the user.
-     */
-	String getUserCurrentEtablissement();
-
-
-    /***
-     * Function that returns a list of current user's groups (not used yet).
-     *
-     * @return groups - The list of current user's groups.
-     */
-//    List<String> getUserGroups();
-
-
     /***
      * Function that returns the current user's favorites.
      *
@@ -78,10 +53,10 @@ public interface MediaCentreService {
 
     /***
      * Function that returns the list of current user's resources.
-     *
+     * @param isMemberOf - a list of user's groups
      * @return listeRessources - The list of current user's resources.
      */
-    List<Ressource> retrieveListRessource() throws IOException;
+    List<Ressource> retrieveListRessource(List<String> isMemberOf) throws IOException;
 
     /***
      * Function that check the user's profile and returns a list of FilterEnum corresponding to the yml properties file.

@@ -27,6 +27,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class SoffitInterceptor implements HandlerInterceptor {
@@ -56,17 +57,25 @@ public class SoffitInterceptor implements HandlerInterceptor {
     try {
       soffit = objectMapper.readValue(payload,Map.class);
 
+      boolean isGuest = Pattern.matches("^guest.*", (CharSequence) soffit.get(("sub")));
+      if(isGuest){
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        return false;
+      }
       soffitHolder.setSub(soffit.get("sub").toString());
+
+
       soffitHolder.setEtabIds(Collections.singletonList(soffit.get("ESCOSIREN").toString()));
       soffitHolder.setCurrentEtabId(Collections.singletonList((soffit.get("ESCOSIRENCourant").toString())));
       soffitHolder.setUid(Collections.singletonList((soffit.get("ENTPersonGARIdentifiant").toString())));
       soffitHolder.setProfil((soffit.get("profile").toString()));
-//    soffitHolder.addUserInfo("favorites", List.of(soffit.get("mediacentreFavorites")));
 
     } catch (IOException ignored) {
       log.error("Unable to read soffit" + soffit);
     }
-    log.debug("Soffit : {}", soffit);
+    catch (NullPointerException e) {
+      return false;
+    }
     return true;
   }
 }

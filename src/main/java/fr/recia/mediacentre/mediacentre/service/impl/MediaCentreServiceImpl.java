@@ -21,7 +21,6 @@ import fr.recia.mediacentre.mediacentre.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.mediacentre.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.mediacentre.model.filter.FilterEnum;
 import fr.recia.mediacentre.mediacentre.model.resource.Ressource;
-import fr.recia.mediacentre.mediacentre.service.LdapService;
 import fr.recia.mediacentre.mediacentre.service.MediaCentreService;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -56,9 +55,6 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     private PreferenceResource preferenceResource;
 
     @Autowired
-    LdapService ldapService;
-
-    @Autowired
     private MediaCentreResourceJacksonImpl mediaCentreResource;
 
     @Autowired
@@ -66,22 +62,6 @@ public class MediaCentreServiceImpl implements MediaCentreService {
 
     @Autowired
     private CategoriesByProfilesProperties categoriesByFilters;
-
-    @Override
-    public List<String> getUserLinkedEtablissements() {
-        return soffit.getEtabIds();
-    }
-
-    @Override
-    public String getUserCurrentEtablissement() {
-        String currentEtabId = soffit.getCurrentEtabId().get(0);
-        /**if (currentEtabId.size() > 1) {
-         // should not happen
-         log.warn("User info has more than one value, the service will return only the first one !");
-         }
-         return userInfos.get(0);*/
-        return currentEtabId;
-    }
 
     @Override
     public List<Ressource> getUserFavorites() {
@@ -111,7 +91,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     }
 
     @Override
-    public List<Ressource> retrieveListRessource() throws IOException {
+    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws IOException {
 
         if (log.isDebugEnabled()) {
             log.debug("Preference mediacentre url is {}", urlRessources);
@@ -122,7 +102,6 @@ public class MediaCentreServiceImpl implements MediaCentreService {
             return new ArrayList<>();
         }
 
-        List<String> isMemberOf = ldapService.getIsMemberOf();
 
         Map<String,List<String>> userInfos = new HashMap<>();
 
@@ -131,9 +110,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
         userInfos.put("uid",soffit.getUid());
         userInfos.put("profils", Collections.singletonList(soffit.getProfil()));
         userInfos.put("isMemberOf",isMemberOf);
-
         List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, userInfos);
-
 //        List<String> listeFavoris = this.getUserFavorites();
 
 //        int id = 1;
@@ -160,9 +137,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     private List<FilterEnum> getFiltersByProfile(String profile){
         List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
         for(CategoriesByProfilesProperties.ProfilesMap item : profilesMapList){
-            log.info("profile mappé : {}", item);
             if(item.getProfiles().contains(profile)){
-                log.info("les filtres : {}",item.getFilters());
                 return item.getFilters();
             }
         }
