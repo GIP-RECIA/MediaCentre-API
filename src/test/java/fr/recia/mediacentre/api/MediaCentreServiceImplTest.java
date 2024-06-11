@@ -52,7 +52,6 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-@ExtendWith(SpringExtension.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
 @SpringBootTest

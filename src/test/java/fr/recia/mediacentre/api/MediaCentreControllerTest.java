@@ -55,7 +55,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
-@ExtendWith(SpringExtension.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebMvcTest(value = MediaCentreController.class)
 @DirtiesContext
