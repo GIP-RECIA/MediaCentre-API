@@ -48,7 +48,6 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
 
 
     public List<Ressource> retrieveListRessource(String mediaUrl,Map<String, List<String>> userInfos) {
-        log.info("dans retrieveListRessource de jackson");
         return this.getServiceMediaCentre(mediaUrl,userInfos);
     }
 
