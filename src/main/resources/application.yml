@@ -21,6 +21,12 @@ spring:
     active: @spring.profiles.active@
     group:
       dev: dev
+      test: test
+
+  cache:
+    jcache:
+      config:
+        "classpath:ehcache.xml"
 
 app:
   cors:
@@ -66,10 +72,6 @@ userInfo:
       ENTPersonGARIdentifiant
     profils:
       ENTPersonProfils
-  mediacentre:
-    favorites:
-#      a remplacer par l'url de l'api
-      mediacentreFavorites
 
 filters:
   categoriesByProfiles:
