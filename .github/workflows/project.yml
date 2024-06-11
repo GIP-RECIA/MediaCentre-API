@@ -36,5 +36,5 @@ jobs:
       - name: Build backend
         run: ./mvnw -B package --file pom.xml -Dmaven.test.skip=true -Darguments="-DskipTests"
 
-      # - name: Tests backend
-      #  run: ./mvnw -B test --file pom.xml
+      - name: Tests backend
+        run: ./mvnw -B test --file pom.xml
