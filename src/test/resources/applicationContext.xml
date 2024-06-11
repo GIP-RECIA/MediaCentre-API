@@ -38,14 +38,14 @@
 	<!--<context:component-scan base-package="org.esco.portlet.mediacentre.service" />-->
 	<!--<context:annotation-config />-->
 
-<!--	<bean id="userResourceMock" class="fr.recia.mediacentre.mediacentre.dao.impl.mock.MockUserResourceImpl" />-->
+<!--	<bean id="userResourceMock" class="fr.recia.mediacentre.api.dao.impl.mock.MockUserResourceImpl" />-->
 <!-- 	<bean id="mediaCentreResourceMock" class="org.esco.portlet.mediacentre.dao.impl.MockHelpInfoResourceImpl" /> -->
 
-<!--  <bean id="mediaUrlBuilder" class="fr.recia.mediacentre.mediacentre.service.bean.MediaUrlBuilderImpl" >-->
+<!--  <bean id="mediaUrlBuilder" class="fr.recia.mediacentre.api.service.bean.MediaUrlBuilderImpl" >-->
 <!--    <property name="userResource" ref="userResourceMock" />-->
 <!--  </bean>-->
 
-<bean id="mediaCentreService" class="fr.recia.mediacentre.mediacentre.service.impl.MediaCentreServiceImpl">
+<bean id="mediaCentreService" class="fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl">
 		<property name="mediaCentreResource" ref="mediaCentreResourceMock"/>
  		<property name="mediaUrlBuilder" ref="mediaUrlBuilder" />
 	</bean>

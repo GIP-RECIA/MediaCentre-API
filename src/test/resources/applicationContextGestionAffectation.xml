@@ -33,19 +33,19 @@
 <!--	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
 <!--		<property name="location" value="classpath:configuration.properties" />-->
 <!--	</bean>-->
-<!--	<bean id="userResource" class="fr.recia.mediacentre.mediacentre.dao.impl.mock.MockUserResourceImpl"/>-->
+<!--	<bean id="userResource" class="fr.recia.mediacentre.api.dao.impl.mock.MockUserResourceImpl"/>-->
 
-	<bean id="filtrageService" class="fr.recia.mediacentre.mediacentre.service.impl.FiltrageServiceImpl"/>
+	<bean id="filtrageService" class="fr.recia.mediacentre.api.service.impl.FiltrageServiceImpl"/>
 
-	<bean id="soffit" class="fr.recia.mediacentre.mediacentre.interceptor.bean.SoffitHolder"/>
+	<bean id="soffit" class="fr.recia.mediacentre.api.interceptor.bean.SoffitHolder"/>
 
 	<!--<bean id="mediaCentreService" class="org.esco.portlet.mediacentre.service.impl.MediaCentreServiceImpl"/>-->
 	<!--<bean id="preferenceResource" class="org.esco.portlet.mediacentre.dao.impl.MockPreferenceResourceImpl" />-->
 	<!--<bean id="mediaCentreResource" class="org.esco.portlet.mediacentre.dao.impl.MediaCentreResourceJacksonImpl" />-->
 
-	<util:list id="gestionAffectation" value-type="fr.recia.mediacentre.mediacentre.model.allocation.GestionAffectation">
+	<util:list id="gestionAffectation" value-type="fr.recia.mediacentre.api.model.allocation.GestionAffectation">
 
-		<bean class="fr.recia.mediacentre.mediacentre.model.allocation.GestionAffectation">
+		<bean class="fr.recia.mediacentre.api.model.allocation.GestionAffectation">
 			<property name="id" value="GAR"/>
 			<property name="nom" value="site.affectation.nom.GAR"/>
 			<property name="description" value="une description !"/>

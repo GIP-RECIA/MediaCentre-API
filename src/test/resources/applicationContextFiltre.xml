@@ -34,17 +34,17 @@
 <!--	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
 <!--		<property name="location" value="classpath:configuration.properties" />-->
 <!--	</bean>-->
-<!--	<bean id="mediaUrlBuilder" class="fr.recia.mediacentre.mediacentre.service.bean.MediaUrlBuilderImpl"/>-->
+<!--	<bean id="mediaUrlBuilder" class="fr.recia.mediacentre.api.service.bean.MediaUrlBuilderImpl"/>-->
 
-<!--	<bean id="userResource" class="fr.recia.mediacentre.mediacentre.dao.impl.mock.MockUserResourceImpl"/>-->
+<!--	<bean id="userResource" class="fr.recia.mediacentre.api.dao.impl.mock.MockUserResourceImpl"/>-->
 	
-	<bean id="filtrageService" class="fr.recia.mediacentre.mediacentre.service.impl.FiltrageServiceImpl"/>
+	<bean id="filtrageService" class="fr.recia.mediacentre.api.service.impl.FiltrageServiceImpl"/>
 	
-	<bean id="mediaCentreService" class="fr.recia.mediacentre.mediacentre.service.impl.MediaCentreServiceImpl"/>
-	<bean id="preferenceResource" class="fr.recia.mediacentre.mediacentre.dao.impl.mock.MockPreferenceResourceImpl" />
-	<bean id="mediaCentreResource" class="fr.recia.mediacentre.mediacentre.dao.impl.MediaCentreResourceJacksonImpl" />
+	<bean id="mediaCentreService" class="fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl"/>
+	<bean id="preferenceResource" class="fr.recia.mediacentre.api.dao.impl.mock.MockPreferenceResourceImpl" />
+	<bean id="mediaCentreResource" class="fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl" />
 
-	<bean id="soffit" class="fr.recia.mediacentre.mediacentre.interceptor.bean.SoffitHolder"/>
+	<bean id="soffit" class="fr.recia.mediacentre.api.interceptor.bean.SoffitHolder"/>
 
 	<bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder"
 				factory-method="create">
@@ -88,9 +88,9 @@
 		<constructor-arg value="json/error.json"/>
 	</bean>
 
-	<util:list id="categoriesFiltres" value-type="fr.recia.mediacentre.mediacentre.model.filter.category.CategorieFiltres">
+	<util:list id="categoriesFiltres" value-type="fr.recia.mediacentre.api.model.filter.category.CategorieFiltres">
 
-		<bean class="fr.recia.mediacentre.mediacentre.model.filter.category.CategorieFiltresEtablissement">
+		<bean class="fr.recia.mediacentre.api.model.filter.category.CategorieFiltresEtablissement">
 			<property name="id" value="etablissements"/>
 			<property name="libelle" value="filter.establishments"/>
 			<property name="libelleTous" value="filter.establishments.all"/>
@@ -102,7 +102,7 @@
 			<property name="regexpPopulation" value="((National_ENS)|(National_DOC)|(National_EVS))"/>
 		</bean>
 
-		<bean class="fr.recia.mediacentre.mediacentre.model.filter.category.CategorieFiltres">
+		<bean class="fr.recia.mediacentre.api.model.filter.category.CategorieFiltres">
 			<property name="id" value="ressources"/>
 			<property name="libelle" value="filter.resources"/>
 			<property name="valeursMultiples" value="false"/>
@@ -111,7 +111,7 @@
 			<property name="regexpPopulation" value=""/>
 			<property name="filtres">
 				<list>
-					<bean class="fr.recia.mediacentre.mediacentre.model.filter.Filtre">
+					<bean class="fr.recia.mediacentre.api.model.filter.Filtre">
 						<property name="id" value="filter.resources"/>
 						<property name="libelle" value="filter.resources.all"/>
 						<property name="actif" value="true"/>
@@ -121,7 +121,7 @@
 						<property name="population" value=""/>
 						<property name="regexpPopulation" value=""/>
 					</bean>
-					<bean class="fr.recia.mediacentre.mediacentre.model.filter.FiltreFavoris">
+					<bean class="fr.recia.mediacentre.api.model.filter.FiltreFavoris">
 						<property name="libelle" value="filter.resources.favoris"/>
 						<property name="actif" value="false"/>
 						<property name="defaultEmptyValue" value="Indéterminé"/>
@@ -132,7 +132,7 @@
 			</property>
 		</bean>
 
-		<bean class="fr.recia.mediacentre.mediacentre.model.filter.category.CategorieFiltresRessource">
+		<bean class="fr.recia.mediacentre.api.model.filter.category.CategorieFiltresRessource">
 			<property name="id" value="niveauEducatif"/>
 			<property name="libelle" value="filter.level"/>
 			<property name="libelleTous" value="filter.level.all"/>
@@ -143,7 +143,7 @@
 			<property name="regexpPopulation" value="((National_ENS)|(National_DOC)|(National_EVS))"/>
 		</bean>
 
-		<bean class="fr.recia.mediacentre.mediacentre.model.filter.category.CategorieFiltresRessource">
+		<bean class="fr.recia.mediacentre.api.model.filter.category.CategorieFiltresRessource">
 			<property name="id" value="typeMedia"/>
 			<property name="libelle" value="filter.type"/>
 			<property name="libelleTous" value="filter.type.all"/>
@@ -154,7 +154,7 @@
 			<property name="regexpPopulation" value=""/>
 		</bean>
 
-		<bean class="fr.recia.mediacentre.mediacentre.model.filter.category.CategorieFiltresRessource">
+		<bean class="fr.recia.mediacentre.api.model.filter.category.CategorieFiltresRessource">
 			<property name="id" value="discipline"/>
 			<property name="libelle" value="filter.subject"/>
 			<property name="libelleTous" value="filter.subject.all"/>
