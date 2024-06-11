@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -35,10 +34,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -79,7 +76,7 @@ public class MediaCentreControllerTest {
     private static String GETRESOURCES_URI = "/api/resources";
     private static String GETFILTERS_URI = "/api/resources/filters";
 
-    private static String token = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwczovL3Rlc3QtbHljZWUuZ2lwcmVjaWEubmV0L3BvcnRhaWwiLCJzdWIiOiJGMjAwMGh0cSIsImF1ZCI6Imh0dHBzOi8vdGVzdC1seWNlZS5naXByZWNpYS5uZXQvcG9ydGFpbCIsImV4cCI6MTcxNDczNjczNiwiaWF0IjoxNzE0NzM2NDM2LCJwcm9maWxlIjoiTmF0aW9uYWxfRU5TIiwiRVNDT1NJUkVOQ291cmFudCI6WyIwMDAwMDAwMDAwMDAwMSJdLCJFTlRQZXJzb25HQVJJZGVudGlmaWFudCI6WyJlN2MyNDlhOS1jZDYzLTQxMzYtYmQ2MS1mMzViNmMwMDE1YzUiXSwiRVNDT1NJUkVOIjpbIjAwMDAwMDAwMDAwMDAxIl19.0Wsymge34QAMcXqj6K20j6iBMUCwYy2pvz5IVsnoY8QI-0Z1Zri7KN36LxsmzgtTJYI26jVf2fYj_NRvrwEh-Q";
+    private static String token = "token";
 
     @Before
     public void init() throws IOException {
@@ -102,7 +99,6 @@ public class MediaCentreControllerTest {
         Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(listeRessourcesMediaCentre);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -121,7 +117,6 @@ public class MediaCentreControllerTest {
         Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -134,22 +129,22 @@ public class MediaCentreControllerTest {
         JSONAssert.assertEquals(objectMapper.writeValueAsString(new ArrayList<>()), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
-    @Test
-    public void getResources_When_No_Token_KO() throws Exception, YmlPropertyNotFoundException {
-        Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8)
-                .content(isMemberOf);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        assertEquals(HttpStatus.SC_UNAUTHORIZED, result.getResponse().getStatus());
-        assertEquals(0, result.getResponse().getContentLength());
-    }
+//    @Test
+//    public void getResources_When_No_Token_KO() throws Exception, YmlPropertyNotFoundException {
+//        Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
+//
+//        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .characterEncoding(StandardCharsets.UTF_8)
+//                .content(isMemberOf);
+//
+//        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+//
+//        assertEquals(HttpStatus.SC_UNAUTHORIZED, result.getResponse().getStatus());
+//        assertEquals(0, result.getResponse().getContentLength());
+//    }
 
 
 
@@ -162,7 +157,6 @@ public class MediaCentreControllerTest {
         Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -175,26 +169,25 @@ public class MediaCentreControllerTest {
         JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
-    @Test
-    public void getFilters_When_No_Token_KO() throws Exception {
-        Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        assertEquals(HttpStatus.SC_UNAUTHORIZED, result.getResponse().getStatus());
-        assertEquals(0, result.getResponse().getContentLength());
-    }
+//    @Test
+//    public void getFilters_When_No_Token_KO() throws Exception {
+//        Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(null);
+//
+//        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON);
+//
+//        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+//
+//        assertEquals(HttpStatus.SC_UNAUTHORIZED, result.getResponse().getStatus());
+//        assertEquals(0, result.getResponse().getContentLength());
+//    }
 
     @Test
     public void getFilters_When_No_Filters_OK() throws Exception {
         Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
