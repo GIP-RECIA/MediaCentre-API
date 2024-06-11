@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.mediacentre.web.rest;
+package fr.recia.mediacentre.api.web.rest;
 
-import fr.recia.mediacentre.mediacentre.model.filter.FilterEnum;
-import fr.recia.mediacentre.mediacentre.model.pojo.IsMemberOf;
-import fr.recia.mediacentre.mediacentre.model.resource.Ressource;
-import fr.recia.mediacentre.mediacentre.service.MediaCentreService;
+import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
+import fr.recia.mediacentre.api.model.filter.FilterEnum;
+import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
+import fr.recia.mediacentre.api.model.resource.Ressource;
+import fr.recia.mediacentre.api.service.MediaCentreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,9 +41,12 @@ public class MediaCentreController {
 
     @PostMapping
     public ResponseEntity<List<Ressource>> getResources(@RequestBody IsMemberOf isMemberOf) throws Exception {
-        log.debug(String.valueOf(isMemberOf));
-        List<Ressource> resourcesList = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
-        return new ResponseEntity<>(resourcesList, HttpStatus.OK);
+        try{
+            List<Ressource> resourcesList = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
+            return new ResponseEntity<>(resourcesList, HttpStatus.OK);
+        }catch (YmlPropertyNotFoundException e){
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(path = "/filters")
@@ -52,30 +54,4 @@ public class MediaCentreController {
         List<FilterEnum> filterEnumList = mediaCentreService.retrieveFiltersList();
         return new ResponseEntity<>(filterEnumList, HttpStatus.OK);
     }
-
-    @PostMapping("/favorite/{id}")
-    public ResponseEntity<Object> addFavorite(@PathVariable String id) {
-        boolean isAddFavorite = mediaCentreService.addToUserFavorites(id);
-        if (isAddFavorite) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @DeleteMapping("/favorite/{id}")
-    public ResponseEntity<Object> removeFavorite(@PathVariable String id) {
-        boolean isRemoveFavorite = mediaCentreService.removeToUserFavorites(id);
-        if (isRemoveFavorite) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping(path="/favorites")
-    public ResponseEntity<List<Ressource>> getFavorites(){
-        List<Ressource> resourceFavorites = mediaCentreService.getUserFavorites();
-
-        return new ResponseEntity<>(resourceFavorites, HttpStatus.OK);
-    }
-
 }

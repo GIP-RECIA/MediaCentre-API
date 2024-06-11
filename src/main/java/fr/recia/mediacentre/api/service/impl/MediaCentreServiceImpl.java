@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.mediacentre.service.impl;
+package fr.recia.mediacentre.api.service.impl;
 
-import fr.recia.mediacentre.mediacentre.configuration.bean.CategoriesByProfilesProperties;
-import fr.recia.mediacentre.mediacentre.dao.PreferenceResource;
-import fr.recia.mediacentre.mediacentre.dao.impl.MediaCentreResourceJacksonImpl;
-import fr.recia.mediacentre.mediacentre.interceptor.bean.SoffitHolder;
-import fr.recia.mediacentre.mediacentre.model.filter.FilterEnum;
-import fr.recia.mediacentre.mediacentre.model.resource.Ressource;
-import fr.recia.mediacentre.mediacentre.service.MediaCentreService;
+import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
+import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
+import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
+import fr.recia.mediacentre.api.model.filter.FilterEnum;
+import fr.recia.mediacentre.api.model.resource.Ressource;
+import fr.recia.mediacentre.api.service.MediaCentreService;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,9 +51,6 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     private String urlRessources;
 
     @Autowired
-    private PreferenceResource preferenceResource;
-
-    @Autowired
     private MediaCentreResourceJacksonImpl mediaCentreResource;
 
     @Autowired
@@ -64,44 +60,15 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     private CategoriesByProfilesProperties categoriesByFilters;
 
     @Override
-    public List<Ressource> getUserFavorites() {
-        return preferenceResource.getUserFavorites(soffit);
-    }
-
-    @Override
-    public boolean addToUserFavorites(@NotNull String idFavorite) {
-        if (!idFavorite.isEmpty()) {
-            preferenceResource.addToUserFavorites(soffit, idFavorite);
-            return true;
-        } else {
-            log.warn("Tried to add an empty string passed as favorite !");
-            return false;
-        }
-    }
-
-    @Override
-    public boolean removeToUserFavorites(@NotNull String favorite) {
-        if (!favorite.isEmpty()) {
-            preferenceResource.removeToUserFavorites(soffit, favorite);
-            return true;
-        } else {
-            log.warn("Tried to remove an empty string passed as favorite !");
-            return false;
-        }
-    }
-
-    @Override
-    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws IOException {
+    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws IOException, YmlPropertyNotFoundException {
 
         if (log.isDebugEnabled()) {
             log.debug("Preference mediacentre url is {}", urlRessources);
         }
 
         if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty()) {
-            // a changer par une exception
-            return new ArrayList<>();
+            throw new YmlPropertyNotFoundException();
         }
-
 
         Map<String,List<String>> userInfos = new HashMap<>();
 
@@ -111,20 +78,6 @@ public class MediaCentreServiceImpl implements MediaCentreService {
         userInfos.put("profils", Collections.singletonList(soffit.getProfil()));
         userInfos.put("isMemberOf",isMemberOf);
         List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, userInfos);
-//        List<String> listeFavoris = this.getUserFavorites();
-
-//        int id = 1;
-//        for (Ressource ressource : listRessources) {
-//            ressource.setIdInterne(id++);
-//            String idRessource = ressource.getIdRessource();
-//            if (!idRessource.isBlank()) {
-//                if ((listeFavoris.contains(idRessource))) {
-//                    ressource.setFavorite(true);
-//                } else {
-//                    ressource.setFavorite(false);
-//                }
-//            }
-//        }
         return listRessources;
     }
 
