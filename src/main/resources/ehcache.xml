@@ -24,7 +24,7 @@
         <key-type>java.lang.String</key-type>
         <value-type>java.util.List</value-type>
         <expiry>
-            <ttl unit="seconds">14400</ttl>
+            <ttl unit="seconds">7400</ttl>
         </expiry>
         <listeners>
             <listener>
@@ -39,7 +39,7 @@
             </listener>
         </listeners>
         <resources>
-            <heap unit="entries">10000</heap>
+            <heap unit="entries">1000</heap>
         </resources>
     </cache>
 
