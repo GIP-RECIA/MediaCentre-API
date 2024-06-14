@@ -76,8 +76,6 @@ public class MediaCentreControllerTest {
     private static String GETRESOURCES_URI = "/api/resources";
     private static String GETFILTERS_URI = "/api/resources/filters";
 
-    private static String token = "token";
-
     @Before
     public void init() throws IOException {
         listeRessourcesMediaCentre = objectMapper.readValue(new File("src/test/resources/json/resources-example.json"),new TypeReference<>(){});
@@ -129,26 +127,6 @@ public class MediaCentreControllerTest {
         JSONAssert.assertEquals(objectMapper.writeValueAsString(new ArrayList<>()), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
-//    @Test
-//    public void getResources_When_No_Token_KO() throws Exception, YmlPropertyNotFoundException {
-//        Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
-//
-//        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .characterEncoding(StandardCharsets.UTF_8)
-//                .content(isMemberOf);
-//
-//        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-//
-//        assertEquals(HttpStatus.SC_UNAUTHORIZED, result.getResponse().getStatus());
-//        assertEquals(0, result.getResponse().getContentLength());
-//    }
-
-
-
-
 //     getFilters() tests :
     @Test
     public void getFilters_OK() throws Exception {
@@ -169,19 +147,6 @@ public class MediaCentreControllerTest {
         JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
-//    @Test
-//    public void getFilters_When_No_Token_KO() throws Exception {
-//        Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(null);
-//
-//        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .contentType(MediaType.APPLICATION_JSON);
-//
-//        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-//
-//        assertEquals(HttpStatus.SC_UNAUTHORIZED, result.getResponse().getStatus());
-//        assertEquals(0, result.getResponse().getContentLength());
-//    }
 
     @Test
     public void getFilters_When_No_Filters_OK() throws Exception {
