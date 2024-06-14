@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        java: ['17']
+        java: ['11','17']
 
     name: Java ${{ matrix.java }}
 
@@ -37,4 +37,4 @@ jobs:
         run: ./mvnw -B package --file pom.xml -Dmaven.test.skip=true -Darguments="-DskipTests"
 
       - name: Tests backend
-        run: ./mvnw -B test --file pom.xml
+        run: ./mvnw -B test --file pom.xml -P ci
