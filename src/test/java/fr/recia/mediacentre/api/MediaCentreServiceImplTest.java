@@ -80,29 +80,41 @@ public class MediaCentreServiceImplTest {
 
     private List<Ressource> listeRessourcesMediaCentre;
 
+    @NonNull
+    @Value("${path.resources}")
+    private String resourcesFilePath;
+
+    @NonNull
+    @Value("${path.filters}")
+    private String filtersFilePath;
+
+    @NonNull
+    @Value("${path.isMemberOf}")
+    private String isMemberOfFilePath;
+
     private IsMemberOf isMemberOf;
 
     private Map<String,List<String>> userInfos;
 
     @Before
     public void init() throws IOException {
-        listeRessourcesMediaCentre = objectMapper.readValue(new File("src/test/resources/json/resources-example.json"),new TypeReference<>(){});
-        isMemberOf = objectMapper.readValue(new File("src/test/resources/json/isMemberOf.json"), new TypeReference<>() {
+        listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath),new TypeReference<>(){});
+        isMemberOf = objectMapper.readValue(new File(isMemberOfFilePath), new TypeReference<>() {
         });
         userInfos = new HashMap<>();
         userInfos.put("etabIds",List.of("id"));
         userInfos.put("currentEtabId",List.of("idCurrent"));
         userInfos.put("uid",List.of("uid"));
-        userInfos.put("profils",List.of("National_ENS"));
+        userInfos.put("profils",List.of("profile1"));
         userInfos.put("isMemberOf",isMemberOf.getIsMemberOf());
 
         when(soffit.getEtabIds()).thenReturn(List.of("id"));
         when(soffit.getCurrentEtabId()).thenReturn(List.of("idCurrent"));
         when(soffit.getUid()).thenReturn(List.of("uid"));
-        when(soffit.getProfil()).thenReturn("National_ENS");
+        when(soffit.getProfil()).thenReturn("profile1");
 
         CategoriesByProfilesProperties.ProfilesMap profilesMap = new CategoriesByProfilesProperties.ProfilesMap();
-        profilesMap.setProfiles(List.of("National_ENS"));
+        profilesMap.setProfiles(List.of("profile1"));
         profilesMap.setFilters(List.of(FilterEnum.TYPE_PRESENTATION_FILTER, FilterEnum.NIVEAU_EDUCATIF_FILTER, FilterEnum.UAI_FILTER));
         when(categoriesByFilters.getCategoriesByProfiles()).thenReturn(List.of(profilesMap));
     }
@@ -150,7 +162,7 @@ public class MediaCentreServiceImplTest {
         List<FilterEnum> result = mediaCentreService.retrieveFiltersList();
         assertNotNull(result);
         assertEquals(result.size(),3);
-        List<FilterEnum> filters = objectMapper.readValue(new File("src/test/resources/json/filters.json"), new TypeReference<>() {});
+        List<FilterEnum> filters = objectMapper.readValue(new File(filtersFilePath), new TypeReference<>() {});
         assertEquals(result,filters);
     }
 }

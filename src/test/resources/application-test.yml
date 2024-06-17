@@ -52,14 +52,14 @@ app:
 filters:
   categoriesByProfiles:
     - profiles:
-        - 'National_ELV'
+        - 'profile4'
       filters:
         - TYPE_PRESENTATION_FILTER
         - DOMAINE_ENSEIGNEMENT_FILTER
     - profiles:
-        - 'National_EVS'
-        - 'National_DOC'
-        - 'National_ENS'
+        - 'profile1'
+        - 'profile2'
+        - 'profile3'
       filters:
         - TYPE_PRESENTATION_FILTER
         - NIVEAU_EDUCATIF_FILTER
@@ -69,3 +69,11 @@ url:
   ressources:
     mediacentre:
       "http://my-url:0000/"
+
+path:
+  resources:
+    src/test/resources/json/resources-test.json
+  isMemberOf:
+    src/test/resources/json/isMemberOf-test.json
+  filters:
+    src/test/resources/json/filters-test.json

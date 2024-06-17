@@ -23,6 +23,7 @@ import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl;
 import fr.recia.mediacentre.api.web.rest.MediaCentreController;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.HttpStatus;
 import org.junit.Before;
@@ -31,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -71,6 +73,18 @@ public class MediaCentreControllerTest {
     private List<FilterEnum> lesFiltres;
     private String isMemberOf;
 
+    @NonNull
+    @Value("${path.resources}")
+    private String resourcesFilePath;
+
+    @NonNull
+    @Value("${path.filters}")
+    private String filtersFilePath;
+
+    @NonNull
+    @Value("${path.isMemberOf}")
+    private String isMemberOfFilePath;
+
     private IsMemberOf isMemberOfObject;
 
     private static String GETRESOURCES_URI = "/api/resources";
@@ -78,10 +92,10 @@ public class MediaCentreControllerTest {
 
     @Before
     public void init() throws IOException {
-        listeRessourcesMediaCentre = objectMapper.readValue(new File("src/test/resources/json/resources-example.json"),new TypeReference<>(){});
-        lesFiltres = objectMapper.readValue(new File("src/test/resources/json/filters.json")
+        listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath),new TypeReference<>(){});
+        lesFiltres = objectMapper.readValue(new File(filtersFilePath)
                 ,new TypeReference<>(){});
-        File isMemberOfFile = new File("src/test/resources/json/isMemberOf.json");
+        File isMemberOfFile = new File(isMemberOfFilePath);
         isMemberOf = Files.readString(isMemberOfFile.toPath());
         isMemberOfObject = objectMapper.readValue(isMemberOf, new TypeReference<>() {
         });
@@ -90,9 +104,6 @@ public class MediaCentreControllerTest {
 //     getResources() tests :
     @Test
     public void getResources_OK() throws Exception, YmlPropertyNotFoundException {
-
-        this.listeRessourcesMediaCentre = objectMapper.readValue(new File("src/test/resources/json/resources-example.json")
-                ,new TypeReference<>(){});
 
         Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(listeRessourcesMediaCentre);
 
@@ -130,7 +141,6 @@ public class MediaCentreControllerTest {
 //     getFilters() tests :
     @Test
     public void getFilters_OK() throws Exception {
-
 
         Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
 
