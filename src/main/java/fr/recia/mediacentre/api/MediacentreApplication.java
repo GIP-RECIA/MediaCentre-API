@@ -15,6 +15,7 @@
  */
 package fr.recia.mediacentre.api;
 
+import fr.recia.mediacentre.api.annotation.ExcludeFromJacocoGeneratedReport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -24,6 +25,7 @@ import org.springframework.core.env.Environment;
 @Slf4j
 @SpringBootApplication
 @EnableAutoConfiguration
+@ExcludeFromJacocoGeneratedReport
 public class MediacentreApplication {
 
 	public static void main(String[] args) {
