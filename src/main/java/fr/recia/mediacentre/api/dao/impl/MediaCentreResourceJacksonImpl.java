@@ -17,6 +17,7 @@ package fr.recia.mediacentre.api.dao.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -64,34 +74,32 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
         if(!Objects.isNull(userResources)){
             return userResources;
         }
-        try {
-            listRessourceMediaCentre = objectMapper.readValue(new File("src/test/resources/json/resources-example.json"),new TypeReference<>(){});
-            cache.putIfAbsent(userInfos.get("uid").get(0),listRessourceMediaCentre);
-        } catch (IOException ex) {
-            log.info("Unable to convert given json value into resource list.");
-            throw new RuntimeException(ex);
-        }
-
 //        try {
-//
-//            // appel au ws
-//            HttpHeaders requestHeaders = new HttpHeaders();
-//            requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-//            HttpEntity<Map<String, List<String>>> requestEntity = new HttpEntity<Map<String, List<String>>>(userInfos, requestHeaders);
-//            ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
-//            listRessourceMediaCentre = Lists.newArrayList(response.getBody());
+//            listRessourceMediaCentre = objectMapper.readValue(new File("src/test/resources/json/resources-example.json"),new TypeReference<>(){});
 //            cache.putIfAbsent(userInfos.get("uid").get(0),listRessourceMediaCentre);
-//        } catch (HttpClientErrorException e) {
-//            // providing the error stacktrace only on debug as the custom logged error should be suffisant.
-//            log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(),e);
-//            return Lists.newArrayList();
-//        } catch (RestClientException ex) {
-//            log.warn("Error getting MediaCentre from url '{}'", url, ex.getLocalizedMessage(), ex);
-//            return Lists.newArrayList();
-//        } catch (HttpMessageNotReadableException ex) {
-//            log.warn("Error getting MediaCentre from url '{}' the object doesn't map MediaCentre Object properties with a such response {}", url, ex.getLocalizedMessage(), ex);
-//            return Lists.newArrayList();
+//        } catch (IOException ex) {
+//            log.info("Unable to convert given json value into resource list.");
+//            throw new RuntimeException(ex);
 //        }
+
+        try {
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+            HttpEntity<Map<String, List<String>>> requestEntity = new HttpEntity<Map<String, List<String>>>(userInfos, requestHeaders);
+            ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
+            listRessourceMediaCentre = Lists.newArrayList(response.getBody());
+            cache.putIfAbsent(userInfos.get("uid").get(0),listRessourceMediaCentre);
+        } catch (HttpClientErrorException e) {
+            // providing the error stacktrace only on debug as the custom logged error should be suffisant.
+            log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(),e);
+            return Lists.newArrayList();
+        } catch (RestClientException ex) {
+            log.warn("Error getting MediaCentre from url '{}'", url, ex.getLocalizedMessage(), ex);
+            return Lists.newArrayList();
+        } catch (HttpMessageNotReadableException ex) {
+            log.warn("Error getting MediaCentre from url '{}' the object doesn't map MediaCentre Object properties with a such response {}", url, ex.getLocalizedMessage(), ex);
+            return Lists.newArrayList();
+        }
 
         return listRessourceMediaCentre;
     }
