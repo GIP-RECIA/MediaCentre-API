@@ -22,13 +22,12 @@ import org.apereo.portal.soffit.security.SoffitApiPreAuthenticatedProcessingFilt
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Profile("!test")
 @Slf4j
@@ -54,14 +53,10 @@ public class SecurityConfiguration {
         filter.setAuthenticationManager(authenticationManager());
         http.addFilter(filter);
     http
-      .csrf(csrf ->
-                csrf
-                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
-            //csrfTokenRepository utile pour le POST
+      .csrf(AbstractHttpConfigurer::disable
+          );
 
     http.authorizeHttpRequests(authz -> authz
-      .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .antMatchers("/api/**").permitAll()
       .antMatchers("/health-check").permitAll()
       .antMatchers("/api/**").authenticated()
       .anyRequest().denyAll()
