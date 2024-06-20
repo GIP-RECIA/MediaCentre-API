@@ -10,6 +10,9 @@ server:
     include-message: always
     include-stacktrace: always
 
+logging:
+  config: 'classpath:logback-dev.xml'
+
 hostnames:
   trusted:
     - "test.reciacas.fr"

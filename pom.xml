@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.recia.mediacentre.api</groupId>
     <artifactId>esco-mediacentre</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>mediacentre</name>
     <inceptionYear>2017</inceptionYear>
