@@ -68,7 +68,7 @@ jobs:
         run: ./mvnw -B package -Pprod -Dmaven.test.skip=true -Darguments="-DskipTests"
 
       - name: Tests backend
-        run: ./mvnw test -Pci
+        run: ./mvnw test -Ptest
 
       - name: Generate JaCoCo badge
         id: jacoco
