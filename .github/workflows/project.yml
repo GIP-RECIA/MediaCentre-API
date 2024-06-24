@@ -51,6 +51,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Checkout badges branch to a badges directory nested inside first checkout
+        uses: actions/checkout@v4
+        with:
+          ref: badges
+          path: badges
+
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
