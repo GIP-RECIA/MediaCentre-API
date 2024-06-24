@@ -65,10 +65,10 @@ jobs:
           cache: maven
 
       - name: Build backend
-        run: ./mvnw -B package -Dmaven.test.skip=true -Darguments="-DskipTests"
+        run: ./mvnw -B package -Pprod -Dmaven.test.skip=true -Darguments="-DskipTests"
 
       - name: Tests backend
-        run: ./mvnw test -P ci
+        run: ./mvnw test -Pci
 
       - name: Generate JaCoCo badge
         id: jacoco
