@@ -24,7 +24,7 @@
         <key-type>java.lang.String</key-type>
         <value-type>java.util.List</value-type>
         <expiry>
-            <ttl unit="seconds">7400</ttl>
+            <ttl unit="seconds">300</ttl>
         </expiry>
         <listeners>
             <listener>
