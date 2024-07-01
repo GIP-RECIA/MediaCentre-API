@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,7 +59,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     private CategoriesByProfilesProperties categoriesByFilters;
 
     @Override
-    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws IOException, YmlPropertyNotFoundException {
+    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException {
 
         if (log.isDebugEnabled()) {
             log.debug("Preference mediacentre url is {}", urlRessources);
@@ -82,13 +81,16 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     }
 
     @Override
-    public List<FilterEnum> retrieveFiltersList() {
+    public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
         String userProfile = soffit.getProfil();
         return getFiltersByProfile(userProfile);
     }
 
-    private List<FilterEnum> getFiltersByProfile(String profile){
+    private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
         List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
+        if(profilesMapList.isEmpty()){
+            throw new YmlPropertyNotFoundException();
+        }
         for(CategoriesByProfilesProperties.ProfilesMap item : profilesMapList){
             if(item.getProfiles().contains(profile)){
                 return item.getFilters();
