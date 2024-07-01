@@ -29,7 +29,6 @@ import org.apache.hc.core5.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -105,7 +105,7 @@ public class MediaCentreControllerTest {
     @Test
     public void getResources_OK() throws Exception, YmlPropertyNotFoundException {
 
-        Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(listeRessourcesMediaCentre);
+        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(listeRessourcesMediaCentre);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
                 .accept(MediaType.APPLICATION_JSON)
@@ -123,7 +123,7 @@ public class MediaCentreControllerTest {
 
     @Test
     public void getResources_When_No_resource_OK() throws Exception, YmlPropertyNotFoundException {
-        Mockito.when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
+        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
                 .accept(MediaType.APPLICATION_JSON)
@@ -138,11 +138,28 @@ public class MediaCentreControllerTest {
         JSONAssert.assertEquals(objectMapper.writeValueAsString(new ArrayList<>()), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
+    @Test
+    public void getResources_When_No_Yml_Properties_For_UrlRessources_KO() throws Exception, YmlPropertyNotFoundException {
+        mediaCentreService.setUrlRessources("");
+        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenThrow(new YmlPropertyNotFoundException());
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8)
+                .content(isMemberOf);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+        assertEquals(result.getResponse().getStatus(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        assertEquals(0, result.getResponse().getContentLength());
+    }
+
 //     getFilters() tests :
     @Test
-    public void getFilters_OK() throws Exception {
+    public void getFilters_OK() throws Exception, YmlPropertyNotFoundException {
 
-        Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
+        when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
                 .accept(MediaType.APPLICATION_JSON)
@@ -159,8 +176,8 @@ public class MediaCentreControllerTest {
 
 
     @Test
-    public void getFilters_When_No_Filters_OK() throws Exception {
-        Mockito.when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
+    public void getFilters_When_No_Filters_OK() throws Exception, YmlPropertyNotFoundException {
+        when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
                 .accept(MediaType.APPLICATION_JSON)

@@ -30,7 +30,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +37,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.File;
 import java.io.IOException;
@@ -125,7 +123,6 @@ public class MediaCentreServiceImplTest {
     public void retrieveListRessource_OK() throws YmlPropertyNotFoundException, IOException {
         mediaCentreService.setUrlRessources(urlRessources);
         when(mediaCentreResource.retrieveListRessource(urlRessources,userInfos)).thenReturn(listeRessourcesMediaCentre);
-        log.info(isMemberOf.getIsMemberOf().toString());
         List<Ressource> result = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
 
         assertNotNull(result);
@@ -158,11 +155,19 @@ public class MediaCentreServiceImplTest {
     // retrieveFiltersList() test :
 
     @Test
-    public void retrieveFiltersList_OK() throws IOException {
+    public void retrieveFiltersList_OK() throws IOException, YmlPropertyNotFoundException {
         List<FilterEnum> result = mediaCentreService.retrieveFiltersList();
         assertNotNull(result);
         assertEquals(result.size(),3);
         List<FilterEnum> filters = objectMapper.readValue(new File(filtersFilePath), new TypeReference<>() {});
         assertEquals(result,filters);
+    }
+
+    @Test
+    public void retrieveFiltersList_When_No_Yml_Properties_For_Filter_Categories_KO() throws IOException, YmlPropertyNotFoundException {
+        when(categoriesByFilters.getCategoriesByProfiles()).thenReturn(new ArrayList<>());
+        assertThrows(YmlPropertyNotFoundException.class, () -> {
+            mediaCentreService.retrieveFiltersList();
+        });
     }
 }
