@@ -55,7 +55,8 @@ app:
       - DELETE
 
   soffit:
-    jwtSignatureKey: ''
+    signatureKey: ''
+    encryptionPassword: ''
 
 viewResCache: false
 

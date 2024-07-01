@@ -38,6 +38,11 @@ spring:
     activate:
       on-profile: 'test'
 
+  cache:
+    jcache:
+      config:
+        "classpath:ehcache.xml"
+
 app:
   cors:
     enable: true
@@ -46,9 +51,10 @@ app:
       #        port def de vite
       - http://localhost:5173
       - https://*.giprecia.net
-  soffit:
-    jwtSignatureKey: 'jwtSignatureKey'
 
+  soffit:
+    encryptionPassword: 'encryptionPassword'
+    signatureKey: 'signatureKey'
 filters:
   categoriesByProfiles:
     - profiles:

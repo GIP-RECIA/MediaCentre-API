@@ -49,9 +49,13 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         final AbstractPreAuthenticatedProcessingFilter filter = new SoffitApiPreAuthenticatedProcessingFilter(
-            mediaCentreProperties.getSoffit().getJwtSignatureKey());
+            mediaCentreProperties.getSoffit().getSignatureKey());
+
         filter.setAuthenticationManager(authenticationManager());
+
         http.addFilter(filter);
+
+
     http
       .csrf(AbstractHttpConfigurer::disable
           );

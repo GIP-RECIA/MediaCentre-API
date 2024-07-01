@@ -16,16 +16,21 @@
 package fr.recia.mediacentre.api.configuration.bean;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
+@ConfigurationProperties(prefix = "soffit")
 public class SoffitProperties {
 
-     private String jwtSignatureKey;
+     private String signatureKey;
+
+     private String encryptionPassword;
 
   @Override
   public String toString() {
     return "\"SoffitProperties\": {" +
-      "\n\t\"jwtSignatureKey\": \"" + jwtSignatureKey + "\"" +
+      "\n\t\"signatureKey\": \"" + signatureKey + "\"" +
+            "\n\t\"encryptionPassword\": \"" + encryptionPassword + "\"" +
       "\n}";
   }
 }
