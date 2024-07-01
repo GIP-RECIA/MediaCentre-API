@@ -18,7 +18,6 @@ package fr.recia.mediacentre.api.service;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.resource.Ressource;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -29,12 +28,12 @@ public interface MediaCentreService {
      * @param isMemberOf - a list of user's groups
      * @return listeRessources - The list of current user's resources.
      */
-    List<Ressource> retrieveListRessource(List<String> isMemberOf) throws IOException, YmlPropertyNotFoundException;
+    List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException;
 
     /***
      * Function that check the user's profile and returns a list of FilterEnum corresponding to the yml properties file.
      *
      * @return a List<FilterEnum>
      */
-    List<FilterEnum> retrieveFiltersList();
+    List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException;
 }
