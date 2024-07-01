@@ -120,7 +120,7 @@ public class MediaCentreServiceImplTest {
     // retrieveListRessource() tests :
 
     @Test
-    public void retrieveListRessource_OK() throws YmlPropertyNotFoundException, IOException {
+    public void retrieveListRessource_OK() throws YmlPropertyNotFoundException {
         mediaCentreService.setUrlRessources(urlRessources);
         when(mediaCentreResource.retrieveListRessource(urlRessources,userInfos)).thenReturn(listeRessourcesMediaCentre);
         List<Ressource> result = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
@@ -136,7 +136,7 @@ public class MediaCentreServiceImplTest {
     }
 
     @Test
-    public void retrieveListRessource_When_No_Resource_OK() throws YmlPropertyNotFoundException, IOException {
+    public void retrieveListRessource_When_No_Resource_OK() throws YmlPropertyNotFoundException {
         when(mediaCentreResource.retrieveListRessource(urlRessources,userInfos)).thenReturn(new ArrayList<>());
         List<Ressource> result = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
 
@@ -145,7 +145,7 @@ public class MediaCentreServiceImplTest {
     }
 
     @Test
-    public void retrieveListRessource_When_UrlRessources_Is_Missing_In_Yml_Properties_KO() throws YmlPropertyNotFoundException, IOException {
+    public void retrieveListRessource_When_UrlRessources_Is_Missing_In_Yml_Properties_KO() {
         mediaCentreService.setUrlRessources("");
         assertThrows(YmlPropertyNotFoundException.class, () -> {
             mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
@@ -164,7 +164,7 @@ public class MediaCentreServiceImplTest {
     }
 
     @Test
-    public void retrieveFiltersList_When_No_Yml_Properties_For_Filter_Categories_KO() throws IOException, YmlPropertyNotFoundException {
+    public void retrieveFiltersList_When_No_Yml_Properties_For_Filter_Categories_KO() {
         when(categoriesByFilters.getCategoriesByProfiles()).thenReturn(new ArrayList<>());
         assertThrows(YmlPropertyNotFoundException.class, () -> {
             mediaCentreService.retrieveFiltersList();
