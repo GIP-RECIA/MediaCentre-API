@@ -15,7 +15,6 @@
  */
 package fr.recia.mediacentre.api.dao.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
@@ -35,9 +34,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -61,7 +57,7 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
         return this.getServiceMediaCentre(mediaUrl,userInfos);
     }
 
-    @Cacheable(cacheNames = "userResourcesCache", key = "#userInfos.uid[0]")
+  @Cacheable(cacheNames = "userResourcesCache", key = "#userInfos.uid[0]")
     private List<Ressource> getServiceMediaCentre(String url,Map<String, List<String>> userInfos) {
         if (log.isDebugEnabled()) {
         log.debug("Requesting mediacentre on URL {}", url );

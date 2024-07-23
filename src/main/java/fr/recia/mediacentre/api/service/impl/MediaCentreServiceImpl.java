@@ -44,58 +44,59 @@ import java.util.Objects;
 @NoArgsConstructor
 public class MediaCentreServiceImpl implements MediaCentreService {
 
-    @NonNull
-    @Value("${url.ressources.mediacentre}")
-    @Setter
-    private String urlRessources;
+  @NonNull
+  @Value("${url.ressources.mediacentre}")
+  @Setter
+  private String urlRessources;
 
-    @Autowired
-    private MediaCentreResourceJacksonImpl mediaCentreResource;
+  @Autowired
+  private MediaCentreResourceJacksonImpl mediaCentreResource;
 
-    @Autowired
-    private SoffitHolder soffit;
+  @Autowired
+  private SoffitHolder soffit;
 
-    @Autowired
-    private CategoriesByProfilesProperties categoriesByFilters;
+  @Autowired
+  private CategoriesByProfilesProperties categoriesByFilters;
 
-    @Override
-    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException {
+  @Override
+  public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Preference mediacentre url is {}", urlRessources);
-        }
-
-        if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty()) {
-            throw new YmlPropertyNotFoundException();
-        }
-
-        Map<String,List<String>> userInfos = new HashMap<>();
-
-        userInfos.put("etabIds",soffit.getEtabIds());
-        userInfos.put("currentEtabId",soffit.getCurrentEtabId());
-        userInfos.put("uid",soffit.getUid());
-        userInfos.put("profils", Collections.singletonList(soffit.getProfil()));
-        userInfos.put("isMemberOf",isMemberOf);
-        List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, userInfos);
-        return listRessources;
+    if (log.isDebugEnabled()) {
+      log.debug("Preference mediacentre url is {}", urlRessources);
     }
 
-    @Override
-    public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-        String userProfile = soffit.getProfil();
-        return getFiltersByProfile(userProfile);
+    if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty()) {
+      throw new YmlPropertyNotFoundException();
     }
 
-    private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
-        List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
-        if(profilesMapList.isEmpty()){
-            throw new YmlPropertyNotFoundException();
-        }
-        for(CategoriesByProfilesProperties.ProfilesMap item : profilesMapList){
-            if(item.getProfiles().contains(profile)){
-                return item.getFilters();
-            }
-        }
-        return new ArrayList<>();
+    Map<String, List<String>> userInfos = new HashMap<>();
+
+    userInfos.put("etabIds", soffit.getEtabIds());
+    userInfos.put("currentEtabId", soffit.getCurrentEtabId());
+    userInfos.put("uid", soffit.getUid());
+    userInfos.put("profils", Collections.singletonList(soffit.getProfil()));
+    userInfos.put("isMemberOf", isMemberOf);
+    List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, userInfos);
+    return listRessources;
+  }
+
+  @Override
+  public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
+    String userProfile = soffit.getProfil();
+    return getFiltersByProfile(userProfile);
+  }
+
+  private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
+    List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
+    if (profilesMapList.isEmpty()) {
+      throw new YmlPropertyNotFoundException();
     }
+    for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
+      if (item.getProfiles().contains(profile)) {
+        return item.getFilters();
+      }
+    }
+    return new ArrayList<>();
+  }
+
 }
