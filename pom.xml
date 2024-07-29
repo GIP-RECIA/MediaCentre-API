@@ -309,7 +309,10 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <packagingExcludes>**/tomcat-*.jar,
-                        **/application-*.yml,</packagingExcludes>
+                      **/application-*.yml,
+                      **/logback-*.xml,
+                      **/application*.example,
+                      **/*Test.class,</packagingExcludes>
                     <warSourceExcludes>src/,
                         public/,
                         tests/</warSourceExcludes>
