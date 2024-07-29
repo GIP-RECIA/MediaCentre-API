@@ -79,6 +79,9 @@ userInfo:
 filters:
   categoriesByProfiles:
 
+config:
+  groups:
+
 url:
   ressources:
     mediacentre:
