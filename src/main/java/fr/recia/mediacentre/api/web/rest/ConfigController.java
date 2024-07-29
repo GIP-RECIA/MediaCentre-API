@@ -42,6 +42,13 @@ public class ConfigController {
   @Autowired
   private Environment environment;
 
+  /**
+   * Function that retrieves the child yml properties of the yml config property and creates one Config object per child
+   * object with the name of the child yml property for the key attribute and the value of the child yml property for the value attribute.
+   * Each object is stored in the config list.
+   *
+   * @param config - An empty list of Config object
+   */
   private void initMap(List<Config> config){
     String prefix = "config.";
     for (String key : ((AbstractEnvironment) environment).getPropertySources().stream()
