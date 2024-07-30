@@ -17,6 +17,7 @@ package fr.recia.mediacentre.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
@@ -42,16 +43,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.resolve;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -103,7 +103,7 @@ public class MediaCentreControllerTest {
 
 //     getResources() tests :
     @Test
-    public void getResources_OK() throws Exception, YmlPropertyNotFoundException {
+    public void getResources_OK() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
 
         when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(listeRessourcesMediaCentre);
 
@@ -122,7 +122,7 @@ public class MediaCentreControllerTest {
     }
 
     @Test
-    public void getResources_When_No_resource_OK() throws Exception, YmlPropertyNotFoundException {
+    public void getResources_When_No_resource_OK() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
         when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
@@ -139,7 +139,7 @@ public class MediaCentreControllerTest {
     }
 
     @Test
-    public void getResources_When_No_Yml_Properties_For_UrlRessources_KO() throws Exception, YmlPropertyNotFoundException {
+    public void getResources_When_No_Yml_Properties_For_UrlRessources_KO() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
         mediaCentreService.setUrlRessources("");
         when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenThrow(new YmlPropertyNotFoundException());
 
@@ -154,6 +154,21 @@ public class MediaCentreControllerTest {
         assertEquals(result.getResponse().getStatus(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
         assertEquals(0, result.getResponse().getContentLength());
     }
+
+  @Test
+  public void getResources_When_A_400_Error_From_MediacentreWS_Occurs_KO() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
+    when(mediaCentreService.retrieveListRessource(new ArrayList<>())).thenThrow(new MediacentreWSException(resolve(HttpStatus.SC_BAD_REQUEST)));
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .characterEncoding(StandardCharsets.UTF_8);
+
+    MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+    assertEquals(result.getResponse().getStatus(), HttpStatus.SC_BAD_REQUEST);
+    assertEquals(0, result.getResponse().getContentLength());
+  }
 
 //     getFilters() tests :
     @Test

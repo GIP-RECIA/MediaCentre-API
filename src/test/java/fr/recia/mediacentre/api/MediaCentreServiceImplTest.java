@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
@@ -35,9 +36,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,12 +74,18 @@ public class MediaCentreServiceImplTest {
     private MediaCentreResourceJacksonImpl mediaCentreResource;
 
     @MockBean
+    private CacheManager cacheManager;
+
+    @MockBean
     private SoffitHolder soffit;
 
     @MockBean
     private CategoriesByProfilesProperties categoriesByFilters;
 
     private List<Ressource> listeRessourcesMediaCentre;
+
+    @MockBean
+    private RestTemplate restTemplate;
 
     @NonNull
     @Value("${path.resources}")
@@ -104,7 +113,7 @@ public class MediaCentreServiceImplTest {
         userInfos.put("currentEtabId",List.of("idCurrent"));
         userInfos.put("uid",List.of("uid"));
         userInfos.put("profils",List.of("profile1"));
-        userInfos.put("isMemberOf",isMemberOf.getIsMemberOf());
+        userInfos.put("isMemberOf", isMemberOf.getIsMemberOf());
 
         when(soffit.getEtabIds()).thenReturn(List.of("id"));
         when(soffit.getCurrentEtabId()).thenReturn(List.of("idCurrent"));
@@ -120,11 +129,9 @@ public class MediaCentreServiceImplTest {
     // retrieveListRessource() tests :
 
     @Test
-    public void retrieveListRessource_OK() throws YmlPropertyNotFoundException {
-        mediaCentreService.setUrlRessources(urlRessources);
+    public void retrieveListRessource_OK() throws YmlPropertyNotFoundException, MediacentreWSException {
         when(mediaCentreResource.retrieveListRessource(urlRessources,userInfos)).thenReturn(listeRessourcesMediaCentre);
         List<Ressource> result = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
-
         assertNotNull(result);
         assertEquals(result.size(),listeRessourcesMediaCentre.size());
 
@@ -136,7 +143,7 @@ public class MediaCentreServiceImplTest {
     }
 
     @Test
-    public void retrieveListRessource_When_No_Resource_OK() throws YmlPropertyNotFoundException {
+    public void retrieveListRessource_When_No_Resource_OK() throws YmlPropertyNotFoundException, MediacentreWSException {
         when(mediaCentreResource.retrieveListRessource(urlRessources,userInfos)).thenReturn(new ArrayList<>());
         List<Ressource> result = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
 
