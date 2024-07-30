@@ -16,6 +16,7 @@
 package fr.recia.mediacentre.api.dao;
 
 import fr.recia.mediacentre.api.model.resource.Ressource;
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +28,6 @@ import java.util.Map;
 @Service
 public interface MediaCentreResource {
 
-	List<Ressource> retrieveListRessource(final String mediaCentreUrl,Map<String, List<String>> userInfos) ;
+	List<Ressource> retrieveListRessource(final String mediaCentreUrl,Map<String, List<String>> userInfos) throws MediacentreWSException;
 }
 

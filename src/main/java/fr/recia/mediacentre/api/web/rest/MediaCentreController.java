@@ -15,6 +15,7 @@
  */
 package fr.recia.mediacentre.api.web.rest;
 
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
@@ -46,6 +47,8 @@ public class MediaCentreController {
             return new ResponseEntity<>(resourcesList, HttpStatus.OK);
         }catch (YmlPropertyNotFoundException e){
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (MediacentreWSException e) {
+          return new ResponseEntity<>(null, e.getStatusCode());
         }
     }
 

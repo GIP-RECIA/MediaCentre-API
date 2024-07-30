@@ -17,6 +17,7 @@ package fr.recia.mediacentre.api.service.impl;
 
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
@@ -59,7 +60,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
   private CategoriesByProfilesProperties categoriesByFilters;
 
   @Override
-  public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException {
+  public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
 
     if (log.isDebugEnabled()) {
       log.debug("Preference mediacentre url is {}", urlRessources);

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.model.resource.Ressource;
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -53,30 +54,23 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
     private RestTemplate restTemplate;
 
 
-    public List<Ressource> retrieveListRessource(String mediaUrl,Map<String, List<String>> userInfos) {
+    public List<Ressource> retrieveListRessource(String mediaUrl,Map<String, List<String>> userInfos) throws MediacentreWSException{
         return this.getServiceMediaCentre(mediaUrl,userInfos);
     }
 
   @Cacheable(cacheNames = "userResourcesCache", key = "#userInfos.uid[0]")
-    private List<Ressource> getServiceMediaCentre(String url,Map<String, List<String>> userInfos) {
+    private List<Ressource> getServiceMediaCentre(String url,Map<String, List<String>> userInfos) throws MediacentreWSException {
         if (log.isDebugEnabled()) {
         log.debug("Requesting mediacentre on URL {}", url );
     }
         List<Ressource> listRessourceMediaCentre = null;
         ObjectMapper objectMapper = new ObjectMapper();
 
-        Cache cache = cacheManager.getCache("userResourcesCache");
-        List<Ressource> userResources = (List<Ressource>) cache.get(userInfos.get("uid").get(0), List.class);
-        if(!Objects.isNull(userResources)){
+          Cache cache = cacheManager.getCache("userResourcesCache");
+          List<Ressource> userResources = (List<Ressource>) cache.get(userInfos.get("uid").get(0), List.class);
+          if(!Objects.isNull(userResources)){
             return userResources;
-        }
-//        try {
-//            listRessourceMediaCentre = objectMapper.readValue(new File("src/test/resources/json/resources-example.json"),new TypeReference<>(){});
-//            cache.putIfAbsent(userInfos.get("uid").get(0),listRessourceMediaCentre);
-//        } catch (IOException ex) {
-//            log.info("Unable to convert given json value into resource list.");
-//            throw new RuntimeException(ex);
-//        }
+          }
 
         try {
             HttpHeaders requestHeaders = new HttpHeaders();
@@ -84,11 +78,13 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
             HttpEntity<Map<String, List<String>>> requestEntity = new HttpEntity<Map<String, List<String>>>(userInfos, requestHeaders);
             ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
             listRessourceMediaCentre = Lists.newArrayList(response.getBody());
+
             cache.putIfAbsent(userInfos.get("uid").get(0),listRessourceMediaCentre);
+
         } catch (HttpClientErrorException e) {
             // providing the error stacktrace only on debug as the custom logged error should be suffisant.
             log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(),e);
-            return Lists.newArrayList();
+            throw new MediacentreWSException(e.getStatusCode());
         } catch (RestClientException ex) {
             log.warn("Error getting MediaCentre from url '{}'", url, ex.getLocalizedMessage(), ex);
             return Lists.newArrayList();
