@@ -73,8 +73,12 @@ public class SoffitInterceptor implements HandlerInterceptor {
 
     } catch (IOException ignored) {
       log.error("Unable to read soffit" + soffit);
+      response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+      return false;
     }
     catch (NullPointerException e) {
+      log.error("A user info attribute is missing in the token.");
+      response.setStatus(HttpStatus.BAD_REQUEST.value());
       return false;
     }
     return true;
