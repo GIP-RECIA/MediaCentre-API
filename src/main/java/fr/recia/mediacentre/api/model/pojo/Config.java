@@ -18,10 +18,25 @@ package fr.recia.mediacentre.api.model.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Objects;
+
 @Data
 @AllArgsConstructor
 public class Config {
 
   private String key;
   private String value;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Config config = (Config) o;
+    return Objects.equals(key, config.key) && Objects.equals(value, config.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(key, value);
+  }
 }

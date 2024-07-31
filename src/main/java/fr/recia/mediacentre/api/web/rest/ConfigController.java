@@ -47,31 +47,36 @@ public class ConfigController {
    * object with the name of the child yml property for the key attribute and the value of the child yml property for the value attribute.
    * Each object is stored in the config list.
    *
-   * @param config - An empty list of Config object
    */
-  private void initMap(List<Config> config){
+  private List<Config> initMap(){
+    List<Config> configList = new ArrayList<>();
     String prefix = "config.";
     for (String key : ((AbstractEnvironment) environment).getPropertySources().stream()
       .filter(ps -> ps instanceof EnumerablePropertySource)
       .flatMap(ps -> java.util.Arrays.stream(((EnumerablePropertySource) ps).getPropertyNames()))
       .toArray(String[]::new)) {
+
       if (key.startsWith(prefix)) {
         String configKey = key.substring(prefix.length());
-        config.add(new Config(configKey, environment.getProperty(key)));
+        Config newConfig = new Config(configKey, environment.getProperty(key));
+
+        if(!configList.contains(newConfig)){
+          configList.add(newConfig);
+        }
       }
     }
-
+    return configList;
   }
 
   @GetMapping
   public ResponseEntity<List<Config>> getConfig() throws JsonProcessingException {
-    configProperties.setConfig(new ArrayList<>());
-    List<Config> config = configProperties.getConfig();
-    this.initMap(config);
-    if(config.isEmpty()){
+    List<Config> configList = this.initMap();
+    configProperties.setConfig(configList);
+
+    if(configProperties.getConfig().isEmpty()){
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }else{
-      return new ResponseEntity<>(config, HttpStatus.OK);
+      return new ResponseEntity<>(configProperties.getConfig(), HttpStatus.OK);
     }
   }
 }
