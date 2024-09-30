@@ -83,3 +83,10 @@ path:
     src/test/resources/json/isMemberOf-test.json
   filters:
     src/test/resources/json/filters-test.json
+
+config:
+  groups:
+    - "^.*:(regex1):.*$"
+    - "^.*:(regex2):.*$"
+    - "^.*:(regex3):.*$"
+    - "^.*:(regex4):.*$"
