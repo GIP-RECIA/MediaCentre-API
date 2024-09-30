@@ -39,44 +39,18 @@ public class ConfigController {
   @Autowired
   private ConfigProperties configProperties;
 
-  @Autowired
-  private Environment environment;
-
-  /**
-   * Function that retrieves the child yml properties of the yml config property and creates one Config object per child
-   * object with the name of the child yml property for the key attribute and the value of the child yml property for the value attribute.
-   * Each object is stored in the config list.
-   *
-   */
-  private List<Config> initMap(){
-    List<Config> configList = new ArrayList<>();
-    String prefix = "config.";
-    for (String key : ((AbstractEnvironment) environment).getPropertySources().stream()
-      .filter(ps -> ps instanceof EnumerablePropertySource)
-      .flatMap(ps -> java.util.Arrays.stream(((EnumerablePropertySource) ps).getPropertyNames()))
-      .toArray(String[]::new)) {
-
-      if (key.startsWith(prefix)) {
-        String configKey = key.substring(prefix.length());
-        Config newConfig = new Config(configKey, environment.getProperty(key));
-
-        if(!configList.contains(newConfig)){
-          configList.add(newConfig);
-        }
-      }
-    }
-    return configList;
-  }
-
   @GetMapping
   public ResponseEntity<List<Config>> getConfig() throws JsonProcessingException {
-    List<Config> configList = this.initMap();
-    configProperties.setConfig(configList);
 
-    if(configProperties.getConfig().isEmpty()){
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    List<Config> config = new ArrayList<Config>();
+    for (String groupValue : configProperties.getGroups()){
+      config.add(new Config("groups", groupValue));
+    }
+
+    if(config.isEmpty()){
+      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }else{
-      return new ResponseEntity<>(configProperties.getConfig(), HttpStatus.OK);
+      return new ResponseEntity<>(config, HttpStatus.OK);
     }
   }
 }

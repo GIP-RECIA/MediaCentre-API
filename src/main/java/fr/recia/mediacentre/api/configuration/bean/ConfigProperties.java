@@ -15,16 +15,44 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.Config;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@Configuration
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
+
 @Slf4j
+@ConfigurationProperties(prefix = "config")
+@Component
+@Data
+@Validated
 public class ConfigProperties {
 
-  private List<Config> config;
+  @NotNull @NotEmpty
+  private List<String> groups;
+
+  @PostConstruct
+  private void init() throws JsonProcessingException {
+    log.info("Loaded properties: {}", this);
+  }
+
+  @Override
+  public String toString(){
+      String joinedGroups = String.join("\", \"", groups);
+    return "\"Config properties\": {" +
+      "\n\t\"groups\": \"" + joinedGroups + "\"" +
+      "\n}";
+  }
 }
