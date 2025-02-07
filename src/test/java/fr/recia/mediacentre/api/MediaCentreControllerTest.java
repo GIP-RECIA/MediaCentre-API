@@ -17,6 +17,7 @@ package fr.recia.mediacentre.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
@@ -51,6 +52,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.resolve;
 
@@ -67,6 +70,9 @@ public class MediaCentreControllerTest {
 
     @MockBean
     private MediaCentreServiceImpl mediaCentreService;
+
+    @MockBean
+    private MediaCentreResourceJacksonImpl mediaCentreResourceJackson;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -107,7 +113,7 @@ public class MediaCentreControllerTest {
     @Test
     public void getResources_OK() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
 
-        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(listeRessourcesMediaCentre);
+      doReturn(listeRessourcesMediaCentre).when(mediaCentreResourceJackson).retrieveListRessource(any(),any());
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
                 .accept(MediaType.APPLICATION_JSON)
@@ -116,10 +122,10 @@ public class MediaCentreControllerTest {
                 .content(isMemberOf);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        assertEquals(result.getResponse().getStatus(), HttpStatus.SC_OK);
+        assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
 
         List<Ressource> retrievedResources = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
-        assertEquals(retrievedResources.size(), listeRessourcesMediaCentre.size());
+        assertEquals(listeRessourcesMediaCentre.size(), retrievedResources.size());
         JSONAssert.assertEquals(objectMapper.writeValueAsString(listeRessourcesMediaCentre), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
