@@ -1,0 +1,107 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /the-path
+
+  error:
+    whitelabel.enabled: true
+    include-binding-errors: always
+    include-exception: true
+    include-message: always
+    include-stacktrace: always
+
+logging:
+  config: 'classpath:logback-dev.xml'
+
+hostnames:
+  trusted:
+    - "full.address.ext"
+
+spring:
+  config:
+    activate:
+      on-profile: 'dev'
+  application:
+    name: MediaCentre
+
+  profiles:
+    active: @spring.profiles.active@
+    group:
+      prod: prod
+      dev: dev
+      test: test
+      ci: test
+
+  cache:
+    jcache:
+      config:
+        "classpath:ehcache.xml"
+app:
+  cors:
+      enable: true
+      allow-credentials: true
+      allowed-origins:
+        - http://full.address.domain.ext
+        - https://*.domain.ext
+      exposed-headers:
+        - x-auth-token
+        - x-requested-with
+        - x-xsrf-token
+      allowed-headers:
+        - content-type
+        - authorization
+        - x-com-persist
+        - X-Auth-Token
+        - x-auth-token
+        - x-requested-with
+        - x-xsrf-token
+      allowed-methods:
+        - GET
+        - PUT
+        - POST
+        - DELETE
+  soffit:
+    encryptionPassword: 'encryptionPassword'
+    signatureKey: 'aJwtSignatureKey'
+
+viewResCache: false
+
+
+userInfo:
+  key:
+    currenEtabId:
+      ESCOSIRENCourant
+    etabIds:
+      ESCOSIREN
+    groups:
+      isMemberOf
+    uid:
+      ENTPersonGARIdentifiant
+    profils:
+      ENTPersonProfils
+
+filters:
+  categoriesByProfiles:
+    - profiles:
+        - 'profile1'
+      filters:
+        - filter1
+        - filter2
+    - profiles:
+        - 'profile2'
+        - 'profile3'
+        - 'profile4'
+      filters:
+        - filter3
+        - filter4
+        - filter5
+
+config:
+  groups:
+    - "groupRegex1"
+    - "groupRegex2"
+
+url:
+  ressources:
+    mediacentre:
+      "mediacentre-WS url"

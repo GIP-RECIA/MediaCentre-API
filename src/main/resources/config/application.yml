@@ -84,6 +84,5 @@ config:
 
 url:
   ressources:
-    mediacentre:
-
+    mediacentre: ""
 
