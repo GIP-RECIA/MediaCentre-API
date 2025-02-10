@@ -31,6 +31,10 @@
 
 see official doc: https://maven.apache.org/wrapper/
 
+### To run server with properties outside of project scope
+
+`./mvnw clean compile spring-boot:run -Dspring-boot.run.fork=false -Dspring.config.additional-location=$PATH_PROPERTIES/MediaCentre/application-local.yml`
+
 ### To run tests 
 
 `./mvnw test -P test` will execute all Spring Boot test classes with the test profile.
@@ -47,7 +51,3 @@ see official doc: https://maven.apache.org/wrapper/
 
 ### retrieve user's resources to web service :
 - ```curl -X POST 'http://***********/mediacentre-ws/api/ressources/' -d '{"isMemberOf":["***********"],"ENTPersonGARIdentifiant":["****************"],"ESCOUAI":["********"],"ENTPersonProfils":["************"]}' -H 'Accept: application/json' -H 'Content-Type: application/json' --compressed -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' -k -v --tlsv1.2```
-
-### To run server with properties outside of project scope
-
-`./mvnw clean compile spring-boot:run -Dspring-boot.run.fork=false -Dspring.config.additional-location=$PATH_PROPERTIES/MediaCentre/application-local.yml`
