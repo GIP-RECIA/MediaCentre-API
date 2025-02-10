@@ -15,6 +15,10 @@
  */
 package fr.recia.mediacentre.api.configuration;
 
+import fr.recia.mediacentre.api.service.MediaCentreService;
+import fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl;
+import fr.recia.mediacentre.api.service.impl.MediaCentreServiceJsonImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -25,5 +29,17 @@ public class MediaCentreConfiguration {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @ConditionalOnProperty(name="service.mock", havingValue="true")
+    @Bean(name = "mediaCentreService")
+    public MediaCentreService httpGetImpl() {
+      return new MediaCentreServiceJsonImpl();
+    }
+
+    @ConditionalOnProperty(name="service.mock", havingValue="false")
+    @Bean(name = "mediaCentreService")
+    public MediaCentreService localFileImpl() {
+      return new MediaCentreServiceImpl();
     }
 }

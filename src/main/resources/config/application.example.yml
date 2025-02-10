@@ -105,3 +105,6 @@ url:
   ressources:
     mediacentre:
       "mediacentre-WS url"
+
+service:
+  mock: false
