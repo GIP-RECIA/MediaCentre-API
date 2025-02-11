@@ -88,3 +88,4 @@ url:
 
 service:
   mock: false
+  mockedDataLocation: ''

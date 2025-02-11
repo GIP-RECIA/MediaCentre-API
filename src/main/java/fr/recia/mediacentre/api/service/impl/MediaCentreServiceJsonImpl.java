@@ -44,7 +44,7 @@ import java.util.List;
 public class MediaCentreServiceJsonImpl implements MediaCentreService {
 
   @NonNull
-  @Value("${url.ressources.mediacentre}")
+  @Value("${service.mockedDataLocation}")
   @Setter
   private String urlRessources;
 
@@ -59,9 +59,9 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
 
   @Override
   public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
-          ObjectMapper objectMapper = new ObjectMapper();
-          File file = new File("src/test/resources/json/resources-mock.json");
     try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      File file = new File(urlRessources);
       List<Ressource> ressourceList = objectMapper.readValue(file, new TypeReference<List<Ressource>>(){});
       return ressourceList;
     } catch (IOException e) {

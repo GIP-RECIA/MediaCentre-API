@@ -108,3 +108,4 @@ url:
 
 service:
   mock: false
+  mockedDataLocation: 'mocked/data/location/mock-data.json'
