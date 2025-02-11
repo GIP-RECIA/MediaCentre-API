@@ -67,7 +67,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     }
 
     if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty()) {
-      throw new YmlPropertyNotFoundException();
+      throw new YmlPropertyNotFoundException("Property url.ressources is empty");
     }
 
     Map<String, List<String>> userInfos = new HashMap<>();
@@ -90,7 +90,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
   private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
     List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
     if (profilesMapList.isEmpty()) {
-      throw new YmlPropertyNotFoundException();
+      throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
     }
     for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
       if (item.getProfiles().contains(profile)) {

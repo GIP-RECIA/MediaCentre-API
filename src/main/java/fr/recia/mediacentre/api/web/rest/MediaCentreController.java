@@ -42,23 +42,13 @@ public class MediaCentreController {
 
     @PostMapping
     public ResponseEntity<List<Ressource>> getResources(@RequestBody IsMemberOf isMemberOf) {
-        try{
-            List<Ressource> resourcesList = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
-            return new ResponseEntity<>(resourcesList, HttpStatus.OK);
-        }catch (YmlPropertyNotFoundException e){
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (MediacentreWSException e) {
-          return new ResponseEntity<>(null, e.getStatusCode());
-        }
+        List<Ressource> resourcesList = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
+        return new ResponseEntity<>(resourcesList, HttpStatus.OK);
     }
 
     @GetMapping(path = "/filters")
     public ResponseEntity<List<FilterEnum>> getFilters(){
-        try{
-            List<FilterEnum> filterEnumList = mediaCentreService.retrieveFiltersList();
-            return new ResponseEntity<>(filterEnumList, HttpStatus.OK);
-        }catch(YmlPropertyNotFoundException e){
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<FilterEnum> filterEnumList = mediaCentreService.retrieveFiltersList();
+        return new ResponseEntity<>(filterEnumList, HttpStatus.OK);
     }
 }

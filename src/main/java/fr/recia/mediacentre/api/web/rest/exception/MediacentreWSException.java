@@ -18,7 +18,7 @@ package fr.recia.mediacentre.api.web.rest.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-public class MediacentreWSException extends Throwable{
+public class MediacentreWSException extends RuntimeException {
 
   @Getter
   private HttpStatus statusCode;

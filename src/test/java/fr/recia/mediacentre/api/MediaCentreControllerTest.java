@@ -149,7 +149,7 @@ public class MediaCentreControllerTest {
     @Test
     public void getResources_When_No_Yml_Properties_For_UrlRessources_KO() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
         mediaCentreService.setUrlRessources("");
-        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenThrow(new YmlPropertyNotFoundException());
+        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenThrow(new YmlPropertyNotFoundException("Message"));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
                 .accept(MediaType.APPLICATION_JSON)

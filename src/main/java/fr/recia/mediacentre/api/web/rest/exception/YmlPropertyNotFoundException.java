@@ -15,13 +15,10 @@
  */
 package fr.recia.mediacentre.api.web.rest.exception;
 
-public class YmlPropertyNotFoundException extends Throwable {
+public class YmlPropertyNotFoundException extends RuntimeException {
 
     public YmlPropertyNotFoundException(String message){
         super(message);
     }
 
-    public YmlPropertyNotFoundException(){
-        super();
-    }
 }

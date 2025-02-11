@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
       List<Ressource> ressourceList = objectMapper.readValue(file, new TypeReference<List<Ressource>>(){});
       return ressourceList;
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -74,11 +75,10 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
     String userProfile = soffit.getProfil();
     return getFiltersByProfile(userProfile);
   }
-
   private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
     List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
     if (profilesMapList.isEmpty()) {
-      throw new YmlPropertyNotFoundException();
+      throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
     }
     for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
       if (item.getProfiles().contains(profile)) {
