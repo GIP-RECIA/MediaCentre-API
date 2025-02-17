@@ -82,6 +82,15 @@ filters:
 config:
   groups:
 
+gestionaffectations:
+  objects:
+    - id: "" # must be unique for each object but does not relate to anything
+      link: true
+      title: ""
+      description: ""
+      regexp: ""
+
+
 url:
   ressources:
     mediacentre: ""
@@ -89,3 +98,4 @@ url:
 service:
   mock: false
   mockedDataLocation: ''
+  mockedDTOLocation: ''

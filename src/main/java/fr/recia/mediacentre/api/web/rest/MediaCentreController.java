@@ -15,8 +15,7 @@
  */
 package fr.recia.mediacentre.api.web.rest;
 
-import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
-import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
+import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
 import fr.recia.mediacentre.api.model.resource.Ressource;
@@ -44,6 +43,11 @@ public class MediaCentreController {
     public ResponseEntity<List<Ressource>> getResources(@RequestBody IsMemberOf isMemberOf) {
         List<Ressource> resourcesList = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
         return new ResponseEntity<>(resourcesList, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/gestion")
+    public ResponseEntity<List<GestionAffectationDTO>> getGestion(@RequestBody IsMemberOf isMemberOf){
+      return ResponseEntity.ok().body(mediaCentreService.getGestionAffectationDTOs(isMemberOf.getIsMemberOf()));
     }
 
     @GetMapping(path = "/filters")

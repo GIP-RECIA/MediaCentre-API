@@ -21,6 +21,7 @@ import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesPropertie
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
+import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.service.MediaCentreService;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
@@ -49,6 +50,11 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
   @Setter
   private String urlRessources;
 
+  @NonNull
+  @Value("${service.mockedDTOLocation}")
+  @Setter
+  private String urlDTOS;
+
   @Autowired
   private MediaCentreResourceJacksonImpl mediaCentreResource;
 
@@ -75,6 +81,18 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
     String userProfile = soffit.getProfil();
     return getFiltersByProfile(userProfile);
   }
+
+  @Override
+  public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf) {
+    try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      File file = new File(urlDTOS);
+      return objectMapper.readValue(file, new TypeReference<List<GestionAffectationDTO>>(){});
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
   private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
     List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
     if (profilesMapList.isEmpty()) {

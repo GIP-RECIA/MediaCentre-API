@@ -100,6 +100,14 @@ config:
   groups:
     - "groupRegex1"
     - "groupRegex2"
+    -
+gestionaffectations:
+  objects:
+    - id: "id" # must be unique for each object but does not relate to anything
+      link: true
+      title: "hyperlink text value if link is true, modal button text if link is false"
+      description: "link to redirect to if link is true | modal html content if link is false"
+      regexp: "regexp"
 
 url:
   ressources:
@@ -109,3 +117,4 @@ url:
 service:
   mock: false
   mockedDataLocation: 'mocked/data/location/mock-data.json'
+  mockedDTOLocation: 'mocked/dto/location/mock-data.json'

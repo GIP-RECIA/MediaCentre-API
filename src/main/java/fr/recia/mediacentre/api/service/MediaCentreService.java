@@ -15,6 +15,8 @@
  */
 package fr.recia.mediacentre.api.service;
 
+import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
+import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
@@ -37,4 +39,6 @@ public interface MediaCentreService {
      * @return a List<FilterEnum>
      */
     List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException;
+
+    public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf);
 }

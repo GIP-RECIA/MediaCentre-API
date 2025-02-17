@@ -16,7 +16,10 @@
 package fr.recia.mediacentre.api.service.impl;
 
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
+import fr.recia.mediacentre.api.configuration.bean.GestionAffectationsProperties;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
+import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
@@ -30,6 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,6 +60,9 @@ public class MediaCentreServiceImpl implements MediaCentreService {
 
   @Autowired
   private SoffitHolder soffit;
+
+  @Autowired
+  private GestionAffectationsProperties gestionAffectations;
 
   @Autowired
   private CategoriesByProfilesProperties categoriesByFilters;
@@ -85,6 +93,48 @@ public class MediaCentreServiceImpl implements MediaCentreService {
   public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
     String userProfile = soffit.getProfil();
     return getFiltersByProfile(userProfile);
+  }
+
+  @Override
+  public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf) {
+    return convertGestionAffectationListToDTOS(getFilteredGestionAffectations(isMemberOf));
+  }
+
+  private List<GestionAffectationDTO> convertGestionAffectationListToDTOS(List<GestionAffectation> gestionAffectations){
+    List<GestionAffectationDTO> gestionAffectationDTOS = new ArrayList<>();
+    for(GestionAffectation gestionAffectation : gestionAffectations){
+      gestionAffectationDTOS.add( GestionAffectationDTO.fromGestionAffectation(gestionAffectation));
+    }
+    return gestionAffectationDTOS;
+  }
+
+  public List<GestionAffectation> getFilteredGestionAffectations(List<String> isMemberOf) {
+
+    List<GestionAffectation> gestionAffectationsFiltered = new ArrayList<>();
+    for(GestionAffectation gestionAffectation: gestionAffectations.getObjects()){
+      if(concerneUtilisateur(gestionAffectation, isMemberOf)){
+        gestionAffectationsFiltered.add(gestionAffectation);
+      }
+    }
+    return gestionAffectationsFiltered;
+  }
+
+
+  public boolean concerneUtilisateur(GestionAffectation gestionAffectation, List<String> isMemberOf) {
+    String regexp = gestionAffectation.getRegexp();
+    if (isMemberOf == null) {
+      return false;
+    }
+    if ( StringUtils.hasText(regexp)) {
+      return true;
+    }
+
+    for (String value : isMemberOf) {
+      if (value.matches(regexp)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
