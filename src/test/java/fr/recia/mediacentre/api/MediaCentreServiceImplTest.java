@@ -51,6 +51,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -117,10 +118,7 @@ public class MediaCentreServiceImplTest {
         userInfos.put("profils",List.of("profile1"));
         userInfos.put("isMemberOf", isMemberOf.getIsMemberOf());
 
-        when(soffit.getEtabIds()).thenReturn(List.of("id"));
-        when(soffit.getCurrentEtabId()).thenReturn(List.of("idCurrent"));
-        when(soffit.getUid()).thenReturn(List.of("uid"));
-        when(soffit.getProfil()).thenReturn("profile1");
+        doReturn("profile1").when(soffit).getProfiles();
 
         CategoriesByProfilesProperties.ProfilesMap profilesMap = new CategoriesByProfilesProperties.ProfilesMap();
         profilesMap.setProfiles(List.of("profile1"));

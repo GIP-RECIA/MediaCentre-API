@@ -15,8 +15,10 @@
  */
 package fr.recia.mediacentre.api.configuration;
 
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.interceptor.SoffitInterceptor;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -30,6 +32,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
 
+
+  @Autowired
+  MappingProperties mappingProperties;
+
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(soffitInterceptor());
@@ -37,7 +43,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
 
   @Bean
   public SoffitInterceptor soffitInterceptor() {
-    return new SoffitInterceptor(soffitHolder());
+    return new SoffitInterceptor(soffitHolder(), mappingProperties);
   }
 
   @Bean

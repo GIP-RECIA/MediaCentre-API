@@ -67,18 +67,14 @@ app:
 viewResCache: false
 
 
-userInfo:
-  key:
-    currenEtabId:
-      ESCOSIRENCourant
-    etabIds:
-      ESCOSIREN
-    groups:
-      isMemberOf
-    uid:
-      ENTPersonGARIdentifiant
-    profils:
-      ENTPersonProfils
+mapping:
+  profileKey: "ENTPersonProfils" #must be the same as the in key of the profile in the following list
+  userinfoAttributes: # do not put isMemberOf in this list
+    - in: "keyOfValueInSoffit"
+      out: "keyOfValueSentToMediacentre-WS"
+  groups:
+    in: "" # leave empty string
+    out: "isMemberOf" #name that the groups collection must be given went sent to mediacentre-WS
 
 filters:
   categoriesByProfiles:

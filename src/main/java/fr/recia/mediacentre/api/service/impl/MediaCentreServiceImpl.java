@@ -20,6 +20,7 @@ import fr.recia.mediacentre.api.configuration.bean.GestionAffectationsProperties
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
+import fr.recia.mediacentre.api.service.utils.UserInfosBuilder;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
@@ -36,11 +37,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by jgribonvald on 06/06/17.
@@ -54,6 +56,9 @@ public class MediaCentreServiceImpl implements MediaCentreService {
   @Value("${url.ressources.mediacentre}")
   @Setter
   private String urlRessources;
+
+  @Autowired
+  private UserInfosBuilder userInfosBuilder;
 
   @Autowired
   private MediaCentreResourceJacksonImpl mediaCentreResource;
@@ -77,22 +82,16 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty()) {
       throw new YmlPropertyNotFoundException("Property url.ressources is empty");
     }
+    Map<String, List<String>> userInfos = userInfosBuilder.getUserInfos(soffit, isMemberOf);
 
-    Map<String, List<String>> userInfos = new HashMap<>();
-
-    userInfos.put("etabIds", soffit.getEtabIds());
-    userInfos.put("currentEtabId", soffit.getCurrentEtabId());
-    userInfos.put("uid", soffit.getUid());
-    userInfos.put("profils", Collections.singletonList(soffit.getProfil()));
-    userInfos.put("isMemberOf", isMemberOf);
     List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, userInfos);
     return listRessources;
   }
 
   @Override
   public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-    String userProfile = soffit.getProfil();
-    return getFiltersByProfile(userProfile);
+    List<String> userProfiles = soffit.getProfiles();
+    return getFiltersByProfile(userProfiles);
   }
 
   @Override
@@ -137,17 +136,20 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     return false;
   }
 
-  private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
+  private List<FilterEnum> getFiltersByProfile(List<String> profiles) throws YmlPropertyNotFoundException {
     List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
+    Set<FilterEnum> filterEnumSet = new HashSet<>();
     if (profilesMapList.isEmpty()) {
       throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
     }
     for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
-      if (item.getProfiles().contains(profile)) {
-        return item.getFilters();
+      for(String profile : profiles){
+        if (item.getProfiles().contains(profile)) {
+          filterEnumSet.addAll(item.getFilters());
+        }
       }
     }
-    return new ArrayList<>();
+    return new ArrayList<>(filterEnumSet);
   }
 
 }

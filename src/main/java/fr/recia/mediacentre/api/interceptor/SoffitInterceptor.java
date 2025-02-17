@@ -15,8 +15,11 @@
  */
 package fr.recia.mediacentre.api.interceptor;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
+import fr.recia.mediacentre.api.model.pojo.UserInfoAttribute;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -25,9 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -36,8 +39,11 @@ public class SoffitInterceptor implements HandlerInterceptor {
 
   private final SoffitHolder soffitHolder;
 
-  public SoffitInterceptor(SoffitHolder soffitHolder) {
+  MappingProperties mappingProperties;
+
+  public SoffitInterceptor(SoffitHolder soffitHolder, MappingProperties mappingProperties) {
     this.soffitHolder = soffitHolder;
+    this.mappingProperties = mappingProperties;
   }
 
   @Override
@@ -65,11 +71,20 @@ public class SoffitInterceptor implements HandlerInterceptor {
       }
       soffitHolder.setSub(soffit.get("sub").toString());
 
+      for(UserInfoAttribute userInfoAttribute: mappingProperties.getUserinfoAttributes()){
+        Object rawObject =soffit.get(userInfoAttribute.getIn());
+        try{
+          List<String> values =  new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+          });
+          soffitHolder.getUserInfosWithoutIsMemberOf().put(userInfoAttribute.getOut(), values);
+        }catch (IllegalArgumentException illegalArgumentException){
+          log.warn("Soffit did not contain string collection for argument {}", userInfoAttribute.getIn());
+        }
+      }
+      if(soffitHolder.getUserInfosWithoutIsMemberOf().containsKey(mappingProperties.getProfileKey())){
+        soffitHolder.setProfiles(soffitHolder.getUserInfosWithoutIsMemberOf().get(mappingProperties.getProfileKey()));
+      }
 
-      soffitHolder.setEtabIds(Collections.singletonList(soffit.get("ESCOSIREN").toString()));
-      soffitHolder.setCurrentEtabId(Collections.singletonList((soffit.get("ESCOSIRENCourant").toString())));
-      soffitHolder.setUid(Collections.singletonList((soffit.get("ENTPersonGARIdentifiant").toString())));
-      soffitHolder.setProfil((soffit.get("profile").toString()));
 
     } catch (IOException ignored) {
       log.error("Unable to read soffit" + soffit);

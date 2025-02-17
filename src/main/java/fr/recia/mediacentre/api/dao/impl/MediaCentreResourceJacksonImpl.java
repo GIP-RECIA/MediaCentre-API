@@ -18,6 +18,7 @@ package fr.recia.mediacentre.api.dao.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
+import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,9 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private SoffitHolder soffitHolder;
+
 
     public List<Ressource> retrieveListRessource(String mediaUrl,Map<String, List<String>> userInfos) throws MediacentreWSException{
         return this.getServiceMediaCentre(mediaUrl,userInfos);
@@ -66,11 +70,11 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
         List<Ressource> listRessourceMediaCentre = null;
         ObjectMapper objectMapper = new ObjectMapper();
 
-          Cache cache = cacheManager.getCache("userResourcesCache");
-          List<Ressource> userResources = (List<Ressource>) cache.get(userInfos.get("uid").get(0), List.class);
-          if(!Objects.isNull(userResources)){
-            return userResources;
-          }
+        Cache cache = cacheManager.getCache("userResourcesCache");
+        List<Ressource> userResources = (List<Ressource>) cache.get(soffitHolder.getSub(), List.class);
+        if(!Objects.isNull(userResources)){
+          return userResources;
+        }
 
         try {
             HttpHeaders requestHeaders = new HttpHeaders();
@@ -79,7 +83,7 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
             ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
             listRessourceMediaCentre = Lists.newArrayList(response.getBody());
 
-            cache.putIfAbsent(userInfos.get("uid").get(0),listRessourceMediaCentre);
+            cache.putIfAbsent(soffitHolder.getSub(),listRessourceMediaCentre);
 
         } catch (HttpClientErrorException e) {
             // providing the error stacktrace only on debug as the custom logged error should be suffisant.

@@ -38,7 +38,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -78,7 +80,7 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
 
   @Override
   public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-    String userProfile = soffit.getProfil();
+    List<String> userProfile = soffit.getProfiles();
     return getFiltersByProfile(userProfile);
   }
 
@@ -93,16 +95,19 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
     }
   }
 
-  private List<FilterEnum> getFiltersByProfile(String profile) throws YmlPropertyNotFoundException {
+  private List<FilterEnum> getFiltersByProfile(List<String> profiles) throws YmlPropertyNotFoundException {
     List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
+    Set<FilterEnum> filterEnumSet = new HashSet<>();
     if (profilesMapList.isEmpty()) {
       throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
     }
     for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
-      if (item.getProfiles().contains(profile)) {
-        return item.getFilters();
+      for(String profile : profiles){
+        if (item.getProfiles().contains(profile)) {
+          filterEnumSet.addAll(item.getFilters());
+        }
       }
     }
-    return new ArrayList<>();
+    return new ArrayList<>(filterEnumSet);
   }
 }

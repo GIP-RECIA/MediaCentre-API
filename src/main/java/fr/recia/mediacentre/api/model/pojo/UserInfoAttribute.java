@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.api.interceptor.bean;
+package fr.recia.mediacentre.api.model.pojo;
 
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Data
-public class SoffitHolder {
+public class UserInfoAttribute {
 
-  private String sub;
+  private String in;
+  private String out;
 
-  private List<String> profiles;
-
-  private Map<String, List<String>> userInfosWithoutIsMemberOf = new HashMap<>();
+  @Override
+  public String toString(){
+    return String.format("in {%s}, out {%s}", in, out);
+  }
 
 }
