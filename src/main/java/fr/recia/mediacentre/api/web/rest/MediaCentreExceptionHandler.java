@@ -38,11 +38,12 @@ public class MediaCentreExceptionHandler {
       log.error("A YmlPropertyNotFoundException occurred : [{}]", ex.getMessage());
     }else if( ex instanceof MediacentreWSException){
       MediacentreWSException mcwsex = (MediacentreWSException) ex;
-      log.warn("A MediacentreWSException occurred  with status code: [{}]", mcwsex.getStatusCode());
+      log.error("A MediacentreWSException occurred  with status code: [{}]", mcwsex.getStatusCode());
     } else if (ex instanceof UncheckedIOException) {
-      log.warn("An IOException occurred with message: [{}]", ex.getMessage());
+      log.error("An IOException occurred with message: [{}]", ex.getMessage());
     } else {
-      log.warn("An exception of type {} occurred with message [{}]", ex.getClass(), ex.getMessage());
+      log.error("An exception of type {} occurred with message [{}]", ex.getClass(), ex.getMessage());
+      log.error("Trace : ", ex);
     }
     return ResponseEntity.internalServerError().build();
   }
