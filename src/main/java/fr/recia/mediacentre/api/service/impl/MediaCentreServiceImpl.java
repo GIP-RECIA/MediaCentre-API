@@ -108,7 +108,6 @@ public class MediaCentreServiceImpl implements MediaCentreService {
   }
 
   public List<GestionAffectation> getFilteredGestionAffectations(List<String> isMemberOf) {
-
     List<GestionAffectation> gestionAffectationsFiltered = new ArrayList<>();
     for(GestionAffectation gestionAffectation: gestionAffectations.getObjects()){
       if(concerneUtilisateur(gestionAffectation, isMemberOf)){
@@ -124,7 +123,7 @@ public class MediaCentreServiceImpl implements MediaCentreService {
     if (isMemberOf == null) {
       return false;
     }
-    if ( StringUtils.hasText(regexp)) {
+    if (!StringUtils.hasText(regexp)) {
       return true;
     }
 
