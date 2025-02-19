@@ -37,6 +37,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,11 +73,14 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
   public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
     try {
       ObjectMapper objectMapper = new ObjectMapper();
-      File file = new File(urlRessources);
-      List<Ressource> ressourceList = objectMapper.readValue(file, new TypeReference<List<Ressource>>(){});
-      return ressourceList;
+      URL resource = MediaCentreServiceJsonImpl.class.getResource(urlRessources);
+      assert resource != null;
+      File file = Paths.get(resource.toURI()).toFile();
+      return objectMapper.readValue(file, new TypeReference<>() {});
     } catch (IOException e) {
       throw new UncheckedIOException(e);
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -88,10 +94,14 @@ public class MediaCentreServiceJsonImpl implements MediaCentreService {
   public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf) {
     try {
       ObjectMapper objectMapper = new ObjectMapper();
-      File file = new File(urlDTOS);
-      return objectMapper.readValue(file, new TypeReference<List<GestionAffectationDTO>>(){});
+      URL resource = MediaCentreServiceJsonImpl.class.getResource(urlDTOS);
+      assert resource != null;
+      File file = Paths.get(resource.toURI()).toFile();
+      return objectMapper.readValue(file, new TypeReference<>() {});
     } catch (IOException e) {
       throw new UncheckedIOException(e);
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
     }
   }
 
