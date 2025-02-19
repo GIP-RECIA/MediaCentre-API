@@ -34,17 +34,7 @@ public class MediaCentreExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<Object> handleException(Exception ex) {
-    if(ex instanceof YmlPropertyNotFoundException){
-      log.error("A YmlPropertyNotFoundException occurred : [{}]", ex.getMessage());
-    }else if( ex instanceof MediacentreWSException){
-      MediacentreWSException mcwsex = (MediacentreWSException) ex;
-      log.error("A MediacentreWSException occurred  with status code: [{}]", mcwsex.getStatusCode());
-    } else if (ex instanceof UncheckedIOException) {
-      log.error("An IOException occurred with message: [{}]", ex.getMessage());
-    } else {
-      log.error("An exception of type {} occurred with message [{}]", ex.getClass(), ex.getMessage());
-      log.error("Trace : ", ex);
-    }
+    log.error("MediacentreException: ",ex);
     return ResponseEntity.internalServerError().build();
   }
 }
