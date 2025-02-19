@@ -20,13 +20,13 @@ import fr.recia.mediacentre.api.configuration.bean.GestionAffectationsProperties
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
+import fr.recia.mediacentre.api.service.MediaCentreServiceAbstractImpl;
 import fr.recia.mediacentre.api.service.utils.UserInfosBuilder;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.resource.Ressource;
-import fr.recia.mediacentre.api.service.MediaCentreService;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
@@ -50,7 +50,7 @@ import java.util.Set;
 @Slf4j
 @Service
 @NoArgsConstructor
-public class MediaCentreServiceImpl implements MediaCentreService {
+public class MediaCentreServiceImpl extends MediaCentreServiceAbstractImpl {
 
   @NonNull
   @Value("${url.ressources.mediacentre}")

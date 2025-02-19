@@ -23,7 +23,7 @@ import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.model.resource.Ressource;
-import fr.recia.mediacentre.api.service.MediaCentreService;
+import fr.recia.mediacentre.api.service.MediaCentreServiceAbstractImpl;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import lombok.NoArgsConstructor;
@@ -48,7 +48,7 @@ import java.util.Set;
 @Slf4j
 @Service
 @NoArgsConstructor
-public class MediaCentreServiceJsonImpl implements MediaCentreService {
+public class MediaCentreServiceJsonImpl extends MediaCentreServiceAbstractImpl {
 
   @NonNull
   @Value("${service.mockedDataLocation}")
