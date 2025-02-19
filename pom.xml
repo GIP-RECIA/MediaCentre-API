@@ -312,6 +312,8 @@
                       **/application-*.yml,
                       **/logback-*.xml,
                       **/application*.example,
+                      **/*mock*.json,
+                      **/json,
                       **/*Test.class,</packagingExcludes>
                     <warSourceExcludes>src/,
                         public/,
