@@ -68,7 +68,8 @@ viewResCache: false
 
 
 mapping:
-  profileKey: "ENTPersonProfils" #must be the same as the in key of the profile in the following list
+  profileKey: "" #must be the same as the out key of the profile in the following list
+  currentEtabUaiKey: # must be the same as the out key of the currentSiren in the following list
   userinfoAttributes: # do not put isMemberOf in this list
     - in: "keyOfValueInSoffit"
       out: "keyOfValueSentToMediacentre-WS"

@@ -64,13 +64,14 @@ hostnames:
   trusted:
 
 mapping:
-  profileKey: "ENTPersonProfils" # must be the same as the in key of the profile in the following list
+  profileKey:  # must be the same as the out key of the profile in the following list
+  currentEtabUaiKey: # must be the same as the out key of the currentSiren in the following list
   userinfoAttributes: # do not put isMemberOf in this list
-    - in: "keyOfValueInSoffit"
-      out: "keyOfValueSentToMediacentre-WS"
+    - in:
+      out:
   groups:
     in: "" # leave empty string
-    out: "isMemberOf" # name that the groups collection must be given went sent to mediacentre-WS
+    out: # name that the groups collection must be given went sent to mediacentre-WS
 filters:
   categoriesByProfiles:
 
