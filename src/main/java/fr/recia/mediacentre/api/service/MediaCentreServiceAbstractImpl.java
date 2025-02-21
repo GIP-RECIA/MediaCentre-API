@@ -15,5 +15,56 @@
  */
 package fr.recia.mediacentre.api.service;
 
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
+import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
+import fr.recia.mediacentre.api.model.resource.Ressource;
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
+import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+@Slf4j
 public abstract class MediaCentreServiceAbstractImpl implements MediaCentreService{
+
+  @Autowired
+  SoffitHolder soffitHolder;
+
+  @Autowired
+  MappingProperties mappingProperties;
+
+  @Override
+  public Optional<Ressource> retrieveRessourceById(String ressourceId, List<String> isMemberOf, boolean isBase64) throws YmlPropertyNotFoundException, MediacentreWSException {
+    String ressourceIdForFiltering = ressourceId;
+    if(isBase64){
+      String decodedId = new String(Base64.decodeBase64(ressourceId.getBytes()));
+      ressourceIdForFiltering = decodedId;
+    }
+
+    return getRessourceOfCurrentEtabFromRessourceList(ressourceIdForFiltering, retrieveListRessource(isMemberOf));
+  }
+
+  protected Optional<Ressource> getRessourceOfCurrentEtabFromRessourceList(String ressourceId, List<Ressource> ressourceList){
+    List<String> currentUaiList = soffitHolder.getUserInfosWithoutIsMemberOf().get(mappingProperties.getCurrentEtabUaiKey());
+    if(Objects.isNull(currentUaiList) || currentUaiList.isEmpty()){
+      throw new YmlPropertyNotFoundException("Missing mapping for current etab UAI");
+    }
+    String currentUai = currentUaiList.get(0);
+    for(Ressource ressource : ressourceList){
+      if(ressourceId.trim().equalsIgnoreCase(ressource.getIdRessource().trim())){
+        if(ressource.getIdEtablissement().isEmpty()){
+          return Optional.of(ressource);
+        }else  if(ressource.getIdEtablissement().stream().anyMatch(o -> o.getUAI().trim().equals(currentUai.trim()))){
+          return Optional.of(ressource);
+        }else{
+          log.info("resource found but does not match the current UAI");
+        }
+      }
+    }
+    return Optional.empty();
+  }
 }

@@ -18,7 +18,9 @@ package fr.recia.mediacentre.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.model.resource.IdEtablissement;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
@@ -29,6 +31,7 @@ import fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -48,9 +52,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -70,7 +81,7 @@ public class MediaCentreServiceImplTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
+    @SpyBean
     private MediaCentreServiceImpl mediaCentreService;
 
     @MockBean
@@ -81,6 +92,9 @@ public class MediaCentreServiceImplTest {
 
     @MockBean
     private SoffitHolder soffit;
+
+    @MockBean
+    MappingProperties mappingProperties;
 
     @MockBean
     private CategoriesByProfilesProperties categoriesByFilters;
@@ -106,6 +120,8 @@ public class MediaCentreServiceImplTest {
 
     private Map<String,List<String>> userInfos;
 
+    private static final  String testUai = "TestUai";
+
     @Before
     public void init() throws IOException {
         listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath),new TypeReference<>(){});
@@ -118,19 +134,136 @@ public class MediaCentreServiceImplTest {
         userInfos.put("profils",List.of("profile1"));
         userInfos.put("isMemberOf", isMemberOf.getIsMemberOf());
 
-        doReturn("profile1").when(soffit).getProfiles();
+        doReturn(List.of("profile1")).when(soffit).getProfiles();
 
         CategoriesByProfilesProperties.ProfilesMap profilesMap = new CategoriesByProfilesProperties.ProfilesMap();
         profilesMap.setProfiles(List.of("profile1"));
         profilesMap.setFilters(List.of(FilterEnum.TYPE_PRESENTATION_FILTER, FilterEnum.NIVEAU_EDUCATIF_FILTER, FilterEnum.UAI_FILTER));
         when(categoriesByFilters.getCategoriesByProfiles()).thenReturn(List.of(profilesMap));
+
+        String currentEtabUaiKey = "CurrentEtabUai";
+
+        Map<String, List<String>> soffitMap = new HashMap<>();
+        soffitMap.put(currentEtabUaiKey, List.of(testUai));
+
+        doReturn(soffitMap).when(soffit).getUserInfosWithoutIsMemberOf();
+        doReturn(currentEtabUaiKey).when(mappingProperties).getCurrentEtabUaiKey();
     }
+
+    // retrieveRessourceById() tests :
+
+    @Test
+    public void retrieveRessourceById_NoEtab_OK(){
+
+      String idRessourceRequested = "ID-RES";
+      String idRessource = idRessourceRequested;
+
+      Ressource matchingRessource = new Ressource();
+      matchingRessource.setIdEtablissement(new ArrayList<>());
+
+      matchingRessource.setIdRessource(idRessource);
+
+
+      doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
+      Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
+
+      assertFalse(optionalRessource.isEmpty());
+      assertEquals(idRessourceRequested, optionalRessource.get().getIdRessource());
+    }
+
+  @Test
+  public void retrieveRessourceById_NoEtab_Base64_OK(){
+
+    String idDecoded = "ID-TEST";
+
+    String idEncoded = new String(Base64.encodeBase64(idDecoded.getBytes()));
+
+    String idRessourceRequested = idEncoded;
+    String idRessource = idDecoded;
+
+    Ressource matchingRessource = new Ressource();
+    matchingRessource.setIdEtablissement(new ArrayList<>());
+
+    matchingRessource.setIdRessource(idRessource);
+
+
+    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), true);
+
+    assertFalse(optionalRessource.isEmpty());
+    assertEquals(idDecoded, optionalRessource.get().getIdRessource());
+  }
+
+  @Test
+  public void retrieveRessourceById_MatchingEtab_OK(){
+
+    String idRessourceRequested = "ID-RES";
+    String idRessource = idRessourceRequested;
+
+    Ressource matchingRessource = new Ressource();
+
+    matchingRessource.setIdEtablissement(new ArrayList<>());
+
+    IdEtablissement idEtablissement = new IdEtablissement();
+    idEtablissement.setUAI(testUai);
+
+    matchingRessource.getIdEtablissement().add(idEtablissement);
+
+    matchingRessource.setIdRessource(idRessource);
+
+    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
+
+    assertFalse(optionalRessource.isEmpty());
+    assertEquals(idRessourceRequested, optionalRessource.get().getIdRessource());
+  }
+
+  @Test
+  public void retrieveRessourceById_NonMatchingEtab_KO(){
+
+    String idRessourceRequested = "ID-RES";
+    String idRessource = idRessourceRequested;
+
+    Ressource matchingRessource = new Ressource();
+
+    matchingRessource.setIdEtablissement(new ArrayList<>());
+
+    IdEtablissement idEtablissement = new IdEtablissement();
+    idEtablissement.setUAI(testUai+"-suffix");
+
+    matchingRessource.getIdEtablissement().add(idEtablissement);
+
+    matchingRessource.setIdRessource(idRessource);
+
+    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
+
+    assertTrue(optionalRessource.isEmpty());
+  }
+
+  @Test
+  public void retrieveRessourceById_NotEtab_NonMatchingId_KO(){
+
+    String idRessourceRequested = "ID-RES";
+    String idRessource = "ID-TEST";
+
+    Ressource matchingRessource = new Ressource();
+    matchingRessource.setIdEtablissement(new ArrayList<>());
+
+    matchingRessource.setIdRessource(idRessource);
+
+
+    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
+
+    assertTrue(optionalRessource.isEmpty());
+  }
 
     // retrieveListRessource() tests :
 
     @Test
     public void retrieveListRessource_OK() throws YmlPropertyNotFoundException, MediacentreWSException {
-        when(mediaCentreResource.retrieveListRessource(urlRessources,userInfos)).thenReturn(listeRessourcesMediaCentre);
+        doReturn(listeRessourcesMediaCentre).when(mediaCentreResource).retrieveListRessource(eq(urlRessources), any());
         List<Ressource> result = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
         assertNotNull(result);
         assertEquals(result.size(),listeRessourcesMediaCentre.size());
@@ -165,9 +298,9 @@ public class MediaCentreServiceImplTest {
     public void retrieveFiltersList_OK() throws IOException, YmlPropertyNotFoundException {
         List<FilterEnum> result = mediaCentreService.retrieveFiltersList();
         assertNotNull(result);
-        assertEquals(result.size(),3);
+        assertEquals(3, result.size());
         List<FilterEnum> filters = objectMapper.readValue(new File(filtersFilePath), new TypeReference<>() {});
-        assertEquals(result,filters);
+        assertThat(filters).containsAll(result);
     }
 
     @Test
