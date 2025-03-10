@@ -36,22 +36,9 @@ public class UserInfosBuilder {
   MappingProperties mappingProperties;
 
   public  Map<String, List<String>> getUserInfos(SoffitHolder soffitHolder, List<String> isMemberOf){
-
-    //deep copy of the map
-
     Map<String, List<String>> mapToCopy = soffitHolder.getUserInfosWithoutIsMemberOf();
-
-    Map<String, List<String>> deepCopiedMap = new HashMap<>();
-
-    for(Map.Entry<String, List<String>> entry : mapToCopy.entrySet()){
-      String key = String.valueOf( entry.getKey());
-      List<String> values = new ArrayList<>();
-      for(String value : entry.getValue()){
-        values.add(String.valueOf(value));
-      }
-      deepCopiedMap.put(key, values);
-    }
-    deepCopiedMap.put(mappingProperties.getGroups().getOut(), isMemberOf);
+    Map<String, List<String>> deepCopiedMap = MapUtils.stringListStringDeepCopy(mapToCopy);
+    deepCopiedMap.put(mappingProperties.getGroups(), isMemberOf);
     return deepCopiedMap;
   }
 
