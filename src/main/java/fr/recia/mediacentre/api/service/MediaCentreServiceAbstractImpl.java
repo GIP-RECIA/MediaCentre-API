@@ -49,7 +49,7 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
   }
 
   protected Optional<Ressource> getRessourceOfCurrentEtabFromRessourceList(String ressourceId, List<Ressource> ressourceList){
-    List<String> currentUaiList = soffitHolder.getUserInfosWithoutIsMemberOf().get(mappingProperties.getCurrentEtabUaiKey());
+    List<String> currentUaiList = soffitHolder.getUaiCurrent();
     if(Objects.isNull(currentUaiList) || currentUaiList.isEmpty()){
       throw new YmlPropertyNotFoundException("Missing mapping for current etab UAI");
     }

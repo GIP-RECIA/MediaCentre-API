@@ -147,7 +147,7 @@ public class MediaCentreServiceImplTest {
         soffitMap.put(currentEtabUaiKey, List.of(testUai));
 
         doReturn(soffitMap).when(soffit).getUserInfosWithoutIsMemberOf();
-        doReturn(currentEtabUaiKey).when(mappingProperties).getCurrentEtabUaiKey();
+        doReturn(currentEtabUaiKey).when(mappingProperties).getUaiCurrent();
     }
 
     // retrieveRessourceById() tests :

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
-import fr.recia.mediacentre.api.model.pojo.UserInfoAttribute;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -71,20 +70,61 @@ public class SoffitInterceptor implements HandlerInterceptor {
       }
       soffitHolder.setSub(soffit.get("sub").toString());
 
-      for(UserInfoAttribute userInfoAttribute: mappingProperties.getUserinfoAttributes()){
-        Object rawObject =soffit.get(userInfoAttribute.getIn());
+
+      // UAI CURRENT
+      Object rawObject = soffit.get(mappingProperties.getUaiCurrent());
+      try {
+        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+        });
+        soffitHolder.setUaiCurrent(values);
+      }catch (IllegalArgumentException illegalArgumentException){
+        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        return false;
+      }
+
+      // UAI LIST
+      rawObject = soffit.get(mappingProperties.getUaiList());
+      try {
+        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+        });
+        soffitHolder.setUaiList(values);
+      }catch (IllegalArgumentException illegalArgumentException){
+        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        return false;
+      }
+
+      // PROFILES
+      rawObject = soffit.get(mappingProperties.getProfiles());
+      try {
+        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+        });
+        soffitHolder.setProfiles(values);
+      }catch (IllegalArgumentException illegalArgumentException){
+        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        return false;
+      }
+
+      // GAR ID
+      rawObject = soffit.get(mappingProperties.getGarId());
+      try {
+        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+        });
+        soffitHolder.setGarId(values);
+      }catch (IllegalArgumentException illegalArgumentException){
+        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        return false;
+      }
+
+      for(String userInfoAttribute: mappingProperties.getOtherUserInfoAttributes()){
+        rawObject = soffit.get(userInfoAttribute);
         try{
           List<String> values =  new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
           });
-          soffitHolder.getUserInfosWithoutIsMemberOf().put(userInfoAttribute.getOut(), values);
+          soffitHolder.getOtherUserInfoAttributes().put(userInfoAttribute, values);
         }catch (IllegalArgumentException illegalArgumentException){
-          log.warn("Soffit did not contain string collection for argument {}", userInfoAttribute.getIn());
+          log.warn("Soffit does not contain string collection for argument {}", userInfoAttribute);
         }
       }
-      if(soffitHolder.getUserInfosWithoutIsMemberOf().containsKey(mappingProperties.getProfileKey())){
-        soffitHolder.setProfiles(soffitHolder.getUserInfosWithoutIsMemberOf().get(mappingProperties.getProfileKey()));
-      }
-
 
     } catch (IOException ignored) {
       log.error("Unable to read soffit" + soffit);

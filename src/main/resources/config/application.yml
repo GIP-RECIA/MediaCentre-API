@@ -64,14 +64,13 @@ hostnames:
   trusted:
 
 mapping:
-  profileKey:  # must be the same as the out key of the profile in the following list
-  currentEtabUaiKey: # must be the same as the out key of the currentSiren in the following list
-  userinfoAttributes: # do not put isMemberOf in this list
-    - in:
-      out:
-  groups:
-    in: "" # leave empty string
-    out: # name that the groups collection must be given went sent to mediacentre-WS
+  uaiList:
+  uaiCurrent:
+  garId:
+  profiles:
+  otherUserInfoAttributes:
+  groups: # name that the groups collection must be given went sent to mediacentre-WS
+
 filters:
   categoriesByProfiles:
 

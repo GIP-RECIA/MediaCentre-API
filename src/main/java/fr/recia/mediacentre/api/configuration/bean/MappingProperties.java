@@ -15,7 +15,6 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
-import fr.recia.mediacentre.api.model.pojo.UserInfoAttribute;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -23,17 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.function.BiPredicate;
 
 @Data
 @Slf4j
@@ -47,72 +44,47 @@ public class MappingProperties {
   @Autowired
   private ApplicationContext ctx;
 
-
-  @NotNull @NotEmpty
-  private List<UserInfoAttribute> userinfoAttributes;
-
-
-  private String profileKey;
-  private String currentEtabUaiKey;
-
   @NotNull
-  private UserInfoAttribute groups;
+  private String uaiList;
+  @NotNull
+  private String uaiCurrent;
+  @NotNull
+  private String garId;
+  @NotNull
+  private String profiles;
+  @NotNull
+  private String groups;
+  @NotNull
+  private List<String> otherUserInfoAttributes;
 
 
   @PostConstruct
   private void init() {
 
-    if(this.groups.getOut().trim().isEmpty()){
-      cancelServerStart("Parameter {out} of {groups} in MappingProperties is empty, startup canceled.");
-    }
 
-    if(this.profileKey.trim().isEmpty()){
-      cancelServerStart("Parameter {profileKey} in MappingProperties is empty, startup canceled.");
-    }
-    if(this.currentEtabUaiKey.trim().isEmpty()){
-      cancelServerStart("Parameter {currentEtabUaiKey} in MappingProperties is empty, startup canceled.");
-    }
+    List<String> tempListForAdditionalValidation = new ArrayList<>(otherUserInfoAttributes);
+    tempListForAdditionalValidation.add(uaiList);
+    tempListForAdditionalValidation.add(uaiCurrent);
+    tempListForAdditionalValidation.add(garId);
+    tempListForAdditionalValidation.add(profiles);
+    tempListForAdditionalValidation.add(groups);
 
-    Set<String> inKeys = new HashSet<>();
-    Set<String> outKeys = new HashSet<>();
-
-    for(UserInfoAttribute userInfoAttribute: this.userinfoAttributes){
-      if(Objects.isNull(userInfoAttribute.getIn()) || userInfoAttribute.getIn().trim().isEmpty()){
-        cancelServerStart("Parameter {in} of a member of {userinfoAttributes} in MappingProperties is empty, startup canceled.");
+    BiPredicate<String, String> stringBiPredicate = new BiPredicate<String, String>() {
+      @Override
+      public boolean test(String s, String s2) {
+        return Objects.equals(s, s2);
       }
-      if(Objects.isNull(userInfoAttribute.getOut()) || userInfoAttribute.getIn().trim().isEmpty()){
-        cancelServerStart("Parameter {out} of a member of {userinfoAttributes} in MappingProperties is empty, startup canceled.");
-      }
+    };
 
-      boolean addedIn = inKeys.add(userInfoAttribute.getIn());
-      boolean addedOut = outKeys.add(userInfoAttribute.getOut());
+    for (int i = 0; i < tempListForAdditionalValidation.size(); i++) {
 
-      if(!addedIn){
-        cancelServerStart(String.format("the {in} key {%s} of a member of {userinfoAttribues} in MappingProperties is present multiple time, startup canceled", userInfoAttribute.getIn()));
-      }
-      if(!addedOut){
-        cancelServerStart(String.format("the {out} key {%s} of a member of {userinfoAttribues} in MappingProperties is present multiple time, startup canceled", userInfoAttribute.getOut()));
-      }
+      String key = tempListForAdditionalValidation.get(i);
+      long occurencesKeyIn = tempListForAdditionalValidation.stream().filter(x -> x == key).count();
+      assert occurencesKeyIn == 1;
     }
-
-    if(!outKeys.contains(this.profileKey)){
-      cancelServerStart(String.format("Parameter {profileKey} : {%s} in MappingProperties does not match any out key of {groups}, startup canceled.", this.profileKey));
-    }
-    if(!outKeys.contains(this.currentEtabUaiKey)){
-      cancelServerStart(String.format("Parameter {currentEtabUaiKey} : {%s} in MappingProperties does not match any out key of {groups}, startup canceled.", this.currentEtabUaiKey));
-    }
-    if(this.profileKey.equals(this.currentEtabUaiKey)){
-      cancelServerStart(String.format("Parameter {profileKey} : {%s} and {currentEtabUaiKey} : {%s} in MappingProperties are the same, startup canceled.", this.profileKey, this.currentEtabUaiKey));
-    }
-
     log.info("Loaded properties: {}", this);
   }
 
-  private void cancelServerStart(String exMessage){
-    log.error(exMessage);
-    ((ConfigurableApplicationContext) ctx).close();
-    System.exit(1);
-  }
 
   @Override
   public String toString() {
@@ -124,14 +96,26 @@ public class MappingProperties {
     stringBuilder.append(groups.toString());
     stringBuilder.append(",\n");
 
-    stringBuilder.append("\t\"profileKey\": ");
-    stringBuilder.append(profileKey);
+    stringBuilder.append("\t\"profiles\": ");
+    stringBuilder.append(profiles.toString());
     stringBuilder.append(",\n");
 
-    stringBuilder.append("\t\"userinfoAttributes\": { \n");
-    for(UserInfoAttribute userInfoAttribute : userinfoAttributes){
+    stringBuilder.append("\t\"gar id\": ");
+    stringBuilder.append(garId.toString());
+    stringBuilder.append(",\n");
+
+    stringBuilder.append("\t\"uai current\": ");
+    stringBuilder.append(uaiCurrent.toString());
+    stringBuilder.append(",\n");
+
+    stringBuilder.append("\t\"uai list\": ");
+    stringBuilder.append(uaiList.toString());
+    stringBuilder.append(",\n");
+
+    stringBuilder.append("\t\"otherAttributes\": { \n");
+    for(String userInfoAttribute : otherUserInfoAttributes){
       stringBuilder.append("\t\t\"");
-      stringBuilder.append(userInfoAttribute.toString());
+      stringBuilder.append(userInfoAttribute);
       stringBuilder.append("\",\n");
     }
     stringBuilder.append( "\t}");
@@ -139,7 +123,6 @@ public class MappingProperties {
 
     return stringBuilder.toString();
   }
-
 }
 
 
