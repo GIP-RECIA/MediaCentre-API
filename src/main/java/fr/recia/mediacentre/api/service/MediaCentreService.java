@@ -39,7 +39,7 @@ public interface MediaCentreService {
      * @param isMemberOf - a list of user's groups
      * @return ressource - The matching ressource, or empty
      */
-    Optional<Ressource> retrieveRessourceById(String ressourceId, List<String> isMemberOf, boolean isBase64) throws YmlPropertyNotFoundException, MediacentreWSException;
+    Optional<Ressource> retrieveRessourceById(String ressourceId, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException;
 
     /***
      * Function that check the user's profile and returns a list of FilterEnum corresponding to the yml properties file.

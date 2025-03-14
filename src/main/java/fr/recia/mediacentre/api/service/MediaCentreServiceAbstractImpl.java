@@ -38,31 +38,29 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
   MappingProperties mappingProperties;
 
   @Override
-  public Optional<Ressource> retrieveRessourceById(String ressourceId, List<String> isMemberOf, boolean isBase64) throws YmlPropertyNotFoundException, MediacentreWSException {
+  public Optional<Ressource> retrieveRessourceById(String ressourceId, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {
     String ressourceIdForFiltering = ressourceId;
+    if(forCurrentEtab){
+      soffitHolder.setUaiList(soffitHolder.getUaiCurrent());
+    }
     if(isBase64){
       String decodedId = new String(Base64.decodeBase64(ressourceId.getBytes()));
       ressourceIdForFiltering = decodedId;
     }
-
     return getRessourceOfCurrentEtabFromRessourceList(ressourceIdForFiltering, retrieveListRessource(isMemberOf));
   }
-
   protected Optional<Ressource> getRessourceOfCurrentEtabFromRessourceList(String ressourceId, List<Ressource> ressourceList){
     List<String> currentUaiList = soffitHolder.getUaiCurrent();
     if(Objects.isNull(currentUaiList) || currentUaiList.isEmpty()){
       throw new YmlPropertyNotFoundException("Missing mapping for current etab UAI");
     }
     String currentUai = currentUaiList.get(0);
+    if(Objects.isNull(ressourceList)){
+      return Optional.empty();
+    }
     for(Ressource ressource : ressourceList){
       if(ressourceId.trim().equalsIgnoreCase(ressource.getIdRessource().trim())){
-        if(ressource.getIdEtablissement().isEmpty()){
-          return Optional.of(ressource);
-        }else  if(ressource.getIdEtablissement().stream().anyMatch(o -> o.getUAI().trim().equals(currentUai.trim()))){
-          return Optional.of(ressource);
-        }else{
-          log.info("resource found but does not match the current UAI");
-        }
+        return Optional.of(ressource);
       }
     }
     return Optional.empty();

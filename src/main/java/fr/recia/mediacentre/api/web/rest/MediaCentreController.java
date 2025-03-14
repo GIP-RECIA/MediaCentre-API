@@ -60,8 +60,10 @@ public class MediaCentreController {
     }
 
     @PostMapping(path = "/{id}")
-    public ResponseEntity<Ressource> getResourceById(@PathVariable String id, @RequestBody IsMemberOf isMemberOf, @RequestParam(defaultValue = "false") boolean base64){
-        Optional<Ressource> ressourceOptional = mediaCentreService.retrieveRessourceById(id, isMemberOf.getIsMemberOf(),base64);
+    public ResponseEntity<Ressource> getResourceById(@PathVariable String id, @RequestBody IsMemberOf isMemberOf,
+                                                     @RequestParam(defaultValue = "false") boolean base64,
+                                                     @RequestParam(defaultValue = "true") boolean forCurrentEtab){
+        Optional<Ressource> ressourceOptional = mediaCentreService.retrieveRessourceById(id, isMemberOf.getIsMemberOf(),base64, forCurrentEtab);
         if(ressourceOptional.isEmpty()){
           return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }else {

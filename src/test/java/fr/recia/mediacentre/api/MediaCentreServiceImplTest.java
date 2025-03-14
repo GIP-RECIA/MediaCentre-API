@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
-import fr.recia.mediacentre.api.model.resource.IdEtablissement;
+import fr.recia.mediacentre.api.service.utils.UserInfosBuilder;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
@@ -31,10 +31,11 @@ import fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,20 +50,21 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -81,6 +83,9 @@ public class MediaCentreServiceImplTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserInfosBuilder userInfosBuilder;
+
     @SpyBean
     private MediaCentreServiceImpl mediaCentreService;
 
@@ -90,7 +95,7 @@ public class MediaCentreServiceImplTest {
     @MockBean
     private CacheManager cacheManager;
 
-    @MockBean
+    @SpyBean
     private SoffitHolder soffit;
 
     @MockBean
@@ -122,141 +127,78 @@ public class MediaCentreServiceImplTest {
 
     private static final  String testUai = "TestUai";
 
+  private List<String> currentUAI = List.of("UAI_1");
+  private List<String> listUAI = List.of("UAI_1","UAI_2");
+
     @Before
     public void init() throws IOException {
         listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath),new TypeReference<>(){});
         isMemberOf = objectMapper.readValue(new File(isMemberOfFilePath), new TypeReference<>() {
         });
-        userInfos = new HashMap<>();
-        userInfos.put("etabIds",List.of("id"));
-        userInfos.put("currentEtabId",List.of("idCurrent"));
-        userInfos.put("uid",List.of("uid"));
-        userInfos.put("profils",List.of("profile1"));
-        userInfos.put("isMemberOf", isMemberOf.getIsMemberOf());
 
-        doReturn(List.of("profile1")).when(soffit).getProfiles();
+      soffit.setUaiCurrent(currentUAI);
+      soffit.setUaiList(listUAI);
+      soffit.setProfiles(Collections.singletonList("profile1"));
+      soffit.setGarId(Collections.singletonList("garId"));
+
+      userInfos = userInfosBuilder.getUserInfos(soffit, isMemberOf.getIsMemberOf());
+//        userInfos = new HashMap<>();
+//        userInfos.put("etabIds",List.of("id"));
+//        userInfos.put("currentEtabId",List.of("idCurrent"));
+//        userInfos.put("uid",List.of("uid"));
+//        userInfos.put("profils",List.of("profile1"));
+//        userInfos.put("isMemberOf", isMemberOf.getIsMemberOf());
+
+//        doReturn(List.of("profile1")).when(soffit).getProfiles();
+
+      doReturn("currentUai").when(mappingProperties).getUaiCurrent();
+      doReturn("profile").when(mappingProperties).getProfiles();
+      doReturn("listUai").when(mappingProperties).getUaiList();
+      doReturn("garId").when(mappingProperties).getGarId();
+      doReturn("isMemberOf").when(mappingProperties).getGroups();
 
         CategoriesByProfilesProperties.ProfilesMap profilesMap = new CategoriesByProfilesProperties.ProfilesMap();
         profilesMap.setProfiles(List.of("profile1"));
         profilesMap.setFilters(List.of(FilterEnum.TYPE_PRESENTATION_FILTER, FilterEnum.NIVEAU_EDUCATIF_FILTER, FilterEnum.UAI_FILTER));
         when(categoriesByFilters.getCategoriesByProfiles()).thenReturn(List.of(profilesMap));
-
-        String currentEtabUaiKey = "CurrentEtabUai";
-
-        Map<String, List<String>> soffitMap = new HashMap<>();
-        soffitMap.put(currentEtabUaiKey, List.of(testUai));
-
-        doReturn(soffitMap).when(soffit).getUserInfosWithoutIsMemberOf();
-        doReturn(currentEtabUaiKey).when(mappingProperties).getUaiCurrent();
     }
 
     // retrieveRessourceById() tests :
 
-    @Test
-    public void retrieveRessourceById_NoEtab_OK(){
+  @Captor
+  private ArgumentCaptor<Map<String, List<String>>> captor;
 
-      String idRessourceRequested = "ID-RES";
-      String idRessource = idRessourceRequested;
-
-      Ressource matchingRessource = new Ressource();
-      matchingRessource.setIdEtablissement(new ArrayList<>());
-
-      matchingRessource.setIdRessource(idRessource);
-
-
-      doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
-      Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
-
-      assertFalse(optionalRessource.isEmpty());
-      assertEquals(idRessourceRequested, optionalRessource.get().getIdRessource());
-    }
 
   @Test
-  public void retrieveRessourceById_NoEtab_Base64_OK(){
+  public void retrieveRessourceByIdForCurrentEtabRemoveOtherUais(){
 
-    String idDecoded = "ID-TEST";
+    //make sure that test data are relevant
+    //test does not prove that listUAI is filtered in request if there is nothing to filter
+    assertNotEquals(currentUAI, listUAI);
 
-    String idEncoded = new String(Base64.encodeBase64(idDecoded.getBytes()));
+    String idRessourceRequested = "ID-RES";
+    doReturn(null).when(mediaCentreResource).retrieveListRessource(eq(idRessourceRequested), any());
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false, true);
 
-    String idRessourceRequested = idEncoded;
-    String idRessource = idDecoded;
-
-    Ressource matchingRessource = new Ressource();
-    matchingRessource.setIdEtablissement(new ArrayList<>());
-
-    matchingRessource.setIdRessource(idRessource);
-
-
-    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), true);
-
-    assertFalse(optionalRessource.isEmpty());
-    assertEquals(idDecoded, optionalRessource.get().getIdRessource());
+    verify(mediaCentreResource).retrieveListRessource(any(), captor.capture());
+    assertTrue(captor.getValue().containsKey(mappingProperties.getUaiList()));
+    assertEquals(currentUAI, captor.getValue().get(mappingProperties.getUaiList()));
   }
 
   @Test
-  public void retrieveRessourceById_MatchingEtab_OK(){
+  public void retrieveRessourceByIdForAllEtabDoesNotRemoveOtherUais(){
+
+    //make sure that test data are relevant
+    //test does not prove that listUAI is not filtered in request if there is nothing to filter
+    assertNotEquals(currentUAI, listUAI);
 
     String idRessourceRequested = "ID-RES";
-    String idRessource = idRessourceRequested;
+    doReturn(null).when(mediaCentreResource).retrieveListRessource(eq(idRessourceRequested), any());
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false, false);
 
-    Ressource matchingRessource = new Ressource();
-
-    matchingRessource.setIdEtablissement(new ArrayList<>());
-
-    IdEtablissement idEtablissement = new IdEtablissement();
-    idEtablissement.setUAI(testUai);
-
-    matchingRessource.getIdEtablissement().add(idEtablissement);
-
-    matchingRessource.setIdRessource(idRessource);
-
-    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
-
-    assertFalse(optionalRessource.isEmpty());
-    assertEquals(idRessourceRequested, optionalRessource.get().getIdRessource());
-  }
-
-  @Test
-  public void retrieveRessourceById_NonMatchingEtab_KO(){
-
-    String idRessourceRequested = "ID-RES";
-    String idRessource = idRessourceRequested;
-
-    Ressource matchingRessource = new Ressource();
-
-    matchingRessource.setIdEtablissement(new ArrayList<>());
-
-    IdEtablissement idEtablissement = new IdEtablissement();
-    idEtablissement.setUAI(testUai+"-suffix");
-
-    matchingRessource.getIdEtablissement().add(idEtablissement);
-
-    matchingRessource.setIdRessource(idRessource);
-
-    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
-
-    assertTrue(optionalRessource.isEmpty());
-  }
-
-  @Test
-  public void retrieveRessourceById_NotEtab_NonMatchingId_KO(){
-
-    String idRessourceRequested = "ID-RES";
-    String idRessource = "ID-TEST";
-
-    Ressource matchingRessource = new Ressource();
-    matchingRessource.setIdEtablissement(new ArrayList<>());
-
-    matchingRessource.setIdRessource(idRessource);
-
-
-    doReturn(List.of(matchingRessource)).when(mediaCentreService).retrieveListRessource(any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false);
-
-    assertTrue(optionalRessource.isEmpty());
+    verify(mediaCentreResource).retrieveListRessource(any(), captor.capture());
+    assertTrue(captor.getValue().containsKey(mappingProperties.getUaiList()));
+    assertEquals(listUAI, captor.getValue().get(mappingProperties.getUaiList()));
   }
 
     // retrieveListRessource() tests :
