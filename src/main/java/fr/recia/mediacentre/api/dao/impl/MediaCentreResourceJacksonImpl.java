@@ -17,6 +17,7 @@ package fr.recia.mediacentre.api.dao.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.resource.Ressource;
@@ -57,13 +58,16 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
     @Autowired
     private SoffitHolder soffitHolder;
 
+    @Autowired
+    private MappingProperties mappingProperties;
+
 
     public List<Ressource> retrieveListRessource(String mediaUrl,Map<String, List<String>> userInfos) throws MediacentreWSException{
-        return this.getServiceMediaCentre(mediaUrl,userInfos);
+        return this.getServiceMediaCentre(mediaUrl,userInfos, userInfos.get(mappingProperties.getGarId()).get(0));
     }
 
-  @Cacheable(cacheNames = "userResourcesCache", key = "#userInfos.uid[0]")
-    private List<Ressource> getServiceMediaCentre(String url,Map<String, List<String>> userInfos) throws MediacentreWSException {
+  @Cacheable(cacheNames = "userResourcesCache", key = "#userId")
+    private List<Ressource> getServiceMediaCentre(String url,Map<String, List<String>> userInfos, String userId) throws MediacentreWSException {
         if (log.isDebugEnabled()) {
         log.debug("Requesting mediacentre on URL {}", url );
     }
@@ -71,9 +75,14 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
         ObjectMapper objectMapper = new ObjectMapper();
 
         Cache cache = cacheManager.getCache("userResourcesCache");
-        List<Ressource> userResources = (List<Ressource>) cache.get(soffitHolder.getSub(), List.class);
-        if(!Objects.isNull(userResources)){
-          return userResources;
+
+        try{
+          List<Ressource> userResources = (List<Ressource>) cache.get(soffitHolder.getSub(), List.class);
+          if(!Objects.isNull(userResources)){
+            return userResources;
+          }
+        }catch (Exception ignored){
+          log.warn("Unable to read cache");
         }
 
         try {
@@ -83,7 +92,11 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
             ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
             listRessourceMediaCentre = Lists.newArrayList(response.getBody());
 
+          try {
             cache.putIfAbsent(soffitHolder.getSub(),listRessourceMediaCentre);
+          } catch (Exception e) {
+            log.warn("Unable to write cache");
+          }
 
         } catch (HttpClientErrorException e) {
             // providing the error stacktrace only on debug as the custom logged error should be suffisant.
