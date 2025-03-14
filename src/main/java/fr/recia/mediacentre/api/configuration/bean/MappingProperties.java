@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.PostConstruct;
@@ -79,8 +80,8 @@ public class MappingProperties {
     for (int i = 0; i < tempListForAdditionalValidation.size(); i++) {
 
       String key = tempListForAdditionalValidation.get(i);
-      long occurencesKeyIn = tempListForAdditionalValidation.stream().filter(x -> x == key).count();
-      assert occurencesKeyIn == 1;
+      long occurrencesKey = tempListForAdditionalValidation.stream().filter(x -> Objects.equals(x, key)).count();
+      Assert.isTrue( occurrencesKey == 1, String.format("Key %s is present more than one time.", key));
     }
     log.info("Loaded properties: {}", this);
   }
