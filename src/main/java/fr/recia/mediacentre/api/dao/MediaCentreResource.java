@@ -25,7 +25,6 @@ import java.util.Map;
 /**
  * Created by jgribonvald on 13/09/16.
  */
-@Service
 public interface MediaCentreResource {
 
 	List<Ressource> retrieveListRessource(final String mediaCentreUrl,Map<String, List<String>> userInfos) throws MediacentreWSException;

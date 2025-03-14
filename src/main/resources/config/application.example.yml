@@ -111,7 +111,7 @@ url:
     mediacentre:
       "mediacentre-WS url"
 
-service:
-  mock: false
+mock:
+  status: 0
   mockedDataLocation: 'mocked/data/location/mock-data.json'
   mockedDTOLocation: 'mocked/dto/location/mock-data.json'

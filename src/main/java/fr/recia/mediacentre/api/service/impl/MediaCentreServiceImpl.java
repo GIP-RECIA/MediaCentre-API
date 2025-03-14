@@ -17,7 +17,7 @@ package fr.recia.mediacentre.api.service.impl;
 
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.configuration.bean.GestionAffectationsProperties;
-import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.service.MediaCentreServiceAbstractImpl;
@@ -61,7 +61,7 @@ public class MediaCentreServiceImpl extends MediaCentreServiceAbstractImpl {
   private UserInfosBuilder userInfosBuilder;
 
   @Autowired
-  private MediaCentreResourceJacksonImpl mediaCentreResource;
+  private MediaCentreResource mediaCentreResource;
 
   @Autowired
   private SoffitHolder soffit;

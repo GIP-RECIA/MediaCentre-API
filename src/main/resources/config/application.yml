@@ -90,7 +90,7 @@ url:
   ressources:
     mediacentre: ""
 
-service:
-  mock: false
+mock:
+  status: 0 # 0 = no mock, 1 = mock MediaCentreService return mock values and filter it using UAI provided by request, 2 = return all mock values without filtering
   mockedDataLocation: ''
   mockedDTOLocation: ''
