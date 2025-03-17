@@ -26,7 +26,7 @@ public class GestionAffectationDTO {
     gestionAffectationDTO.id = gestionAffectation.getId();
     gestionAffectationDTO.link = gestionAffectation.isLink();
     gestionAffectationDTO.title = gestionAffectation.getTitle();
-    gestionAffectationDTO.description = gestionAffectation.getTitle();
+    gestionAffectationDTO.description = gestionAffectation.getDescription();
     return gestionAffectationDTO;
   }
 
