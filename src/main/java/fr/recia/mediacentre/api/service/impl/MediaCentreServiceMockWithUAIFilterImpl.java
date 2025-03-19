@@ -45,7 +45,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class MediaCentreServiceMockWIthUAIFilterImpl extends MediaCentreServiceAbstractImpl {
+public class MediaCentreServiceMockWithUAIFilterImpl extends MediaCentreServiceAbstractImpl {
   @NonNull
   @Value("${mock.mockedDataLocation:}")
   @Setter

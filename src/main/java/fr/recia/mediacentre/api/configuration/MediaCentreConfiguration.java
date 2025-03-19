@@ -20,7 +20,7 @@ import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.service.MediaCentreService;
 import fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl;
 import fr.recia.mediacentre.api.service.impl.MediaCentreServiceMockImpl;
-import fr.recia.mediacentre.api.service.impl.MediaCentreServiceMockWIthUAIFilterImpl;
+import fr.recia.mediacentre.api.service.impl.MediaCentreServiceMockWithUAIFilterImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +41,7 @@ public class MediaCentreConfiguration {
 
   @ConditionalOnProperty(name="mock.status", havingValue="1")
   @Bean(name = "mediaCentreService")
-  public MediaCentreService localFileFilterImpl() { return new MediaCentreServiceMockWIthUAIFilterImpl(); }
+  public MediaCentreService localFileFilterImpl() { return new MediaCentreServiceMockWithUAIFilterImpl(); }
 
   @ConditionalOnProperty(name="mock.status", havingValue="2")
   @Bean(name = "mediaCentreService")
