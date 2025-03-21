@@ -290,6 +290,7 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <localCheckout>true</localCheckout>
                     <tagNameFormat>@{project.version}</tagNameFormat>
+                    <arguments>-Dmaven.javadoc.skip=true</arguments>
                     <pushChanges>true</pushChanges>
                 </configuration>
             </plugin>
