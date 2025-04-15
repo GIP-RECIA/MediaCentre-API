@@ -76,6 +76,8 @@ filters:
 
 config:
   groups:
+  paramUserEtabsURl:
+  paramUserEtabsDisplayNameKey:
 
 gestionaffectations:
   objects:

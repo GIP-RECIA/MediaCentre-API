@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.api.model.pojo;
+package fr.recia.mediacentre.api.service.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import fr.recia.mediacentre.api.model.pojo.Config;
+import fr.recia.mediacentre.api.model.pojo.ConfigElement;
+import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Slf4j
-@Data
-@NoArgsConstructor
-public class Config {
-  private Map<String, List<ConfigElement>> configListMap = new HashMap<>();
+@Service
+public interface ConfigService {
+
+  public List<ConfigElement> getEtabsNames(List<String> uais);
+
+  public List<ConfigElement> getGroups();
+
 }

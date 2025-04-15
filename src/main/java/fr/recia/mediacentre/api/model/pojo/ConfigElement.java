@@ -17,16 +17,28 @@ package fr.recia.mediacentre.api.model.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Data
-@NoArgsConstructor
-public class Config {
-  private Map<String, List<ConfigElement>> configListMap = new HashMap<>();
+@AllArgsConstructor
+public class ConfigElement {
+
+  private String key;
+  private String value;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ConfigElement config = (ConfigElement) o;
+    return Objects.equals(key, config.key) && Objects.equals(value, config.value);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(key, value);
+  }
 }

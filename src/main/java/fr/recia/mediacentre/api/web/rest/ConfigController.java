@@ -16,20 +16,23 @@
 package fr.recia.mediacentre.api.web.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import fr.recia.mediacentre.api.configuration.bean.ConfigProperties;
 import fr.recia.mediacentre.api.model.pojo.Config;
+import fr.recia.mediacentre.api.model.pojo.ConfigElement;
+import fr.recia.mediacentre.api.model.pojo.Uais;
+import fr.recia.mediacentre.api.service.config.ConfigService;
+import fr.recia.mediacentre.api.service.config.impl.ConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.AbstractEnvironment;
-import org.springframework.core.env.EnumerablePropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -37,17 +40,22 @@ import java.util.List;
 public class ConfigController {
 
   @Autowired
-  private ConfigProperties configProperties;
+  private ConfigService configService;
 
-  @GetMapping
-  public ResponseEntity<List<Config>> getConfig() throws JsonProcessingException {
+  @PostMapping(consumes = "application/json")
+  public ResponseEntity<Config> getConfig(@RequestBody(required = false) Uais uais) throws JsonProcessingException {
+    Config config = new Config();
 
-    List<Config> config = new ArrayList<Config>();
-    for (String groupValue : configProperties.getGroups()){
-      config.add(new Config("groups", groupValue));
+    List<ConfigElement> groupList = configService.getGroups();
+    if(Objects.nonNull(groupList) && !groupList.isEmpty()){
+      config.getConfigListMap().put("groups", groupList);
     }
 
-    if(config.isEmpty()){
+    List<ConfigElement> etabNameList = configService.getEtabsNames(uais.getUais());
+    if(Objects.nonNull(etabNameList) && !etabNameList.isEmpty()){
+      config.getConfigListMap().put("etabsNames", etabNameList);
+    }
+    if(config.getConfigListMap().isEmpty()){
       return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }else{
       return new ResponseEntity<>(config, HttpStatus.OK);

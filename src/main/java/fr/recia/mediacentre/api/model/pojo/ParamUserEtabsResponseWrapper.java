@@ -15,18 +15,38 @@
  */
 package fr.recia.mediacentre.api.model.pojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-@Slf4j
-@Data
 @NoArgsConstructor
-public class Config {
-  private Map<String, List<ConfigElement>> configListMap = new HashMap<>();
+@Getter
+@Setter
+@Slf4j
+public class ParamUserEtabsResponseWrapper {
+
+  @JsonFormat(shape = JsonFormat.Shape.ANY)
+  Map<String, JsonNode> map = new HashMap<>();
+
+  @Override
+  public String toString(){
+    return  String.join(",", map.keySet()) ;
+  }
+
+
+
+  @JsonAnySetter
+  void setDetail(String key, JsonNode value) {
+    log.info("received {} and {} ", key, value);
+    map.put(key, value);
+  }
+
+
 }

@@ -97,7 +97,9 @@ config:
   groups:
     - "groupRegex1"
     - "groupRegex2"
-    -
+  paramUserEtabsURl: "PATH/rest/v1/structures/etabs/?codes="
+  paramUserEtabsDisplayNameKey: "displayName"
+
 gestionaffectations:
   objects:
     - id: "id" # must be unique for each object but does not relate to anything

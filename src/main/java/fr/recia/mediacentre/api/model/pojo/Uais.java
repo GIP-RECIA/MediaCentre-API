@@ -15,18 +15,17 @@
  */
 package fr.recia.mediacentre.api.model.pojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
-@Data
-@NoArgsConstructor
-public class Config {
-  private Map<String, List<ConfigElement>> configListMap = new HashMap<>();
+@Getter
+@Setter
+public class Uais {
+
+  private List<String> uais;
+
 }
