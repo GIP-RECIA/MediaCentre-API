@@ -165,7 +165,7 @@ public class MediaCentreControllerTest {
 
   @Test
   public void getResources_When_A_400_Error_From_MediacentreWS_Occurs_KO() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
-    when(mediaCentreService.retrieveListRessource(new ArrayList<>())).thenThrow(new MediacentreWSException(resolve(HttpStatus.SC_BAD_REQUEST)));
+    when(mediaCentreService.retrieveListRessource(new ArrayList<>())).thenThrow(new MediacentreWSException("", resolve(HttpStatus.SC_BAD_REQUEST)));
 
     RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
       .accept(MediaType.APPLICATION_JSON)

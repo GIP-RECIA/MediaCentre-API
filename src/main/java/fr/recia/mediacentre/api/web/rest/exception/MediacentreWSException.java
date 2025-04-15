@@ -23,10 +23,6 @@ public class MediacentreWSException extends RuntimeException {
   @Getter
   private HttpStatus statusCode;
 
-  public MediacentreWSException(HttpStatus statusCode) {
-    this.statusCode = statusCode;
-  }
-
   public MediacentreWSException(String message, HttpStatus statusCode) {
     super(message);
     this.statusCode = statusCode;

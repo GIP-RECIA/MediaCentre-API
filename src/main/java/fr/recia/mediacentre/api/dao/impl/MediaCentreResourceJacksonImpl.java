@@ -101,7 +101,7 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
         } catch (HttpClientErrorException e) {
             // providing the error stacktrace only on debug as the custom logged error should be suffisant.
             log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(),e);
-            throw new MediacentreWSException(e.getStatusCode());
+            throw new MediacentreWSException(e.getMessage(), e.getStatusCode());
         } catch (RestClientException ex) {
             log.warn("Error getting MediaCentre from url '{}'", url, ex.getLocalizedMessage(), ex);
             return Lists.newArrayList();
