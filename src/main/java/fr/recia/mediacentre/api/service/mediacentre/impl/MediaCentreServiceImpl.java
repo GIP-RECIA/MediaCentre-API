@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.api.service.impl;
+package fr.recia.mediacentre.api.service.mediacentre.impl;
 
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.configuration.bean.GestionAffectationsProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
-import fr.recia.mediacentre.api.service.MediaCentreServiceAbstractImpl;
+import fr.recia.mediacentre.api.service.mediacentre.MediaCentreServiceAbstractImpl;
 import fr.recia.mediacentre.api.service.utils.UserInfosBuilder;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;

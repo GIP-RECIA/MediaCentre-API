@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.api.service;
+package fr.recia.mediacentre.api.service.mediacentre;
 
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;

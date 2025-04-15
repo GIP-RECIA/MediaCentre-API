@@ -27,7 +27,7 @@ import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
 import fr.recia.mediacentre.api.model.resource.Ressource;
-import fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl;
+import fr.recia.mediacentre.api.service.mediacentre.impl.MediaCentreServiceImpl;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

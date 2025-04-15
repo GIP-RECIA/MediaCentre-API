@@ -23,7 +23,7 @@ import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
 import fr.recia.mediacentre.api.model.resource.Ressource;
-import fr.recia.mediacentre.api.service.impl.MediaCentreServiceImpl;
+import fr.recia.mediacentre.api.service.mediacentre.impl.MediaCentreServiceImpl;
 import fr.recia.mediacentre.api.web.rest.MediaCentreController;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

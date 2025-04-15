@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.recia.mediacentre.api.service.impl;
+package fr.recia.mediacentre.api.service.mediacentre.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,15 +22,17 @@ import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
-import fr.recia.mediacentre.api.model.resource.IdEtablissement;
 import fr.recia.mediacentre.api.model.resource.Ressource;
-import fr.recia.mediacentre.api.service.MediaCentreServiceAbstractImpl;
+import fr.recia.mediacentre.api.service.mediacentre.MediaCentreServiceAbstractImpl;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,10 +44,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-public class MediaCentreServiceMockWithUAIFilterImpl extends MediaCentreServiceAbstractImpl {
+@Slf4j
+@Service
+@NoArgsConstructor
+public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
+
   @NonNull
   @Value("${mock.mockedDataLocation:}")
   @Setter
@@ -72,19 +76,7 @@ public class MediaCentreServiceMockWithUAIFilterImpl extends MediaCentreServiceA
       URL resource = MediaCentreServiceMockImpl.class.getResource(urlRessources);
       assert resource != null;
       File file = Paths.get(resource.toURI()).toFile();
-      List<Ressource> ressourceList = objectMapper.readValue(file, new TypeReference<>() {});
-      Predicate<Ressource> atLeastOneEtabInUserEtabs = (i) ->{
-        if(i.getIdEtablissement().isEmpty()){
-          return true;
-        }
-        for (IdEtablissement idEtablissement: i.getIdEtablissement()){
-          if(soffit.getUaiList().contains(idEtablissement.getUAI())){
-            return true;
-          }
-        }
-        return false;
-      };
-      return  ressourceList.stream().filter(atLeastOneEtabInUserEtabs).collect(Collectors.toList());
+      return objectMapper.readValue(file, new TypeReference<>() {});
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     } catch (URISyntaxException e) {
