@@ -44,6 +44,10 @@ public class ConfigController {
 
   @PostMapping(consumes = "application/json")
   public ResponseEntity<Config> getConfig(@RequestBody(required = false) Uais uais) throws JsonProcessingException {
+    if(Objects.isNull(uais)){
+      uais = new Uais();
+    }
+
     Config config = new Config();
 
     List<ConfigElement> groupList = configService.getGroups();
