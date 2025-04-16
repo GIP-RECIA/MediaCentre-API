@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -111,9 +112,10 @@ public class MediaCentreControllerTest {
 
 //     getResources() tests :
     @Test
-    public void getResources_OK() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
+    public void getResources_OK() throws Exception {
 
       doReturn(listeRessourcesMediaCentre).when(mediaCentreResourceJackson).retrieveListRessource(any(),any());
+      doReturn(mediaCentreResourceJackson.retrieveListRessource("", new HashMap<>())).when(mediaCentreService).retrieveListRessource(isMemberOfObject.getIsMemberOf());
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
                 .accept(MediaType.APPLICATION_JSON)
