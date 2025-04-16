@@ -94,8 +94,9 @@ public class ConfigControllerTest {
 
 
       doReturn(configElementList).when(configService).getGroups();
+      doReturn(new ArrayList<>()).when((configService)).getEtabsNames(any());
 
-      RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETCONFIG_URI)
+      RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETCONFIG_URI)
         .accept(MediaType.APPLICATION_JSON)
         .characterEncoding(StandardCharsets.UTF_8);
 
