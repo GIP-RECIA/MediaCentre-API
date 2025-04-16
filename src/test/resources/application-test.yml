@@ -90,3 +90,15 @@ config:
     - "^.*:(regex2):.*$"
     - "^.*:(regex3):.*$"
     - "^.*:(regex4):.*$"
+  paramUserEtabsURl: "paramUserEtabsURl"
+  paramUserEtabsDisplayNameKey: "paramUserEtabsDisplayNameKey"
+
+mapping:
+  uaiList: "uaiList"
+  uaiCurrent: "uaiCurrent"
+  garId: "garId"
+  profiles: "profiles"
+  otherUserInfoAttributes:
+    - "other1"
+    - "other2"
+  groups: "isMemberOf"
