@@ -55,6 +55,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.resolve;
 
@@ -167,7 +168,7 @@ public class MediaCentreControllerTest {
 
   @Test
   public void getResources_When_A_400_Error_From_MediacentreWS_Occurs_KO() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
-    when(mediaCentreService.retrieveListRessource(new ArrayList<>())).thenThrow(new MediacentreWSException("", resolve(HttpStatus.SC_BAD_REQUEST)));
+    doThrow(new MediacentreWSException("", resolve(HttpStatus.SC_BAD_REQUEST))).when(mediaCentreService).retrieveListRessource(any());
 
     RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
       .accept(MediaType.APPLICATION_JSON)
@@ -176,7 +177,7 @@ public class MediaCentreControllerTest {
 
     MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-    assertEquals(result.getResponse().getStatus(), HttpStatus.SC_BAD_REQUEST);
+    assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, result.getResponse().getStatus());
     assertEquals(0, result.getResponse().getContentLength());
   }
 
