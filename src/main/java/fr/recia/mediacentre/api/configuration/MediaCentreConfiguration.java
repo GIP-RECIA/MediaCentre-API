@@ -15,43 +15,67 @@
  */
 package fr.recia.mediacentre.api.configuration;
 
+import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
+import fr.recia.mediacentre.api.configuration.bean.GestionAffectationsProperties;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.service.mediacentre.MediaCentreService;
 import fr.recia.mediacentre.api.service.mediacentre.impl.MediaCentreServiceImpl;
 import fr.recia.mediacentre.api.service.mediacentre.impl.MediaCentreServiceMockImpl;
 import fr.recia.mediacentre.api.service.mediacentre.impl.MediaCentreServiceMockWithUAIFilterImpl;
+import fr.recia.mediacentre.api.service.utils.UserInfosBuilder;
+import org.apache.catalina.User;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class MediaCentreConfiguration {
 
-  @Bean
-  public RestTemplate restTemplate() {
-      return new RestTemplate();
+
+  private final SoffitHolder soffitHolder;
+
+  private final MediaCentreResource mediaCentreResource;
+
+  private final MappingProperties mappingProperties;
+
+  private final UserInfosBuilder userInfosBuilder;
+
+  private final GestionAffectationsProperties gestionAffectationsProperties;
+
+  private final CategoriesByProfilesProperties categoriesByProfilesProperties;
+
+  public MediaCentreConfiguration(SoffitHolder soffitHolder, MappingProperties mappingProperties, UserInfosBuilder userInfosBuilder, MediaCentreResource mediaCentreResource, GestionAffectationsProperties gestionAffectationsProperties, CategoriesByProfilesProperties categoriesByProfilesProperties){
+    this.soffitHolder = soffitHolder;
+    this.mediaCentreResource = mediaCentreResource;
+    this.mappingProperties = mappingProperties;
+    this.userInfosBuilder = userInfosBuilder;
+    this.gestionAffectationsProperties = gestionAffectationsProperties;
+    this.categoriesByProfilesProperties = categoriesByProfilesProperties;
   }
 
-  @ConditionalOnMissingBean(type = "MediaCentreResource")
-  @Bean(name = "mediaCentreResource")
-  public MediaCentreResource wsGetResource() { return  new MediaCentreResourceJacksonImpl(); }
+
+
 
   @ConditionalOnProperty(name="mock.status", havingValue="1")
   @Bean(name = "mediaCentreService")
-  public MediaCentreService localFileFilterImpl() { return new MediaCentreServiceMockWithUAIFilterImpl(); }
+  public MediaCentreService localFileFilterImpl() { return new MediaCentreServiceMockWithUAIFilterImpl(soffitHolder, mappingProperties, categoriesByProfilesProperties); }
 
   @ConditionalOnProperty(name="mock.status", havingValue="2")
   @Bean(name = "mediaCentreService")
   public MediaCentreService localFileImpl() {
-    return new MediaCentreServiceMockImpl();
+    return new MediaCentreServiceMockImpl(soffitHolder, mappingProperties, categoriesByProfilesProperties);
   }
 
   @ConditionalOnMissingBean(type = "MediaCentreService")
   @Bean(name = "mediaCentreService")
   public MediaCentreService httpGetImpl() {
-    return new MediaCentreServiceImpl();
+    return new MediaCentreServiceImpl(soffitHolder, mappingProperties,  userInfosBuilder, mediaCentreResource, gestionAffectationsProperties, categoriesByProfilesProperties);
   }
 }

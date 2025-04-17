@@ -18,6 +18,8 @@ package fr.recia.mediacentre.api.service.mediacentre.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
+import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
@@ -56,14 +58,14 @@ public class MediaCentreServiceMockWithUAIFilterImpl extends MediaCentreServiceA
   @Setter
   private String urlDTOS;
 
-  @Autowired
-  private MediaCentreResourceJacksonImpl mediaCentreResource;
 
-  @Autowired
-  private SoffitHolder soffit;
+  private final CategoriesByProfilesProperties categoriesByFilters;
 
-  @Autowired
-  private CategoriesByProfilesProperties categoriesByFilters;
+  public MediaCentreServiceMockWithUAIFilterImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties, CategoriesByProfilesProperties categoriesByProfilesProperties)
+  {
+    super(soffitHolder, mappingProperties);
+    this.categoriesByFilters = categoriesByProfilesProperties;
+  }
 
   @Override
   public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
@@ -78,7 +80,7 @@ public class MediaCentreServiceMockWithUAIFilterImpl extends MediaCentreServiceA
           return true;
         }
         for (IdEtablissement idEtablissement: i.getIdEtablissement()){
-          if(soffit.getUaiList().contains(idEtablissement.getUAI())){
+          if(getSoffitHolder().getUaiList().contains(idEtablissement.getUAI())){
             return true;
           }
         }
@@ -94,7 +96,7 @@ public class MediaCentreServiceMockWithUAIFilterImpl extends MediaCentreServiceA
 
   @Override
   public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-    List<String> userProfile = soffit.getProfiles();
+    List<String> userProfile = getSoffitHolder().getProfiles();
     return getFiltersByProfile(userProfile);
   }
 

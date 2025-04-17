@@ -17,6 +17,7 @@ package fr.recia.mediacentre.api.service.mediacentre.impl;
 
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.configuration.bean.GestionAffectationsProperties;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
@@ -49,28 +50,31 @@ import java.util.Set;
  */
 @Slf4j
 @Service
-@NoArgsConstructor
 public class MediaCentreServiceImpl extends MediaCentreServiceAbstractImpl {
+
+
+  private UserInfosBuilder userInfosBuilder;
+
+  private MediaCentreResource mediaCentreResource;
+
+  private GestionAffectationsProperties gestionAffectations;
+
+  private CategoriesByProfilesProperties categoriesByFilters;
 
   @NonNull
   @Value("${url.ressources.mediacentre}")
   @Setter
   private String urlRessources;
 
-  @Autowired
-  private UserInfosBuilder userInfosBuilder;
+  public MediaCentreServiceImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties, UserInfosBuilder userInfosBuilder, MediaCentreResource mediaCentreResource, GestionAffectationsProperties gestionAffectationsProperties, CategoriesByProfilesProperties categoriesByProfilesProperties){
+    super(soffitHolder,mappingProperties);
+    this.userInfosBuilder = userInfosBuilder;
+    this.mediaCentreResource = mediaCentreResource;
+    this.gestionAffectations = gestionAffectationsProperties;
+    this.categoriesByFilters =  categoriesByProfilesProperties;
 
-  @Autowired
-  private MediaCentreResource mediaCentreResource;
 
-  @Autowired
-  private SoffitHolder soffit;
-
-  @Autowired
-  private GestionAffectationsProperties gestionAffectations;
-
-  @Autowired
-  private CategoriesByProfilesProperties categoriesByFilters;
+  }
 
   @Override
   public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
@@ -82,7 +86,7 @@ public class MediaCentreServiceImpl extends MediaCentreServiceAbstractImpl {
     if (Objects.isNull(urlRessources) || urlRessources.trim().isEmpty()) {
       throw new YmlPropertyNotFoundException("Property url.ressources is empty");
     }
-    Map<String, List<String>> userInfos = userInfosBuilder.getUserInfos(soffit, isMemberOf);
+    Map<String, List<String>> userInfos = userInfosBuilder.getUserInfos(getSoffitHolder(), isMemberOf);
 
     List<Ressource> listRessources = mediaCentreResource.retrieveListRessource(urlRessources, userInfos);
     return listRessources;
@@ -90,7 +94,7 @@ public class MediaCentreServiceImpl extends MediaCentreServiceAbstractImpl {
 
   @Override
   public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-    List<String> userProfiles = soffit.getProfiles();
+    List<String> userProfiles = getSoffitHolder().getProfiles();
     return getFiltersByProfile(userProfiles);
   }
 

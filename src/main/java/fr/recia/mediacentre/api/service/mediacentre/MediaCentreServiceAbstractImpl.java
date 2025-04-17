@@ -20,6 +20,7 @@ import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,17 @@ import java.util.Optional;
 @Slf4j
 public abstract class MediaCentreServiceAbstractImpl implements MediaCentreService{
 
-  @Autowired
+  @Getter
   SoffitHolder soffitHolder;
 
-  @Autowired
   MappingProperties mappingProperties;
+
+
+  public MediaCentreServiceAbstractImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties){
+    this.soffitHolder = soffitHolder;
+    this.mappingProperties = mappingProperties;
+  }
+
 
   @Override
   public Optional<Ressource> retrieveRessourceById(String ressourceId, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {

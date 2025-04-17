@@ -18,6 +18,8 @@ package fr.recia.mediacentre.api.service.mediacentre.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
+import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
@@ -47,7 +49,6 @@ import java.util.Set;
 
 @Slf4j
 @Service
-@NoArgsConstructor
 public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
 
   @NonNull
@@ -60,14 +61,14 @@ public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
   @Setter
   private String urlDTOS;
 
-  @Autowired
-  private MediaCentreResourceJacksonImpl mediaCentreResource;
 
-  @Autowired
-  private SoffitHolder soffit;
-
-  @Autowired
   private CategoriesByProfilesProperties categoriesByFilters;
+
+  public MediaCentreServiceMockImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties,CategoriesByProfilesProperties categoriesByProfilesProperties)
+  {
+    super(soffitHolder, mappingProperties);
+    this.categoriesByFilters = categoriesByProfilesProperties;
+  }
 
   @Override
   public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
@@ -86,7 +87,7 @@ public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
 
   @Override
   public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-    List<String> userProfile = soffit.getProfiles();
+    List<String> userProfile = getSoffitHolder().getProfiles();
     return getFiltersByProfile(userProfile);
   }
 
