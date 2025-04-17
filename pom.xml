@@ -16,8 +16,8 @@
     <inceptionYear>2017</inceptionYear>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com/GIP-RECIA/mediacentre.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/GIP-RECIA/mediacentre.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/GIP-RECIA/MediaCentre-API.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/GIP-RECIA/MediaCentre-API.git</developerConnection>
         <tag>HEAD</tag>
         <url>https://github.com/GIP-RECIA/MediaCentre-API</url>
     </scm>
