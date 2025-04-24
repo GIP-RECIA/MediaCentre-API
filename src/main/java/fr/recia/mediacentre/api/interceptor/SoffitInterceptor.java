@@ -48,6 +48,11 @@ public class SoffitInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     String path = request.getRequestURI().substring(request.getContextPath().length());
+
+    if (!path.startsWith("/api")) {
+        return true;
+    }
+
     String token = request.getHeader("Authorization");
     if (token == null) {
       log.debug("No Authorization header found");
