@@ -45,13 +45,13 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
 
 
   @Override
-  public Optional<Ressource> retrieveRessourceById(String ressourceId, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {
-    String ressourceIdForFiltering = ressourceId;
+  public Optional<Ressource> retrieveRessourceByName(String nomRessource, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {
+    String ressourceIdForFiltering = nomRessource;
     if(forCurrentEtab){
       soffitHolder.setUaiList(soffitHolder.getUaiCurrent());
     }
     if(isBase64){
-      String decodedId = new String(Base64.decodeBase64(ressourceId.getBytes()));
+      String decodedId = new String(Base64.decodeBase64(nomRessource.getBytes()));
       ressourceIdForFiltering = decodedId;
     }
     return getRessourceOfCurrentEtabFromRessourceList(ressourceIdForFiltering, retrieveListRessource(isMemberOf));
@@ -66,8 +66,16 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
       return Optional.empty();
     }
     for(Ressource ressource : ressourceList){
-      if(ressourceId.trim().equalsIgnoreCase(ressource.getIdRessource().trim())){
-        return Optional.of(ressource);
+      if(ressourceId.trim().equalsIgnoreCase(ressource.getNomRessource().trim())){
+        if( Objects.isNull(ressource.getIdEtablissement()) || ressource.getIdEtablissement().isEmpty()){
+          return Optional.of(ressource);
+        } else {
+          if(ressource.getIdEtablissement().stream().anyMatch(x -> Objects.equals(x.getUAI(), currentUai))){
+            return Optional.of(ressource);
+          } else {
+            return Optional.empty();
+          }
+        }
       }
     }
     return Optional.empty();

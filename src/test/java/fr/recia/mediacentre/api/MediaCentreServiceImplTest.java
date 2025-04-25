@@ -21,7 +21,6 @@ import fr.recia.mediacentre.api.config.ConfigurationTest;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
-import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.service.mediacentre.MediaCentreService;
 import fr.recia.mediacentre.api.service.utils.UserInfosBuilder;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
@@ -175,7 +174,7 @@ public class MediaCentreServiceImplTest {
 
 
   @Test
-  public void retrieveRessourceByIdForCurrentEtabRemoveOtherUais(){
+  public void retrieveRessourceByNameForCurrentEtabRemoveOtherUais(){
 
     //make sure that test data are relevant
     //test does not prove that listUAI is filtered in request if there is nothing to filter
@@ -184,7 +183,7 @@ public class MediaCentreServiceImplTest {
     String idRessourceRequested = "ID-RES";
     doReturn(null).when(mediaCentreResource).retrieveListRessource(any(), any());
     doReturn(null).when(mediaCentreResource).retrieveListRessource(any(), any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false, true);
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceByName(idRessourceRequested, isMemberOf.getIsMemberOf(), false, true);
 
     verify(mediaCentreResource).retrieveListRessource(any(), captor.capture());
     assertTrue(captor.getValue().containsKey(mappingProperties.getUaiList()));
@@ -192,7 +191,7 @@ public class MediaCentreServiceImplTest {
   }
 
   @Test
-  public void retrieveRessourceByIdForAllEtabDoesNotRemoveOtherUais(){
+  public void retrieveRessourceByNameForAllEtabDoesNotRemoveOtherUais(){
 
     //make sure that test data are relevant
     //test does not prove that listUAI is not filtered in request if there is nothing to filter
@@ -200,7 +199,7 @@ public class MediaCentreServiceImplTest {
 
     String idRessourceRequested = "ID-RES";
     doReturn(null).when(mediaCentreResource).retrieveListRessource(eq(idRessourceRequested), any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceById(idRessourceRequested, isMemberOf.getIsMemberOf(), false, false);
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceByName(idRessourceRequested, isMemberOf.getIsMemberOf(), false, false);
 
     verify(mediaCentreResource).retrieveListRessource(any(), captor.capture());
     assertTrue(captor.getValue().containsKey(mappingProperties.getUaiList()));

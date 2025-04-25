@@ -59,11 +59,11 @@ public class MediaCentreController {
         return new ResponseEntity<>(filterEnumList, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/{id}")
-    public ResponseEntity<Ressource> getResourceById(@PathVariable String id, @RequestBody IsMemberOf isMemberOf,
-                                                     @RequestParam(defaultValue = "false") boolean base64,
-                                                     @RequestParam(defaultValue = "true") boolean forCurrentEtab){
-        Optional<Ressource> ressourceOptional = mediaCentreService.retrieveRessourceById(id, isMemberOf.getIsMemberOf(),base64, forCurrentEtab);
+    @PostMapping(path = "/{nomRessource}")
+    public ResponseEntity<Ressource> getResourceByName(@PathVariable String nomRessource, @RequestBody IsMemberOf isMemberOf,
+                                                       @RequestParam(defaultValue = "false") boolean base64,
+                                                       @RequestParam(defaultValue = "true") boolean forCurrentEtab){
+        Optional<Ressource> ressourceOptional = mediaCentreService.retrieveRessourceByName(nomRessource, isMemberOf.getIsMemberOf(),base64, forCurrentEtab);
         if(ressourceOptional.isEmpty()){
           return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }else {
