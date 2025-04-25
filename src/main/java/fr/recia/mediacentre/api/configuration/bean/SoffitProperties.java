@@ -24,13 +24,10 @@ public class SoffitProperties {
 
      private String signatureKey;
 
-     private String encryptionPassword;
-
   @Override
   public String toString() {
     return "\"SoffitProperties\": {" +
       "\n\t\"signatureKey\": \"" + signatureKey + "\"" +
-            "\n\t\"encryptionPassword\": \"" + encryptionPassword + "\"" +
       "\n}";
   }
 }

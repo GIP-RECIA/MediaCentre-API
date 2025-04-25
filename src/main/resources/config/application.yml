@@ -56,7 +56,6 @@ app:
 
   soffit:
     signatureKey: ''
-    encryptionPassword: ''
 
 viewResCache: false
 

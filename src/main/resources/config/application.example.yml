@@ -61,7 +61,6 @@ app:
         - POST
         - DELETE
   soffit:
-    encryptionPassword: 'encryptionPassword'
     signatureKey: 'aJwtSignatureKey'
 
 viewResCache: false
