@@ -28,7 +28,7 @@ import javax.annotation.PostConstruct;
 @Configuration
 @ConfigurationProperties(
   prefix = "app",
-  ignoreUnknownFields = false
+  ignoreUnknownFields = true
 )
 @Data
 @Validated

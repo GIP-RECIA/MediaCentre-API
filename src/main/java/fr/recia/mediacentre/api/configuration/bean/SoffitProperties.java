@@ -19,7 +19,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties(prefix = "soffit")
+@ConfigurationProperties(prefix = "soffit", ignoreUnknownFields = true)
 public class SoffitProperties {
 
      private String signatureKey;
