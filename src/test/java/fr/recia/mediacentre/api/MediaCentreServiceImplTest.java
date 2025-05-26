@@ -144,16 +144,7 @@ public class MediaCentreServiceImplTest {
       soffit.setProfiles(Collections.singletonList("profile1"));
       soffit.setGarId(Collections.singletonList("garId"));
 
-
       userInfos = userInfosBuilder.getUserInfos(soffit, isMemberOf.getIsMemberOf());
-//        userInfos = new HashMap<>();
-//        userInfos.put("etabIds",List.of("id"));
-//        userInfos.put("currentEtabId",List.of("idCurrent"));
-//        userInfos.put("uid",List.of("uid"));
-//        userInfos.put("profils",List.of("profile1"));
-//        userInfos.put("isMemberOf", isMemberOf.getIsMemberOf());
-
-//        doReturn(List.of("profile1")).when(soffit).getProfiles();
 
       doReturn("currentUai").when(mappingProperties).getUaiCurrent();
       doReturn("profile").when(mappingProperties).getProfiles();
