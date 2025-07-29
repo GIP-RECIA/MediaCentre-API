@@ -17,6 +17,8 @@ package fr.recia.mediacentre.api.service.mediacentre;
 
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
+import fr.recia.mediacentre.api.model.pojo.RessourceLight;
+import fr.recia.mediacentre.api.model.resource.IdEtablissement;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
@@ -28,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class MediaCentreServiceAbstractImpl implements MediaCentreService{
@@ -43,6 +47,33 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
     this.mappingProperties = mappingProperties;
   }
 
+  @Override
+  public List<RessourceLight> retrieveListRessourceFav(List<String> isMemberOf, List<String> favorites) throws YmlPropertyNotFoundException {
+    List<Ressource> ressourceList = retrieveListRessource(isMemberOf);
+    String currentUAI =  soffitHolder.getUaiCurrent().get(0);
+
+    Predicate<Ressource> isFavorite = new Predicate<Ressource>() {
+      @Override
+      public boolean test(Ressource ressource) {
+        return favorites.contains(ressource.getIdRessource());
+      }
+    };
+    Predicate<Ressource> isCurrentEtab = new Predicate<Ressource>() {
+      @Override
+      public boolean test(Ressource ressource) {
+        if(Objects.isNull(ressource.getIdEtablissement()) || ressource.getIdEtablissement().isEmpty()){
+          return true;
+        }
+        for(IdEtablissement idEtablissement : ressource.getIdEtablissement()){
+          if(Objects.equals(idEtablissement.getUAI(), currentUAI)){
+            return true;
+          }
+        }
+        return false;
+      }
+    };
+    return ressourceList.stream().filter(isFavorite.and(isCurrentEtab)).map(x -> new RessourceLight(x.getIdRessource(),x.getNomRessource())).collect(Collectors.toList());
+  }
 
   @Override
   public Optional<Ressource> retrieveRessourceByName(String nomRessource, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {
@@ -56,6 +87,7 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
     }
     return getRessourceOfCurrentEtabFromRessourceList(ressourceIdForFiltering, retrieveListRessource(isMemberOf));
   }
+
   protected Optional<Ressource> getRessourceOfCurrentEtabFromRessourceList(String ressourceId, List<Ressource> ressourceList){
     List<String> currentUaiList = soffitHolder.getUaiCurrent();
     if(Objects.isNull(currentUaiList) || currentUaiList.isEmpty()){

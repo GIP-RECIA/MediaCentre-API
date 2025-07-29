@@ -16,6 +16,7 @@
 package fr.recia.mediacentre.api.service.mediacentre;
 
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
+import fr.recia.mediacentre.api.model.pojo.RessourceLight;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
@@ -32,6 +33,8 @@ public interface MediaCentreService {
      * @return listeRessources - The list of current user's resources.
      */
     List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException;
+
+    List<RessourceLight> retrieveListRessourceFav(List<String> isMemberOf, List<String> favorite) throws YmlPropertyNotFoundException;
 
     /***
      * Function that returns the list of current user's resources.
