@@ -94,7 +94,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         });
         soffitHolder.setUaiList(values);
       }catch (IllegalArgumentException illegalArgumentException){
-        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        log.error("Soffit does not contain string collection for UaiList: {", illegalArgumentException);
         return false;
       }
 
@@ -105,7 +105,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         });
         soffitHolder.setProfiles(values);
       }catch (IllegalArgumentException illegalArgumentException){
-        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        log.error("Soffit does not contain string collection for Profiles: {", illegalArgumentException);
         return false;
       }
 
@@ -116,7 +116,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         });
         soffitHolder.setGarId(values);
       }catch (IllegalArgumentException illegalArgumentException){
-        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        log.error("Soffit does not contain string collection for GarID: {", illegalArgumentException);
         return false;
       }
 
