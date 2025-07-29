@@ -84,6 +84,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         soffitHolder.setUaiCurrent(values);
       }catch (IllegalArgumentException illegalArgumentException){
         log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return false;
       }
 
@@ -95,6 +96,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         soffitHolder.setUaiList(values);
       }catch (IllegalArgumentException illegalArgumentException){
         log.error("Soffit does not contain string collection for UaiList: {", illegalArgumentException);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return false;
       }
 
@@ -106,6 +108,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         soffitHolder.setProfiles(values);
       }catch (IllegalArgumentException illegalArgumentException){
         log.error("Soffit does not contain string collection for Profiles: {", illegalArgumentException);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return false;
       }
 
@@ -117,6 +120,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         soffitHolder.setGarId(values);
       }catch (IllegalArgumentException illegalArgumentException){
         log.error("Soffit does not contain string collection for GarID: {", illegalArgumentException);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         return false;
       }
 
