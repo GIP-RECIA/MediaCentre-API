@@ -15,9 +15,11 @@
  */
 package fr.recia.mediacentre.api.web.rest;
 
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
+import fr.recia.mediacentre.api.model.pojo.RessourceLight;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.service.mediacentre.MediaCentreService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -42,11 +47,24 @@ public class MediaCentreController {
     @Autowired
     private MediaCentreService mediaCentreService;
 
+    @Autowired
+    private MappingProperties mappingProperties;
+
     @PostMapping
     public ResponseEntity<List<Ressource>> getResources(@RequestBody IsMemberOf isMemberOf) {
         List<Ressource> resourcesList = mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
         return new ResponseEntity<>(resourcesList, HttpStatus.OK);
     }
+
+  @PostMapping(path="/favorites")
+  public ResponseEntity<List<RessourceLight>> getFavoriteResources(@RequestBody Map<String, List<String>> payload) {
+    List<String> isMemberOf = payload.getOrDefault(mappingProperties.getPayloadIsMemberOf(), new ArrayList<>());
+    List<String> favorites = payload.getOrDefault(mappingProperties.getPayloadFavorites(), new ArrayList<>());
+    if(favorites.isEmpty()){
+      return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    }
+    return new ResponseEntity<>(mediaCentreService.retrieveListRessourceFav(isMemberOf, favorites), HttpStatus.OK);
+  }
 
     @PostMapping(path = "/gestion")
     public ResponseEntity<List<GestionAffectationDTO>> getGestion(@RequestBody IsMemberOf isMemberOf){

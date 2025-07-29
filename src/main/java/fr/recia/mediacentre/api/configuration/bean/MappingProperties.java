@@ -57,6 +57,10 @@ public class MappingProperties {
   private String groups;
   @NotNull
   private List<String> otherUserInfoAttributes;
+  @NotNull
+  private String payloadFavorites = "favorites";
+  @NotNull
+  private String payloadIsMemberOf = "isMemberOf";
 
 
   @PostConstruct
