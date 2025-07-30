@@ -5,12 +5,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.18</version>
-        <relativePath />
+        <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
     <groupId>fr.recia.mediacentre.api</groupId>
     <artifactId>esco-mediacentre</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5</version>
     <packaging>war</packaging>
     <name>mediacentre</name>
     <inceptionYear>2017</inceptionYear>
@@ -18,7 +18,7 @@
     <scm>
         <connection>scm:git:ssh://git@github.com/GIP-RECIA/MediaCentre-API.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/GIP-RECIA/MediaCentre-API.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>0.0.5</tag>
         <url>https://github.com/GIP-RECIA/MediaCentre-API</url>
     </scm>
     <distributionManagement>
