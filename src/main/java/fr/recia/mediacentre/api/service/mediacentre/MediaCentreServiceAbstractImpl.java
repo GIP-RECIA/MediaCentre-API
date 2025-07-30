@@ -72,7 +72,7 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
         return false;
       }
     };
-    return ressourceList.stream().filter(isFavorite.and(isCurrentEtab)).map(x -> new RessourceLight(x.getIdRessource(),x.getNomRessource())).collect(Collectors.toList());
+    return ressourceList.stream().filter(isFavorite.and(isCurrentEtab)).map(x -> new RessourceLight(x.getIdRessource(),x.getNomRessource(), x.getTypePresentation())).collect(Collectors.toList());
   }
 
   @Override
