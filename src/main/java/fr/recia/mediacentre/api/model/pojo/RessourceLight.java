@@ -15,6 +15,7 @@
  */
 package fr.recia.mediacentre.api.model.pojo;
 
+import fr.recia.mediacentre.api.model.resource.TypePresentation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -26,5 +27,6 @@ public class RessourceLight {
 
   private String idRessource;
   private String nomRessource;
+  private TypePresentation typePresentation;
 
 }
