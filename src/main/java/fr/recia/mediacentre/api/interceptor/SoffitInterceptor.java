@@ -49,6 +49,10 @@ public class SoffitInterceptor implements HandlerInterceptor {
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     String path = request.getRequestURI().substring(request.getContextPath().length());
 
+    if(request.getMethod().equals("OPTIONS") ){
+      return true;
+    }
+
     if (!path.startsWith("/api")) {
         return true;
     }
