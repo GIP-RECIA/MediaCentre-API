@@ -15,20 +15,27 @@
  */
 package fr.recia.mediacentre.api.service.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+@Slf4j
 public class MapUtils {
 
   public static Map<String, List<String>> stringListStringDeepCopy(Map<String, List<String>> mapToCopy){
     HashMap<String, List<String>> deepCopiedMap = new HashMap<>();
+
+    log.info("map to copy keys {}", String.join(";", mapToCopy.keySet()));
     for(Map.Entry<String, List<String>> entry : mapToCopy.entrySet()){
       String key = entry.getKey();
       List<String> values = new ArrayList<>();
-      for (String value : entry.getValue()) {
-        values.add(String.valueOf(value));
+
+      if(Objects.nonNull(entry.getValue())){
+        values.addAll(entry.getValue());
       }
       deepCopiedMap.put(key, values);
     }
