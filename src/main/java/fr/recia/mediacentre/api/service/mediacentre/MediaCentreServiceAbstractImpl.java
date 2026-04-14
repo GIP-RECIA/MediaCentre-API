@@ -28,6 +28,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -72,7 +73,18 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
         return false;
       }
     };
-    return ressourceList.stream().filter(isFavorite.and(isCurrentEtab)).map(x -> new RessourceLight(x.getIdRessource(),x.getNomRessource(), x.getTypePresentation())).collect(Collectors.toList());
+
+    // Resources correspondants aux favoris, trié selon l'ordre dans lequel le GAR les a retournées
+    List<RessourceLight> ressourceLightListFiltered = ressourceList.stream().filter(isFavorite.and(isCurrentEtab)).map(x -> new RessourceLight(x.getIdRessource(),x.getNomRessource(), x.getTypePresentation())).collect(Collectors.toList());
+
+    // Map intermédiaire qui fait le pont entre id et resources filtrées
+    Map<String, RessourceLight> ressourceLightFilteredAsMap = ressourceLightListFiltered.stream()
+      .collect(Collectors.toMap(RessourceLight::getIdRessource, o -> o));
+
+    // La méthode map se base sur la liste de favoris donnée en entrée, donc ordonné
+    return favorites.stream()
+      .map(ressourceLightFilteredAsMap::get)
+      .collect(Collectors.toList());
   }
 
   @Override
