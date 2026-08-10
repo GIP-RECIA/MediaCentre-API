@@ -24,6 +24,7 @@ import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.service.mediacentre.MediaCentreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,7 +84,7 @@ public class MediaCentreController {
                                                        @RequestParam(defaultValue = "true") boolean forCurrentEtab){
         Optional<Ressource> ressourceOptional = mediaCentreService.retrieveRessourceByName(nomRessource, isMemberOf.getIsMemberOf(),base64, forCurrentEtab);
         if(ressourceOptional.isEmpty()){
-          return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+          return new ResponseEntity<>(new HttpHeaders(), HttpStatus.NOT_FOUND);
         }else {
           return new ResponseEntity<>(ressourceOptional.get(), HttpStatus.OK);
         }

@@ -21,7 +21,9 @@ import fr.recia.mediacentre.api.config.ConfigurationTest;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
+import fr.recia.mediacentre.api.model.resource.IdEtablissement;
 import fr.recia.mediacentre.api.service.mediacentre.MediaCentreService;
+import fr.recia.mediacentre.api.service.utils.MapUtils;
 import fr.recia.mediacentre.api.service.utils.UserInfosBuilder;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
@@ -32,22 +34,21 @@ import fr.recia.mediacentre.api.model.resource.Ressource;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
@@ -70,43 +71,42 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
 @SpringBootTest
 @Import(ConfigurationTest.class)
 @ActiveProfiles({ "test" })
+@ExtendWith(MockitoExtension.class)
 @TestPropertySource(locations = "classpath:application-test.yml")
 public class MediaCentreServiceImplTest {
 
-    @NonNull
+  @NonNull
     @Value("${url.ressources.mediacentre}")
     @Setter
     private String urlRessources;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private UserInfosBuilder userInfosBuilder;
 
-  @MockBean
-  private MediaCentreResource mediaCentreResource;
+    @MockitoBean
+    private MediaCentreResource mediaCentreResource;
 
-    @MockBean
+    @MockitoBean
     private CacheManager cacheManager;
 
-    @MockBean
+    @MockitoBean
     MappingProperties mappingProperties;
 
-    @MockBean
+    @MockitoBean
     private CategoriesByProfilesProperties categoriesByFilters;
 
     private List<Ressource> listeRessourcesMediaCentre;
 
-    @MockBean
+    @MockitoBean
     private RestTemplate restTemplate;
 
-    @SpyBean
+    @MockitoBean
     private SoffitHolder soffit;
 
     @Autowired
@@ -130,27 +130,47 @@ public class MediaCentreServiceImplTest {
 
     private static final  String testUai = "TestUai";
 
-  private List<String> currentUAI = List.of("UAI_1");
-  private List<String> listUAI = List.of("UAI_1","UAI_2");
+  private List<String> currentUAI;
+  private List<String> listUAI;
 
-    @Before
+    @BeforeEach
     public void init() throws IOException {
         listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath),new TypeReference<>(){});
         isMemberOf = objectMapper.readValue(new File(isMemberOfFilePath), new TypeReference<>() {
         });
 
-      soffit.setUaiCurrent(currentUAI);
-      soffit.setUaiList(listUAI);
-      soffit.setProfiles(Collections.singletonList("profile1"));
-      soffit.setGarId(Collections.singletonList("garId"));
 
-      userInfos = userInfosBuilder.getUserInfos(soffit, isMemberOf.getIsMemberOf());
+      this.listUAI = listeRessourcesMediaCentre.stream()
+        .flatMap(x -> x.getIdEtablissement().stream())
+        .map(IdEtablissement::getUai)
+        .distinct()
+        .toList();
+
+      currentUAI = Collections.singletonList(listUAI.getFirst());
 
       doReturn("currentUai").when(mappingProperties).getUaiCurrent();
       doReturn("profile").when(mappingProperties).getProfiles();
       doReturn("listUai").when(mappingProperties).getUaiList();
       doReturn("garId").when(mappingProperties).getGarId();
       doReturn("isMemberOf").when(mappingProperties).getGroups();
+
+      doReturn(currentUAI).when(soffit).getUaiCurrent();
+      doReturn(listUAI).when(soffit).getUaiList();
+      doReturn(List.of("profile1")).when(soffit).getProfiles();
+      doReturn(List.of("garId")).when(soffit).getGarId();
+
+      userInfos = userInfosBuilder.getUserInfos(soffit, isMemberOf.getIsMemberOf());
+
+
+      Map<String, List<String>> deepCopiedMap = MapUtils.stringListStringDeepCopy(userInfos);
+      deepCopiedMap.put(mappingProperties.getProfiles(), soffit.getProfiles());
+      deepCopiedMap.put(mappingProperties.getUaiCurrent(), soffit.getUaiCurrent());
+      deepCopiedMap.put(mappingProperties.getUaiList(), soffit.getUaiList());
+      deepCopiedMap.put(mappingProperties.getGarId(), soffit.getGarId());
+
+
+      doReturn(deepCopiedMap).when(soffit).getUserInfosWithoutIsMemberOf();
+
 
         CategoriesByProfilesProperties.ProfilesMap profilesMap = new CategoriesByProfilesProperties.ProfilesMap();
         profilesMap.setProfiles(List.of("profile1"));
@@ -160,41 +180,48 @@ public class MediaCentreServiceImplTest {
 
     // retrieveRessourceById() tests :
 
-  @Captor
-  private ArgumentCaptor<Map<String, List<String>>> captor;
-
-
   @Test
   public void retrieveRessourceByNameForCurrentEtabRemoveOtherUais(){
+    String nomRessourceRequested = "nomRessource3";
 
     //make sure that test data are relevant
     //test does not prove that listUAI is filtered in request if there is nothing to filter
     assertNotEquals(currentUAI, listUAI);
+    assertTrue(listeRessourcesMediaCentre.stream().filter(x -> nomRessourceRequested.equals(x.getNomRessource())).toList().getFirst().getIdEtablissement().size() > 1);
 
-    String idRessourceRequested = "ID-RES";
-    doReturn(null).when(mediaCentreResource).retrieveListRessource(any(), any());
-    doReturn(null).when(mediaCentreResource).retrieveListRessource(any(), any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceByName(idRessourceRequested, isMemberOf.getIsMemberOf(), false, true);
 
-    verify(mediaCentreResource).retrieveListRessource(any(), captor.capture());
-    assertTrue(captor.getValue().containsKey(mappingProperties.getUaiList()));
-    assertEquals(currentUAI, captor.getValue().get(mappingProperties.getUaiList()));
+    doReturn(listeRessourcesMediaCentre).when(mediaCentreResource).retrieveListRessource(eq(urlRessources), any());
+
+
+
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceByName(nomRessourceRequested, isMemberOf.getIsMemberOf(), false, true);
+
+
+    assertTrue(optionalRessource.isPresent());
+    assertEquals(1, optionalRessource.get().getIdEtablissement().size());
+    assertEquals(currentUAI.getFirst(), optionalRessource.get().getIdEtablissement().getFirst().getUai());
+
+
+
   }
 
   @Test
   public void retrieveRessourceByNameForAllEtabDoesNotRemoveOtherUais(){
+    String nomRessourceRequested = "nomRessource3";
 
     //make sure that test data are relevant
-    //test does not prove that listUAI is not filtered in request if there is nothing to filter
+    //test does not prove that listUAI is filtered in request if there is nothing to filter
     assertNotEquals(currentUAI, listUAI);
+    assertTrue(listeRessourcesMediaCentre.stream().filter(x -> nomRessourceRequested.equals(x.getNomRessource())).toList().getFirst().getIdEtablissement().size() > 1);
 
-    String idRessourceRequested = "ID-RES";
-    doReturn(null).when(mediaCentreResource).retrieveListRessource(eq(idRessourceRequested), any());
-    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceByName(idRessourceRequested, isMemberOf.getIsMemberOf(), false, false);
+    doReturn(listeRessourcesMediaCentre).when(mediaCentreResource).retrieveListRessource(eq(urlRessources), any());
+    Optional<Ressource> optionalRessource = mediaCentreService.retrieveRessourceByName(nomRessourceRequested, isMemberOf.getIsMemberOf(), false, false);
 
-    verify(mediaCentreResource).retrieveListRessource(any(), captor.capture());
-    assertTrue(captor.getValue().containsKey(mappingProperties.getUaiList()));
-    assertEquals(listUAI, captor.getValue().get(mappingProperties.getUaiList()));
+    Ressource targetRessource = listeRessourcesMediaCentre.stream().filter(x -> nomRessourceRequested.equals(x.getNomRessource())).toList().getFirst();
+
+    assertTrue(optionalRessource.isPresent());
+    assertEquals(targetRessource.getIdEtablissement().size(), optionalRessource.get().getIdEtablissement().size());
+    assertEquals(targetRessource.getIdEtablissement().stream().map(IdEtablissement::getUai).toList(), optionalRessource.get().getIdEtablissement().stream().map(IdEtablissement::getUai).toList());
   }
 
     // retrieveListRessource() tests :
@@ -220,14 +247,6 @@ public class MediaCentreServiceImplTest {
 
         assertNotNull(result);
         assertEquals(result.size(),0);
-    }
-
-    @Test
-    public void retrieveListRessource_When_UrlRessources_Is_Missing_In_Yml_Properties_KO() {
-//        mediaCentreService.setUrlRessources("");
-//        assertThrows(YmlPropertyNotFoundException.class, () -> {
-//            mediaCentreService.retrieveListRessource(isMemberOf.getIsMemberOf());
-//        });
     }
 
     // retrieveFiltersList() test :

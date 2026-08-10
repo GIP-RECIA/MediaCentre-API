@@ -16,7 +16,6 @@
 package fr.recia.mediacentre.api.service.config.impl;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import fr.recia.mediacentre.api.configuration.bean.ConfigProperties;
 import fr.recia.mediacentre.api.model.pojo.ConfigElement;
@@ -31,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import tools.jackson.databind.JsonNode;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -152,7 +153,7 @@ public class ConfigServiceImpl implements ConfigService {
             for(Map.Entry<String, JsonNode> entry : response.getBody().getMap().entrySet()){
               JsonNode jsonNode = entry.getValue();
               JsonNode displayNameJsonNode =jsonNode.get(configProperties.getParamUserEtabsDisplayNameKey());
-              configElementList.add(new ConfigElement(entry.getKey(), displayNameJsonNode.asText()));
+              configElementList.add(new ConfigElement(entry.getKey(), displayNameJsonNode.asString()));
             }
         }
         return configElementList;
@@ -160,7 +161,7 @@ public class ConfigServiceImpl implements ConfigService {
       // providing the error stacktrace only on debug as the custom logged error should be suffisant.
       log.warn("Error client request on URL {}, returned status {}, with response {}", uri, e.getStatusCode(), e.getResponseBodyAsString(),e);
       log.warn(e.getStatusCode().toString());
-      throw new MediacentreWSException(e.getMessage(), e.getStatusCode());
+      throw new MediacentreWSException(e.getMessage(), (HttpStatus) e.getStatusCode());
     } catch (RestClientException ex) {
       log.warn("Error getting MediaCentre from url '{}'", uri, ex.getMessage(), ex);
       return Lists.newArrayList();

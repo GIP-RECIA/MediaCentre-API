@@ -37,10 +37,18 @@ public class IdEtablissement {
     private String id;
 
     @JsonProperty("UAI")
-    private String UAI;
+    private String uai;
 
     @JsonProperty("nom")
     private String nom;
 
+  @Override
+  public String toString() {
+    return "IdEtablissement{" +
+      "id='" + id + '\'' +
+      ", UAI='" + uai + '\'' +
+      ", nom='" + nom + '\'' +
+      '}';
+  }
 }
 

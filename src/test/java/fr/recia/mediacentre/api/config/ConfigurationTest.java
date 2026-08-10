@@ -15,20 +15,37 @@
  */
 package fr.recia.mediacentre.api.config;
 
+import fr.recia.mediacentre.api.configuration.bean.ConfigProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import org.mockito.Mockito;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.web.context.WebApplicationContext;
 
 @TestConfiguration
+@EnableConfigurationProperties(ConfigProperties.class)
 public class ConfigurationTest {
 
   @Primary
   @Bean(name = "mockTestMediaCentreRessource")
   public MediaCentreResource mediaCentreResource(){
     return Mockito.mock(MediaCentreResourceJacksonImpl.class);
+  }
+
+
+  @Bean
+  @Scope(
+    value = WebApplicationContext.SCOPE_REQUEST,
+    proxyMode = ScopedProxyMode.TARGET_CLASS
+  )
+  public SoffitHolder soffitHolder() {
+    return new SoffitHolder();
   }
 
 }

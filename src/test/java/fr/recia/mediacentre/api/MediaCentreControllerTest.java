@@ -17,30 +17,30 @@ package fr.recia.mediacentre.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.recia.mediacentre.api.configuration.bean.CorsProperties;
+import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
+import fr.recia.mediacentre.api.web.rest.MediaCentreController;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.service.mediacentre.impl.MediaCentreServiceImpl;
-import fr.recia.mediacentre.api.web.rest.MediaCentreController;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.HttpStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -58,26 +58,30 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.resolve;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest(value = MediaCentreController.class)
 @DirtiesContext
-@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles({ "test" })
-public class MediaCentreControllerTest {
+@WebMvcTest(MediaCentreController.class)
+class MediaCentreControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    @MockBean
-    private MediaCentreServiceImpl mediaCentreService;
+  @MockitoBean
+  private MediaCentreServiceImpl mediaCentreService;
 
-    @MockBean
+  @MockitoBean
+  private MappingProperties mappingProperties;
+
+  @MockitoBean
+  private CorsProperties corsProperties;
+
+    @MockitoBean
     private MediaCentreResourceJacksonImpl mediaCentreResourceJackson;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private List<Ressource> listeRessourcesMediaCentre;
     private List<FilterEnum> lesFiltres;
@@ -100,7 +104,7 @@ public class MediaCentreControllerTest {
     private static String GETRESOURCES_URI = "/api/resources";
     private static String GETFILTERS_URI = "/api/resources/filters";
 
-    @Before
+    @BeforeEach
     public void init() throws IOException {
         listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath),new TypeReference<>(){});
         lesFiltres = objectMapper.readValue(new File(filtersFilePath)
@@ -125,11 +129,10 @@ public class MediaCentreControllerTest {
                 .content(isMemberOf);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
-
+        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
         List<Ressource> retrievedResources = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
-        assertEquals(listeRessourcesMediaCentre.size(), retrievedResources.size());
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(listeRessourcesMediaCentre), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
+        Assertions.assertEquals(listeRessourcesMediaCentre.size(), retrievedResources.size());
+      JSONAssert.assertEquals(objectMapper.writeValueAsString(listeRessourcesMediaCentre), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
     @Test
@@ -144,8 +147,8 @@ public class MediaCentreControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(result.getResponse().getStatus(), HttpStatus.SC_OK);
-        assertEquals(0, result.getResponse().getContentLength());
+        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
+        Assertions.assertEquals(0, result.getResponse().getContentLength());
         JSONAssert.assertEquals(objectMapper.writeValueAsString(new ArrayList<>()), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
@@ -162,8 +165,8 @@ public class MediaCentreControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(result.getResponse().getStatus(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
-        assertEquals(0, result.getResponse().getContentLength());
+        Assertions.assertEquals(result.getResponse().getStatus(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        Assertions.assertEquals(0, result.getResponse().getContentLength());
     }
 
   @Test
@@ -177,8 +180,8 @@ public class MediaCentreControllerTest {
 
     MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-    assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, result.getResponse().getStatus());
-    assertEquals(0, result.getResponse().getContentLength());
+    Assertions.assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, result.getResponse().getStatus());
+    Assertions.assertEquals(0, result.getResponse().getContentLength());
   }
 
 //     getFilters() tests :
@@ -191,12 +194,12 @@ public class MediaCentreControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andReturn();
 
-        assertEquals(result.getResponse().getStatus(), HttpStatus.SC_OK);
+        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
 
         List<FilterEnum> retrievedFilters = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
-        assertEquals(lesFiltres.size(),retrievedFilters.size());
+        Assertions.assertEquals(lesFiltres.size(), retrievedFilters.size());
         JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 
@@ -211,8 +214,8 @@ public class MediaCentreControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(result.getResponse().getStatus(), HttpStatus.SC_OK);
-        assertEquals(0, result.getResponse().getContentLength());
+        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
+        Assertions.assertEquals(0, result.getResponse().getContentLength());
         JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
     }
 }

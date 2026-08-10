@@ -15,17 +15,17 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 @Slf4j
@@ -39,7 +39,7 @@ public class GestionAffectationsProperties {
   private List<GestionAffectation> objects;
 
   @PostConstruct
-  private void init() throws JsonProcessingException {
+  private void init() {
     log.info("Loaded properties: {}", this);
   }
 
