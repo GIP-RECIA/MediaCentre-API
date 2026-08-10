@@ -15,7 +15,6 @@
  */
 package fr.recia.mediacentre.api.dao.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.MediaCentreResource;
@@ -30,6 +29,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -37,6 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import tools.jackson.databind.ObjectMapper;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -87,7 +89,7 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
 
         try {
             HttpHeaders requestHeaders = new HttpHeaders();
-            requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+            requestHeaders.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Map<String, List<String>>> requestEntity = new HttpEntity<Map<String, List<String>>>(userInfos, requestHeaders);
             ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
             listRessourceMediaCentre = Lists.newArrayList(response.getBody());
@@ -101,7 +103,7 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
         } catch (HttpClientErrorException e) {
             // providing the error stacktrace only on debug as the custom logged error should be suffisant.
             log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(),e);
-            throw new MediacentreWSException(e.getMessage(), e.getStatusCode());
+            throw new MediacentreWSException(e.getMessage(), (HttpStatus) e.getStatusCode());
         } catch (RestClientException ex) {
             log.warn("Error getting MediaCentre from url '{}'", url, ex.getLocalizedMessage(), ex);
             return Lists.newArrayList();

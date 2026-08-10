@@ -105,5 +105,31 @@ public class Ressource {
     @Setter
     @JsonIgnore
     private int idInterne;
+
+  @Override
+  public String toString() {
+    return "Ressource{" +
+      "distributeurTech='" + distributeurTech + '\'' +
+      ", domaineEnseignement=" + domaineEnseignement +
+      ", idEditeur='" + idEditeur + '\'' +
+      ", idRessource='" + idRessource + '\'' +
+      ", idEtablissement=" + idEtablissement +
+      ", idType='" + idType + '\'' +
+      ", niveauEducatif=" + niveauEducatif +
+      ", nomEditeur='" + nomEditeur + '\'' +
+      ", nomRessource='" + nomRessource + '\'' +
+      ", sourceEtiquette='" + sourceEtiquette + '\'' +
+      ", typePedagogique=" + typePedagogique +
+      ", typePresentation=" + typePresentation +
+      ", typologieDocument=" + typologieDocument +
+      ", urlAccesRessource='" + urlAccesRessource + '\'' +
+      ", urlVignette='" + urlVignette + '\'' +
+      ", validateurTech='" + validateurTech + '\'' +
+      ", description='" + description + '\'' +
+      ", estAffichable=" + estAffichable +
+      ", favorite=" + favorite +
+      ", idInterne=" + idInterne +
+      '}';
+  }
 }
 

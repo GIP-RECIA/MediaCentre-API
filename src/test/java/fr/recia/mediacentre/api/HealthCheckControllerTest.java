@@ -16,58 +16,54 @@
 
 package fr.recia.mediacentre.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.recia.mediacentre.api.configuration.bean.ConfigProperties;
 import fr.recia.mediacentre.api.web.rest.HealthCheckController;
+import fr.recia.mediacentre.api.web.rest.MediaCentreExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.HttpStatus;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest(value = HealthCheckController.class)
-@Import(ConfigProperties.class)
-@DirtiesContext
-@AutoConfigureMockMvc(addFilters = false)
-@ActiveProfiles({ "test" })
+@ActiveProfiles("test")
+@WebMvcTest
 public class HealthCheckControllerTest {
 
-  @Autowired
+  private static final String HEALTHCHECK_URI = "/health-check";
+
   private MockMvc mockMvc;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+  @Before
+  public void setup() {
+    HealthCheckController healthCheck = new HealthCheckController();
 
-  @Autowired
-  ConfigProperties configProperties;
-
-  private static String HEALTHCHECK_URI = "/health-check";
+    mockMvc = MockMvcBuilders
+      .standaloneSetup(healthCheck)
+      .setControllerAdvice(new MediaCentreExceptionHandler())
+      .build();
+  }
 
   @Test
   public void healthCheck_OK() throws Exception {
 
-    RequestBuilder requestBuilder = MockMvcRequestBuilders.get(HEALTHCHECK_URI)
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
+      .get(HEALTHCHECK_URI)
       .characterEncoding(StandardCharsets.UTF_8);
 
-    MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+    MvcResult result = mockMvc
+      .perform(requestBuilder)
+      .andReturn();
 
-    assertEquals(result.getResponse().getStatus(), HttpStatus.SC_OK);
+    assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
   }
-
 }

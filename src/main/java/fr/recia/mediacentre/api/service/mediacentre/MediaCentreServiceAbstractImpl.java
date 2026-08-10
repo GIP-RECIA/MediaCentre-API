@@ -25,7 +25,6 @@ import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,7 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
           return true;
         }
         for(IdEtablissement idEtablissement : ressource.getIdEtablissement()){
-          if(Objects.equals(idEtablissement.getUAI(), currentUAI)){
+          if(Objects.equals(idEtablissement.getUai(), currentUAI)){
             return true;
           }
         }
@@ -89,6 +88,12 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
 
   @Override
   public Optional<Ressource> retrieveRessourceByName(String nomRessource, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {
+    System.out.println("****************************************");
+    System.out.println("TEST TEST TEST");
+    System.out.println("nom ressource = "+ nomRessource);
+    System.out.println("nom isMemberOf = "+ isMemberOf.toString());
+    System.out.println("nom isBase64 = "+ isBase64);
+    System.out.println("nom forCurrentEtab = "+ forCurrentEtab);
     String ressourceIdForFiltering = nomRessource;
     if(forCurrentEtab){
       soffitHolder.setUaiList(soffitHolder.getUaiCurrent());
@@ -98,30 +103,49 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
       ressourceIdForFiltering = decodedId;
     }
     return getRessourceOfCurrentEtabFromRessourceList(ressourceIdForFiltering, retrieveListRessource(isMemberOf));
+
   }
 
   protected Optional<Ressource> getRessourceOfCurrentEtabFromRessourceList(String ressourceId, List<Ressource> ressourceList){
+
+    System.out.println("ressourceId = "+ressourceId);
+    System.out.println("ressourceList = "+ressourceList.toString());
+
     List<String> currentUaiList = soffitHolder.getUaiCurrent();
     if(Objects.isNull(currentUaiList) || currentUaiList.isEmpty()){
       throw new YmlPropertyNotFoundException("Missing mapping for current etab UAI");
     }
-    String currentUai = currentUaiList.get(0);
+    String currentUai = currentUaiList.getFirst();
     if(Objects.isNull(ressourceList)){
+      System.out.println("early return car null");
+      System.out.println("****************************************");
+
       return Optional.empty();
     }
     for(Ressource ressource : ressourceList){
       if(ressourceId.trim().equalsIgnoreCase(ressource.getNomRessource().trim())){
         if( Objects.isNull(ressource.getIdEtablissement()) || ressource.getIdEtablissement().isEmpty()){
+          System.out.println("****************************************");
+
           return Optional.of(ressource);
         } else {
-          if(ressource.getIdEtablissement().stream().anyMatch(x -> Objects.equals(x.getUAI(), currentUai))){
+          if(ressource.getIdEtablissement().stream().anyMatch(x -> Objects.equals(x.getUai(), currentUai))){
+            ressource.setIdEtablissement(ressource.getIdEtablissement().stream().filter(x -> Objects.equals(x.getUai(), currentUai)).toList());
+            System.out.println("****************************************");
+
             return Optional.of(ressource);
           } else {
+            System.out.println("****************************************");
+
             return Optional.empty();
           }
         }
       }
     }
+    System.out.println("after for");
+
+    System.out.println("****************************************");
+
     return Optional.empty();
   }
 }

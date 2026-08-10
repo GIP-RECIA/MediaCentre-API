@@ -11,7 +11,7 @@ server:
     include-stacktrace: always
 
 logging:
-  config: 'classpath:logback-dev.xml'
+  config: 'classpath:logback-spring.xml'
 
 hostnames:
   trusted:

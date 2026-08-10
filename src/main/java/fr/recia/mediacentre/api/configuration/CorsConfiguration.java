@@ -16,7 +16,6 @@
 package fr.recia.mediacentre.api.configuration;
 
 import fr.recia.mediacentre.api.configuration.bean.CorsProperties;
-import fr.recia.mediacentre.api.configuration.bean.MediaCentreProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -29,8 +28,8 @@ public class CorsConfiguration implements WebMvcConfigurer {
 
     private final CorsProperties corsProperties;
 
-  public CorsConfiguration(MediaCentreProperties mediaCentreProperties) {
-    this.corsProperties = mediaCentreProperties.getCors();
+  public CorsConfiguration(CorsProperties corsProperties) {
+    this.corsProperties = corsProperties;
   }
 
   @Override

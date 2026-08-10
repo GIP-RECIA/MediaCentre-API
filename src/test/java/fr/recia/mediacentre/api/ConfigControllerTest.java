@@ -15,29 +15,24 @@
  */
 package fr.recia.mediacentre.api;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.ConfigProperties;
+import fr.recia.mediacentre.api.configuration.bean.CorsProperties;
+import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.pojo.Config;
 import fr.recia.mediacentre.api.model.pojo.ConfigElement;
-import fr.recia.mediacentre.api.service.config.ConfigService;
 import fr.recia.mediacentre.api.service.config.impl.ConfigServiceImpl;
 import fr.recia.mediacentre.api.web.rest.ConfigController;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.HttpStatus;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Spy;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -45,89 +40,79 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest(value = ConfigController.class)
 @Import(ConfigProperties.class)
-@DirtiesContext
-@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles({ "test" })
-public class ConfigControllerTest {
+@WebMvcTest(ConfigController.class)
+class ConfigControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   @Autowired
   ConfigProperties configProperties;
 
-
-  @MockBean
+  @MockitoBean
   private ConfigServiceImpl configService;
 
+  @MockitoBean // car @WebMvcTest tente de charger le contexte Spring entier donc CorsProperties
+  private CorsProperties corsProperties;
+
+  @MockitoBean
+  private SoffitHolder soffitHolder;
+
+  private static String GETCONFIG_URI = "/api/config";
+
+  @Test
+  public void Config_OK() throws Exception {
+
+    List<ConfigElement> configElementList = new ArrayList<>();
+    for (String group : configProperties.getGroups()){
+      configElementList.add(new ConfigElement("groups", group));
+    }
+
+    doReturn(configElementList).when(configService).getGroups();
+    doReturn(new ArrayList<>()).when((configService)).getEtabsNames(any());
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETCONFIG_URI)
+      .accept(MediaType.APPLICATION_JSON)
+      .characterEncoding(StandardCharsets.UTF_8);
+
+    MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+    System.out.println(result.getResponse());
+    Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
+    Config retrievedConfigs = objectMapper.readValue(result.getResponse().getContentAsString(), Config.class);
 
 
+    List<ConfigElement> retrievedGroupList = retrievedConfigs.getConfigListMap().get("groups");
 
-    private static String GETCONFIG_URI = "/api/config";
+    // get groups regexes from bean for next asserts
+    List<String> regexesFromConfigProperties = configProperties.getGroups();
 
-    @Test
-    public void getConfig_OK() throws Exception {
+    // check that the number of Configs retrieved match the number of regexes in the bean
+   // assertEquals(retrievedConfigs.size(), regexesFromConfigProperties.size());
 
+    //no use of stream to not change Java language level
+    List<String> retrievedConfigsValues = new ArrayList<>(retrievedGroupList.size());
 
-
-      List<ConfigElement> configElementList = new ArrayList<>();
-      for (String group : configProperties.getGroups()){
-        configElementList.add(new ConfigElement("groups", group));
-      }
-
-
-      doReturn(configElementList).when(configService).getGroups();
-      doReturn(new ArrayList<>()).when((configService)).getEtabsNames(any());
-
-      RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETCONFIG_URI)
-        .accept(MediaType.APPLICATION_JSON)
-        .characterEncoding(StandardCharsets.UTF_8);
-
-      MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-      System.out.println(result.getResponse());
-      assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
-      Config retrievedConfigs = objectMapper.readValue(result.getResponse().getContentAsString(), Config.class);
-
-
-      List<ConfigElement> retrievedGroupList = retrievedConfigs.getConfigListMap().get("groups");
-
-      // get groups regexes from bean for next asserts
-      List<String> regexesFromConfigProperties = configProperties.getGroups();
-
-      // check that the number of Configs retrieved match the number of regexes in the bean
-     // assertEquals(retrievedConfigs.size(), regexesFromConfigProperties.size());
-
-      //no use of stream to not change Java language level
-      List<String> retrievedConfigsValues = new ArrayList<>(retrievedGroupList.size());
-
-      for (ConfigElement configElement : retrievedGroupList) {
-        if(configElement.getKey().equals("groups")){
-          // add the value of each config to the list for next asserts
-          retrievedConfigsValues.add(configElement.getValue());
-        }
-      }
-
-      for (String regex : regexesFromConfigProperties) {
-        //check if each regex is in the response values
-        assertTrue(retrievedConfigsValues.contains(regex));
+    for (ConfigElement configElement : retrievedGroupList) {
+      if(configElement.getKey().equals("groups")){
+        // add the value of each config to the list for next asserts
+        retrievedConfigsValues.add(configElement.getValue());
       }
     }
+
+    for (String regex : regexesFromConfigProperties) {
+      //check if each regex is in the response values
+      Assertions.assertTrue(retrievedConfigsValues.contains(regex));
+    }
+  }
 }

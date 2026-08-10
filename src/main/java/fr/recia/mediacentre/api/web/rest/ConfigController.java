@@ -15,17 +15,15 @@
  */
 package fr.recia.mediacentre.api.web.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.recia.mediacentre.api.model.pojo.Config;
 import fr.recia.mediacentre.api.model.pojo.ConfigElement;
 import fr.recia.mediacentre.api.model.pojo.Uais;
 import fr.recia.mediacentre.api.service.config.ConfigService;
-import fr.recia.mediacentre.api.service.config.impl.ConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +41,7 @@ public class ConfigController {
   private ConfigService configService;
 
   @PostMapping(consumes = "application/json")
-  public ResponseEntity<Config> getConfig(@RequestBody(required = false) Uais uais) throws JsonProcessingException {
+  public ResponseEntity<Config> getConfig(@RequestBody(required = false) Uais uais) {
     if(Objects.isNull(uais)){
       uais = new Uais();
     }
@@ -60,7 +58,7 @@ public class ConfigController {
       config.getConfigListMap().put("etabsNames", etabNameList);
     }
     if(config.getConfigListMap().isEmpty()){
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(new HttpHeaders(), HttpStatus.NOT_FOUND);
     }else{
       return new ResponseEntity<>(config, HttpStatus.OK);
     }

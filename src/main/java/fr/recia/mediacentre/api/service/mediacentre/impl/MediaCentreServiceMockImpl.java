@@ -15,12 +15,8 @@
  */
 package fr.recia.mediacentre.api.service.mediacentre.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.CategoriesByProfilesProperties;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
-import fr.recia.mediacentre.api.dao.MediaCentreResource;
-import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
@@ -28,17 +24,15 @@ import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.service.mediacentre.MediaCentreServiceAbstractImpl;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -78,8 +72,6 @@ public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
       assert resource != null;
       File file = Paths.get(resource.toURI()).toFile();
       return objectMapper.readValue(file, new TypeReference<>() {});
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
@@ -99,8 +91,6 @@ public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
       assert resource != null;
       File file = Paths.get(resource.toURI()).toFile();
       return objectMapper.readValue(file, new TypeReference<>() {});
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }

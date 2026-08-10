@@ -15,15 +15,15 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -38,14 +38,15 @@ public class ConfigProperties {
   @NotNull @NotEmpty
   private List<String> groups;
 
-  @NotNull @NotEmpty
+  @NotNull
+  @NotEmpty
   private String paramUserEtabsURl;
 
   @NotNull @NotEmpty
   private String paramUserEtabsDisplayNameKey;
 
   @PostConstruct
-  private void init() throws JsonProcessingException {
+  private void init() {
     log.info("Loaded properties: {}", this);
   }
 

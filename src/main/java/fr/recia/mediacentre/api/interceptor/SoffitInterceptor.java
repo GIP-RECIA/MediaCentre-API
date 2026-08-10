@@ -15,16 +15,18 @@
  */
 package fr.recia.mediacentre.api.interceptor;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -139,12 +141,7 @@ public class SoffitInterceptor implements HandlerInterceptor {
         }
       }
 
-    } catch (IOException ignored) {
-      log.error("Unable to read soffit" + soffit);
-      response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-      return false;
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
       log.error("A user info attribute is missing in the token.");
       response.setStatus(HttpStatus.BAD_REQUEST.value());
       return false;

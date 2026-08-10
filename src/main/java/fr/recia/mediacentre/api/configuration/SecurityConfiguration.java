@@ -15,10 +15,11 @@
  */
 package fr.recia.mediacentre.api.configuration;
 
-import fr.recia.mediacentre.api.configuration.bean.MediaCentreProperties;
+import fr.recia.mediacentre.api.configuration.bean.SoffitProperties;
+import fr.recia.notifications.soffit_java_client.SoffitJwtAuthenticationFilter;
+import fr.recia.notifications.soffit_java_client.SoffitJwtValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.portal.soffit.security.SoffitApiAuthenticationManager;
-import org.apereo.portal.soffit.security.SoffitApiPreAuthenticatedProcessingFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -28,7 +29,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Profile("!test")
 @Slf4j
@@ -36,11 +37,23 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final MediaCentreProperties mediaCentreProperties;
-
-    public SecurityConfiguration(MediaCentreProperties mediaCentreProperties) {
-        this.mediaCentreProperties = mediaCentreProperties;
+    public SecurityConfiguration( SoffitProperties soffitProperties) {
+      this.jwtProperties = soffitProperties;
     }
+
+  private final SoffitProperties jwtProperties;
+
+
+  @Bean
+  SoffitJwtValidator soffitJwtValidator() {
+    return new SoffitJwtValidator(jwtProperties.getSignatureKey());
+  }
+
+  @Bean
+  SoffitJwtAuthenticationFilter soffitJwtAuthenticationFilter(SoffitJwtValidator validator) {
+    return new SoffitJwtAuthenticationFilter(validator);
+  }
+
 
     @Bean
     public AuthenticationManager authenticationManager() {
@@ -48,13 +61,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        final AbstractPreAuthenticatedProcessingFilter filter = new SoffitApiPreAuthenticatedProcessingFilter(
-            mediaCentreProperties.getSoffit().getSignatureKey());
-
-        filter.setAuthenticationManager(authenticationManager());
-
-        http.addFilter(filter);
+    SecurityFilterChain securityFilterChain(HttpSecurity http, SoffitJwtAuthenticationFilter filter) {
 
 
     http
@@ -62,11 +69,13 @@ public class SecurityConfiguration {
           );
 
     http.authorizeHttpRequests(authz -> authz
-      .antMatchers(HttpMethod.OPTIONS).permitAll()
-      .antMatchers("/health-check").permitAll()
-      .antMatchers("/api/**").authenticated()
+      .requestMatchers(HttpMethod.OPTIONS).permitAll()
+      .requestMatchers("/health-check").permitAll()
+      .requestMatchers("/api/**").authenticated()
       .anyRequest().denyAll()
-    );
+  )
+      .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+    ;
 
     http.sessionManagement(config -> config.sessionFixation().newSession());
 

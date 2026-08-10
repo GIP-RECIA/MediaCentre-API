@@ -15,7 +15,8 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,8 +24,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
-import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Configuration
@@ -45,7 +44,7 @@ public class MockProperties {
   String mockedDTOLocation;
 
   @PostConstruct
-  private void init() throws JsonProcessingException {
+  private void init() {
 
     if(status > 0){
       Assert.isTrue(Objects.nonNull(mockedDataLocation), String.format("Mock status is %s but mockedDataLocation is null", status));
