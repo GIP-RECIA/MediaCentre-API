@@ -81,6 +81,7 @@ public abstract class MediaCentreServiceAbstractImpl implements MediaCentreServi
         // La méthode map se base sur la liste de favoris donnée en entrée, donc ordonné
         return favorites.stream()
             .map(ressourceLightFilteredAsMap::get)
+            .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }
 
