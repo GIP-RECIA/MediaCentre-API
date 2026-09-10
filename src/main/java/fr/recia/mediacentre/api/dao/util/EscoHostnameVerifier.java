@@ -34,25 +34,22 @@ import static javax.net.ssl.HttpsURLConnection.getDefaultHostnameVerifier;
 @Slf4j
 @NoArgsConstructor
 public class EscoHostnameVerifier implements HostnameVerifier, InitializingBean {
-
     private HostnameVerifier defaultHostnameVerifier;
 
     @Setter
     private Set<String> trustedDomains;
 
     public boolean verify(String hostname, SSLSession session) {
-
         log.debug("EscoHostnameVerifier : checking on hostname [" + hostname + "]");
 
         if (hostname != null && trustedDomains.contains(hostname)) {
             return true;
         }
-        return defaultHostnameVerifier.verify(hostname,session);
+        return defaultHostnameVerifier.verify(hostname, session);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
         Assert.notEmpty(trustedDomains, "The list of trusted domains isn't initialized !");
 
         if (defaultHostnameVerifier == null) {
@@ -61,5 +58,4 @@ public class EscoHostnameVerifier implements HostnameVerifier, InitializingBean 
 
         log.debug("Trusted Domain configured are {}", this.trustedDomains);
     }
-
 }

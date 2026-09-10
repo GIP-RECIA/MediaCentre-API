@@ -26,28 +26,24 @@ import java.util.Map;
 
 @Data
 public class SoffitHolder {
+    @Autowired
+    MappingProperties mappingProperties;
 
+    private String sub;
 
-  @Autowired
-  MappingProperties mappingProperties;
+    private List<String> profiles;
+    private List<String> uaiCurrent;
+    private List<String> uaiList;
+    private List<String> garId;
 
-  private String sub;
+    private Map<String, List<String>> otherUserInfoAttributes = new HashMap<>();
 
-  private List<String> profiles;
-  private List<String> uaiCurrent;
-  private List<String> uaiList;
-  private List<String> garId;
-
-
-  private Map<String, List<String>> otherUserInfoAttributes = new HashMap<>();
-
-  public Map<String, List<String>> getUserInfosWithoutIsMemberOf(){
-    Map<String, List<String>> deepCopiedMap = MapUtils.stringListStringDeepCopy(otherUserInfoAttributes);
-    deepCopiedMap.put(mappingProperties.getProfiles(), profiles);
-    deepCopiedMap.put(mappingProperties.getUaiCurrent(), uaiCurrent);
-    deepCopiedMap.put(mappingProperties.getUaiList(), uaiList);
-    deepCopiedMap.put(mappingProperties.getGarId(), garId);
-    return deepCopiedMap;
-  }
-
+    public Map<String, List<String>> getUserInfosWithoutIsMemberOf() {
+        Map<String, List<String>> deepCopiedMap = MapUtils.stringListStringDeepCopy(otherUserInfoAttributes);
+        deepCopiedMap.put(mappingProperties.getProfiles(), profiles);
+        deepCopiedMap.put(mappingProperties.getUaiCurrent(), uaiCurrent);
+        deepCopiedMap.put(mappingProperties.getUaiList(), uaiList);
+        deepCopiedMap.put(mappingProperties.getGarId(), garId);
+        return deepCopiedMap;
+    }
 }

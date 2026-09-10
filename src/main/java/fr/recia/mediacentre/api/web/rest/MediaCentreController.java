@@ -16,8 +16,8 @@
 package fr.recia.mediacentre.api.web.rest;
 
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
-import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
+import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
 import fr.recia.mediacentre.api.model.pojo.RessourceLight;
 import fr.recia.mediacentre.api.model.resource.Ressource;
@@ -44,7 +44,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/api/resources")
 public class MediaCentreController {
-
     @Autowired
     private MediaCentreService mediaCentreService;
 
@@ -57,23 +56,23 @@ public class MediaCentreController {
         return new ResponseEntity<>(resourcesList, HttpStatus.OK);
     }
 
-  @PostMapping(path="/favorites")
-  public ResponseEntity<List<RessourceLight>> getFavoriteResources(@RequestBody Map<String, List<String>> payload) {
-    List<String> isMemberOf = payload.getOrDefault(mappingProperties.getPayloadIsMemberOf(), new ArrayList<>());
-    List<String> favorites = payload.getOrDefault(mappingProperties.getPayloadFavorites(), new ArrayList<>());
-    if(favorites.isEmpty()){
-      return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+    @PostMapping(path = "/favorites")
+    public ResponseEntity<List<RessourceLight>> getFavoriteResources(@RequestBody Map<String, List<String>> payload) {
+        List<String> isMemberOf = payload.getOrDefault(mappingProperties.getPayloadIsMemberOf(), new ArrayList<>());
+        List<String> favorites = payload.getOrDefault(mappingProperties.getPayloadFavorites(), new ArrayList<>());
+        if (favorites.isEmpty()) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(mediaCentreService.retrieveListRessourceFav(isMemberOf, favorites), HttpStatus.OK);
     }
-    return new ResponseEntity<>(mediaCentreService.retrieveListRessourceFav(isMemberOf, favorites), HttpStatus.OK);
-  }
 
     @PostMapping(path = "/gestion")
-    public ResponseEntity<List<GestionAffectationDTO>> getGestion(@RequestBody IsMemberOf isMemberOf){
-      return ResponseEntity.ok().body(mediaCentreService.getGestionAffectationDTOs(isMemberOf.getIsMemberOf()));
+    public ResponseEntity<List<GestionAffectationDTO>> getGestion(@RequestBody IsMemberOf isMemberOf) {
+        return ResponseEntity.ok().body(mediaCentreService.getGestionAffectationDTOs(isMemberOf.getIsMemberOf()));
     }
 
     @GetMapping(path = "/filters")
-    public ResponseEntity<List<FilterEnum>> getFilters(){
+    public ResponseEntity<List<FilterEnum>> getFilters() {
         List<FilterEnum> filterEnumList = mediaCentreService.retrieveFiltersList();
         return new ResponseEntity<>(filterEnumList, HttpStatus.OK);
     }
@@ -81,12 +80,12 @@ public class MediaCentreController {
     @PostMapping(path = "/{nomRessource}")
     public ResponseEntity<Ressource> getResourceByName(@PathVariable String nomRessource, @RequestBody IsMemberOf isMemberOf,
                                                        @RequestParam(defaultValue = "false") boolean base64,
-                                                       @RequestParam(defaultValue = "true") boolean forCurrentEtab){
-        Optional<Ressource> ressourceOptional = mediaCentreService.retrieveRessourceByName(nomRessource, isMemberOf.getIsMemberOf(),base64, forCurrentEtab);
-        if(ressourceOptional.isEmpty()){
-          return new ResponseEntity<>(new HttpHeaders(), HttpStatus.NOT_FOUND);
-        }else {
-          return new ResponseEntity<>(ressourceOptional.get(), HttpStatus.OK);
+                                                       @RequestParam(defaultValue = "true") boolean forCurrentEtab) {
+        Optional<Ressource> ressourceOptional = mediaCentreService.retrieveRessourceByName(nomRessource, isMemberOf.getIsMemberOf(), base64, forCurrentEtab);
+        if (ressourceOptional.isEmpty()) {
+            return new ResponseEntity<>(new HttpHeaders(), HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(ressourceOptional.get(), HttpStatus.OK);
         }
     }
 }

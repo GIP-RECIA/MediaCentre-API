@@ -21,6 +21,5 @@ import java.util.List;
 
 @Data
 public class IsMemberOf {
-
     private List<String> isMemberOf;
 }

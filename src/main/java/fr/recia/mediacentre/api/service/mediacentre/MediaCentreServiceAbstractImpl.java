@@ -34,118 +34,116 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Slf4j
-public abstract class MediaCentreServiceAbstractImpl implements MediaCentreService{
+public abstract class MediaCentreServiceAbstractImpl implements MediaCentreService {
+    @Getter
+    SoffitHolder soffitHolder;
 
-  @Getter
-  SoffitHolder soffitHolder;
+    MappingProperties mappingProperties;
 
-  MappingProperties mappingProperties;
+    public MediaCentreServiceAbstractImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties) {
+        this.soffitHolder = soffitHolder;
+        this.mappingProperties = mappingProperties;
+    }
 
+    @Override
+    public List<RessourceLight> retrieveListRessourceFav(List<String> isMemberOf, List<String> favorites) throws YmlPropertyNotFoundException {
+        List<Ressource> ressourceList = retrieveListRessource(isMemberOf);
+        String currentUAI = soffitHolder.getUaiCurrent().get(0);
 
-  public MediaCentreServiceAbstractImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties){
-    this.soffitHolder = soffitHolder;
-    this.mappingProperties = mappingProperties;
-  }
+        Predicate<Ressource> isFavorite = new Predicate<Ressource>() {
+            @Override
+            public boolean test(Ressource ressource) {
+                return favorites.contains(ressource.getIdRessource());
+            }
+        };
+        Predicate<Ressource> isCurrentEtab = new Predicate<Ressource>() {
+            @Override
+            public boolean test(Ressource ressource) {
+                if (Objects.isNull(ressource.getIdEtablissement()) || ressource.getIdEtablissement().isEmpty()) {
+                    return true;
+                }
+                for (IdEtablissement idEtablissement : ressource.getIdEtablissement()) {
+                    if (Objects.equals(idEtablissement.getUai(), currentUAI)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
 
-  @Override
-  public List<RessourceLight> retrieveListRessourceFav(List<String> isMemberOf, List<String> favorites) throws YmlPropertyNotFoundException {
-    List<Ressource> ressourceList = retrieveListRessource(isMemberOf);
-    String currentUAI =  soffitHolder.getUaiCurrent().get(0);
+        // Resources correspondants aux favoris, trié selon l'ordre dans lequel le GAR les a retournées
+        List<RessourceLight> ressourceLightListFiltered = ressourceList.stream().filter(isFavorite.and(isCurrentEtab)).map(x -> new RessourceLight(x.getIdRessource(), x.getNomRessource(), x.getTypePresentation())).collect(Collectors.toList());
 
-    Predicate<Ressource> isFavorite = new Predicate<Ressource>() {
-      @Override
-      public boolean test(Ressource ressource) {
-        return favorites.contains(ressource.getIdRessource());
-      }
-    };
-    Predicate<Ressource> isCurrentEtab = new Predicate<Ressource>() {
-      @Override
-      public boolean test(Ressource ressource) {
-        if(Objects.isNull(ressource.getIdEtablissement()) || ressource.getIdEtablissement().isEmpty()){
-          return true;
+        // Map intermédiaire qui fait le pont entre id et resources filtrées
+        Map<String, RessourceLight> ressourceLightFilteredAsMap = ressourceLightListFiltered.stream()
+            .collect(Collectors.toMap(RessourceLight::getIdRessource, o -> o));
+
+        // La méthode map se base sur la liste de favoris donnée en entrée, donc ordonné
+        return favorites.stream()
+            .map(ressourceLightFilteredAsMap::get)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Ressource> retrieveRessourceByName(String nomRessource, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {
+        System.out.println("****************************************");
+        System.out.println("TEST TEST TEST");
+        System.out.println("nom ressource = " + nomRessource);
+        System.out.println("nom isMemberOf = " + isMemberOf.toString());
+        System.out.println("nom isBase64 = " + isBase64);
+        System.out.println("nom forCurrentEtab = " + forCurrentEtab);
+        String ressourceIdForFiltering = nomRessource;
+        if (forCurrentEtab) {
+            soffitHolder.setUaiList(soffitHolder.getUaiCurrent());
         }
-        for(IdEtablissement idEtablissement : ressource.getIdEtablissement()){
-          if(Objects.equals(idEtablissement.getUai(), currentUAI)){
-            return true;
-          }
+        if (isBase64) {
+            String decodedId = new String(Base64.decodeBase64(nomRessource.getBytes()));
+            ressourceIdForFiltering = decodedId;
         }
-        return false;
-      }
-    };
+        return getRessourceOfCurrentEtabFromRessourceList(ressourceIdForFiltering, retrieveListRessource(isMemberOf));
 
-    // Resources correspondants aux favoris, trié selon l'ordre dans lequel le GAR les a retournées
-    List<RessourceLight> ressourceLightListFiltered = ressourceList.stream().filter(isFavorite.and(isCurrentEtab)).map(x -> new RessourceLight(x.getIdRessource(),x.getNomRessource(), x.getTypePresentation())).collect(Collectors.toList());
-
-    // Map intermédiaire qui fait le pont entre id et resources filtrées
-    Map<String, RessourceLight> ressourceLightFilteredAsMap = ressourceLightListFiltered.stream()
-      .collect(Collectors.toMap(RessourceLight::getIdRessource, o -> o));
-
-    // La méthode map se base sur la liste de favoris donnée en entrée, donc ordonné
-    return favorites.stream()
-      .map(ressourceLightFilteredAsMap::get)
-      .collect(Collectors.toList());
-  }
-
-  @Override
-  public Optional<Ressource> retrieveRessourceByName(String nomRessource, List<String> isMemberOf, boolean isBase64, boolean forCurrentEtab) throws YmlPropertyNotFoundException, MediacentreWSException {
-    System.out.println("****************************************");
-    System.out.println("TEST TEST TEST");
-    System.out.println("nom ressource = "+ nomRessource);
-    System.out.println("nom isMemberOf = "+ isMemberOf.toString());
-    System.out.println("nom isBase64 = "+ isBase64);
-    System.out.println("nom forCurrentEtab = "+ forCurrentEtab);
-    String ressourceIdForFiltering = nomRessource;
-    if(forCurrentEtab){
-      soffitHolder.setUaiList(soffitHolder.getUaiCurrent());
     }
-    if(isBase64){
-      String decodedId = new String(Base64.decodeBase64(nomRessource.getBytes()));
-      ressourceIdForFiltering = decodedId;
-    }
-    return getRessourceOfCurrentEtabFromRessourceList(ressourceIdForFiltering, retrieveListRessource(isMemberOf));
 
-  }
+    protected Optional<Ressource> getRessourceOfCurrentEtabFromRessourceList(String ressourceId, List<Ressource> ressourceList) {
 
-  protected Optional<Ressource> getRessourceOfCurrentEtabFromRessourceList(String ressourceId, List<Ressource> ressourceList){
+        System.out.println("ressourceId = " + ressourceId);
+        System.out.println("ressourceList = " + ressourceList.toString());
 
-    System.out.println("ressourceId = "+ressourceId);
-    System.out.println("ressourceList = "+ressourceList.toString());
-
-    List<String> currentUaiList = soffitHolder.getUaiCurrent();
-    if(Objects.isNull(currentUaiList) || currentUaiList.isEmpty()){
-      throw new YmlPropertyNotFoundException("Missing mapping for current etab UAI");
-    }
-    String currentUai = currentUaiList.getFirst();
-    if(Objects.isNull(ressourceList)){
-      System.out.println("early return car null");
-      System.out.println("****************************************");
-
-      return Optional.empty();
-    }
-    for(Ressource ressource : ressourceList){
-      if(ressourceId.trim().equalsIgnoreCase(ressource.getNomRessource().trim())){
-        if( Objects.isNull(ressource.getIdEtablissement()) || ressource.getIdEtablissement().isEmpty()){
-          System.out.println("****************************************");
-
-          return Optional.of(ressource);
-        } else {
-          if(ressource.getIdEtablissement().stream().anyMatch(x -> Objects.equals(x.getUai(), currentUai))){
-            ressource.setIdEtablissement(ressource.getIdEtablissement().stream().filter(x -> Objects.equals(x.getUai(), currentUai)).toList());
-            System.out.println("****************************************");
-
-            return Optional.of(ressource);
-          } else {
+        List<String> currentUaiList = soffitHolder.getUaiCurrent();
+        if (Objects.isNull(currentUaiList) || currentUaiList.isEmpty()) {
+            throw new YmlPropertyNotFoundException("Missing mapping for current etab UAI");
+        }
+        String currentUai = currentUaiList.getFirst();
+        if (Objects.isNull(ressourceList)) {
+            System.out.println("early return car null");
             System.out.println("****************************************");
 
             return Optional.empty();
-          }
         }
-      }
+        for (Ressource ressource : ressourceList) {
+            if (ressourceId.trim().equalsIgnoreCase(ressource.getNomRessource().trim())) {
+                if (Objects.isNull(ressource.getIdEtablissement()) || ressource.getIdEtablissement().isEmpty()) {
+                    System.out.println("****************************************");
+
+                    return Optional.of(ressource);
+                } else {
+                    if (ressource.getIdEtablissement().stream().anyMatch(x -> Objects.equals(x.getUai(), currentUai))) {
+                        ressource.setIdEtablissement(ressource.getIdEtablissement().stream().filter(x -> Objects.equals(x.getUai(), currentUai)).toList());
+                        System.out.println("****************************************");
+
+                        return Optional.of(ressource);
+                    } else {
+                        System.out.println("****************************************");
+
+                        return Optional.empty();
+                    }
+                }
+            }
+        }
+        System.out.println("after for");
+
+        System.out.println("****************************************");
+
+        return Optional.empty();
     }
-    System.out.println("after for");
-
-    System.out.println("****************************************");
-
-    return Optional.empty();
-  }
 }

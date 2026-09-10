@@ -19,10 +19,9 @@ import lombok.Data;
 
 @Data
 public class SecurityProperties {
-
-  @Override
-  public String toString() {
-    return "\"SecurityProperties\": {"
-      + "\n}";
-  }
+    @Override
+    public String toString() {
+        return "\"SecurityProperties\": {"
+            + "\n}";
+    }
 }

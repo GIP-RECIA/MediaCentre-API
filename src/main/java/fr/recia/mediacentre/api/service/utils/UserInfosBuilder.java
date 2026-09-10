@@ -18,28 +18,20 @@ package fr.recia.mediacentre.api.service.utils;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
 public class UserInfosBuilder {
+    @Autowired
+    MappingProperties mappingProperties;
 
-
-
-  @Autowired
-  MappingProperties mappingProperties;
-
-  public  Map<String, List<String>> getUserInfos(SoffitHolder soffitHolder, List<String> isMemberOf){
-    Map<String, List<String>> mapToCopy = soffitHolder.getUserInfosWithoutIsMemberOf();
-    Map<String, List<String>> deepCopiedMap = MapUtils.stringListStringDeepCopy(mapToCopy);
-    deepCopiedMap.put(mappingProperties.getGroups(), isMemberOf);
-    return deepCopiedMap;
-  }
-
+    public Map<String, List<String>> getUserInfos(SoffitHolder soffitHolder, List<String> isMemberOf) {
+        Map<String, List<String>> mapToCopy = soffitHolder.getUserInfosWithoutIsMemberOf();
+        Map<String, List<String>> deepCopiedMap = MapUtils.stringListStringDeepCopy(mapToCopy);
+        deepCopiedMap.put(mappingProperties.getGroups(), isMemberOf);
+        return deepCopiedMap;
+    }
 }

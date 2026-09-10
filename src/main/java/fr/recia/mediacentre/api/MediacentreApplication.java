@@ -29,19 +29,18 @@ import org.springframework.core.env.Environment;
 @ExcludeFromJacocoGeneratedReport
 @ConfigurationPropertiesScan
 public class MediacentreApplication {
-
-	public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication app = new SpringApplication(MediacentreApplication.class);
 
         Environment env = app.run(args).getEnvironment();
         log.info(
-                "Access URLs:" +
-                        "\n----------------------------------------------------------" +
-                        "\n\tLocal: \t\thttp://127.0.0.1:{}" +
-                        "\n\tExternal: \thttp://{}:{}" +
-                        "\n\tProfiles: \t{}" +
-                        "\n----------------------------------------------------------",
-                env.getProperty("server.port")
+            "Access URLs:" +
+                "\n----------------------------------------------------------" +
+                "\n\tLocal: \t\thttp://127.0.0.1:{}" +
+                "\n\tExternal: \thttp://{}:{}" +
+                "\n\tProfiles: \t{}" +
+                "\n----------------------------------------------------------",
+            env.getProperty("server.port")
         );
     }
 }

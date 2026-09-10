@@ -32,7 +32,6 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class IdEtablissement {
-
     @JsonProperty("id")
     private String id;
 
@@ -42,13 +41,13 @@ public class IdEtablissement {
     @JsonProperty("nom")
     private String nom;
 
-  @Override
-  public String toString() {
-    return "IdEtablissement{" +
-      "id='" + id + '\'' +
-      ", UAI='" + uai + '\'' +
-      ", nom='" + nom + '\'' +
-      '}';
-  }
+    @Override
+    public String toString() {
+        return "IdEtablissement{" +
+            "id='" + id + '\'' +
+            ", UAI='" + uai + '\'' +
+            ", nom='" + nom + '\'' +
+            '}';
+    }
 }
 

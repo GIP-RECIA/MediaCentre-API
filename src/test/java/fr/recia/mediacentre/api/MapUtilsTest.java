@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,9 +35,8 @@ import static org.junit.Assert.assertEquals;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({ "test" })
+@ActiveProfiles({"test"})
 public class MapUtilsTest {
-
   private Map<String, List<String>> mapToCopy;
 
   final String keyA = "keyA";
@@ -56,22 +56,21 @@ public class MapUtilsTest {
   final String subvalueC3 = "subvalueC3";
 
   @Before
-  public void initMapToCopy(){
-    if(Objects.nonNull(mapToCopy)){
+  public void initMapToCopy() {
+    if (Objects.nonNull(mapToCopy)) {
       mapToCopy.clear();
-    }else {
+    } else {
       mapToCopy = new HashMap<>();
     }
 
-    List<String> valueA = new ArrayList<>( Arrays.asList(subvalueA1, subvalueA2, subvalueA3));
-    List<String> valueB = new ArrayList<>( Arrays.asList(subvalueB1, subvalueB2, subvalueB3));
-    List<String> valueC = new ArrayList<>( Arrays.asList(subvalueC1, subvalueC2, subvalueC3));
+    List<String> valueA = new ArrayList<>(Arrays.asList(subvalueA1, subvalueA2, subvalueA3));
+    List<String> valueB = new ArrayList<>(Arrays.asList(subvalueB1, subvalueB2, subvalueB3));
+    List<String> valueC = new ArrayList<>(Arrays.asList(subvalueC1, subvalueC2, subvalueC3));
 
     mapToCopy.put(keyA, valueA);
     mapToCopy.put(keyB, valueB);
     mapToCopy.put(keyC, valueC);
   }
-
 
   @Test
   public void putNotShared_stringListStringDeepCopy_OK() throws Exception {
@@ -87,7 +86,6 @@ public class MapUtilsTest {
     assertEquals(3, mapToCopy.size());
   }
 
-
   @Test
   public void valuesNotShared_stringListStringDeepCopy_OK() throws Exception {
     Map<String, List<String>> deepCopiedMap = MapUtils.stringListStringDeepCopy(mapToCopy);
@@ -96,5 +94,4 @@ public class MapUtilsTest {
     deepCopiedMap.replace(keyA, Arrays.asList("Lorem", "Ipsum"));
     assertEquals(3, mapToCopy.get(keyA).size());
   }
-
 }

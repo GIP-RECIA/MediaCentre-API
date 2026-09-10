@@ -15,11 +15,8 @@
  */
 package fr.recia.mediacentre.api.interceptor;
 
-
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
@@ -27,125 +24,124 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Slf4j
 @Profile("!test")
 public class SoffitInterceptor implements HandlerInterceptor {
+    private final SoffitHolder soffitHolder;
 
-  private final SoffitHolder soffitHolder;
+    MappingProperties mappingProperties;
 
-  MappingProperties mappingProperties;
-
-  public SoffitInterceptor(SoffitHolder soffitHolder, MappingProperties mappingProperties) {
-    this.soffitHolder = soffitHolder;
-    this.mappingProperties = mappingProperties;
-  }
-
-  @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    String path = request.getRequestURI().substring(request.getContextPath().length());
-
-    if(request.getMethod().equals("OPTIONS") ){
-      return true;
+    public SoffitInterceptor(SoffitHolder soffitHolder, MappingProperties mappingProperties) {
+        this.soffitHolder = soffitHolder;
+        this.mappingProperties = mappingProperties;
     }
 
-    if (!path.startsWith("/api")) {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+
+        if (!path.startsWith("/api")) {
+            return true;
+        }
+
+        String token = request.getHeader("Authorization");
+        if (token == null) {
+            log.debug("No Authorization header found");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        }
+
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(token.replace("Bearer ", "").split("\\.")[1]));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> soffit = new HashMap<>();
+        try {
+            soffit = objectMapper.readValue(payload, Map.class);
+
+            boolean isGuest = Pattern.matches("^guest.*", (CharSequence) soffit.get(("sub")));
+            if (isGuest) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return false;
+            }
+            soffitHolder.setSub(soffit.get("sub").toString());
+
+            // UAI CURRENT
+            Object rawObject = soffit.get(mappingProperties.getUaiCurrent());
+            try {
+                List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+                });
+                soffitHolder.setUaiCurrent(values);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return false;
+            }
+
+            // UAI LIST
+            rawObject = soffit.get(mappingProperties.getUaiList());
+            try {
+                List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+                });
+                soffitHolder.setUaiList(values);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                log.error("Soffit does not contain string collection for UaiList: {", illegalArgumentException);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return false;
+            }
+
+            // PROFILES
+            rawObject = soffit.get(mappingProperties.getProfiles());
+            try {
+                List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+                });
+                soffitHolder.setProfiles(values);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                log.error("Soffit does not contain string collection for Profiles: {", illegalArgumentException);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return false;
+            }
+
+            // GAR ID
+            rawObject = soffit.get(mappingProperties.getGarId());
+            try {
+                List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+                });
+                soffitHolder.setGarId(values);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                log.error("Soffit does not contain string collection for GarID: {", illegalArgumentException);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return false;
+            }
+
+            for (String userInfoAttribute : mappingProperties.getOtherUserInfoAttributes()) {
+                rawObject = soffit.get(userInfoAttribute);
+                try {
+                    List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
+                    });
+                    soffitHolder.getOtherUserInfoAttributes().put(userInfoAttribute, values);
+                } catch (IllegalArgumentException illegalArgumentException) {
+                    log.warn("Soffit does not contain string collection for argument {}", userInfoAttribute);
+                }
+            }
+
+        } catch (NullPointerException e) {
+            log.error("A user info attribute is missing in the token.");
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return false;
+        }
         return true;
     }
-
-    String token = request.getHeader("Authorization");
-    if (token == null) {
-      log.debug("No Authorization header found");
-      response.setStatus(HttpStatus.UNAUTHORIZED.value());
-      return false;
-    }
-
-    Base64.Decoder decoder = Base64.getUrlDecoder();
-    String payload = new String(decoder.decode(token.replace("Bearer ", "").split("\\.")[1]));
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    Map<String,Object> soffit = new HashMap<>();
-    try {
-      soffit = objectMapper.readValue(payload,Map.class);
-
-      boolean isGuest = Pattern.matches("^guest.*", (CharSequence) soffit.get(("sub")));
-      if(isGuest){
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return false;
-      }
-      soffitHolder.setSub(soffit.get("sub").toString());
-
-
-      // UAI CURRENT
-      Object rawObject = soffit.get(mappingProperties.getUaiCurrent());
-      try {
-        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
-        });
-        soffitHolder.setUaiCurrent(values);
-      }catch (IllegalArgumentException illegalArgumentException){
-        log.error("Soffit does not contain string collection for UaiCurrent: {", illegalArgumentException);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return false;
-      }
-
-      // UAI LIST
-      rawObject = soffit.get(mappingProperties.getUaiList());
-      try {
-        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
-        });
-        soffitHolder.setUaiList(values);
-      }catch (IllegalArgumentException illegalArgumentException){
-        log.error("Soffit does not contain string collection for UaiList: {", illegalArgumentException);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return false;
-      }
-
-      // PROFILES
-      rawObject = soffit.get(mappingProperties.getProfiles());
-      try {
-        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
-        });
-        soffitHolder.setProfiles(values);
-      }catch (IllegalArgumentException illegalArgumentException){
-        log.error("Soffit does not contain string collection for Profiles: {", illegalArgumentException);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return false;
-      }
-
-      // GAR ID
-      rawObject = soffit.get(mappingProperties.getGarId());
-      try {
-        List<String> values = new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
-        });
-        soffitHolder.setGarId(values);
-      }catch (IllegalArgumentException illegalArgumentException){
-        log.error("Soffit does not contain string collection for GarID: {", illegalArgumentException);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        return false;
-      }
-
-      for(String userInfoAttribute: mappingProperties.getOtherUserInfoAttributes()){
-        rawObject = soffit.get(userInfoAttribute);
-        try{
-          List<String> values =  new ObjectMapper().convertValue(rawObject, new TypeReference<>() {
-          });
-          soffitHolder.getOtherUserInfoAttributes().put(userInfoAttribute, values);
-        }catch (IllegalArgumentException illegalArgumentException){
-          log.warn("Soffit does not contain string collection for argument {}", userInfoAttribute);
-        }
-      }
-
-    } catch (NullPointerException e) {
-      log.error("A user info attribute is missing in the token.");
-      response.setStatus(HttpStatus.BAD_REQUEST.value());
-      return false;
-    }
-    return true;
-  }
 }

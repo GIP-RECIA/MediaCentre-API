@@ -15,7 +15,6 @@
  */
 package fr.recia.mediacentre.api.service.config;
 
-import fr.recia.mediacentre.api.model.pojo.Config;
 import fr.recia.mediacentre.api.model.pojo.ConfigElement;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +22,7 @@ import java.util.List;
 
 @Service
 public interface ConfigService {
+    List<ConfigElement> getEtabsNames(List<String> uais);
 
-  public List<ConfigElement> getEtabsNames(List<String> uais);
-
-  public List<ConfigElement> getGroups();
-
+    List<ConfigElement> getGroups();
 }

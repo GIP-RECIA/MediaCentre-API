@@ -29,7 +29,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TypologieDocument {
-
     @JsonProperty("nom")
     private String nom;
 

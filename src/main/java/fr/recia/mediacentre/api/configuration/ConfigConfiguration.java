@@ -20,19 +20,17 @@ import fr.recia.mediacentre.api.service.config.ConfigService;
 import fr.recia.mediacentre.api.service.config.impl.ConfigServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class ConfigConfiguration {
+    ConfigProperties configProperties;
 
-  ConfigProperties configProperties;
+    ConfigConfiguration(ConfigProperties configProperties) {
+        this.configProperties = configProperties;
+    }
 
-  ConfigConfiguration(ConfigProperties configProperties){
-    this.configProperties = configProperties;
-  }
-  @Bean
-  public ConfigService configService() {
-    return new ConfigServiceImpl(configProperties);
-  }
-
+    @Bean
+    public ConfigService configService() {
+        return new ConfigServiceImpl(configProperties);
+    }
 }

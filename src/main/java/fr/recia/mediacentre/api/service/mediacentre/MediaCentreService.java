@@ -15,18 +15,18 @@
  */
 package fr.recia.mediacentre.api.service.mediacentre;
 
+import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.GestionAffectationDTO;
 import fr.recia.mediacentre.api.model.pojo.RessourceLight;
+import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
 import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
-import fr.recia.mediacentre.api.model.filter.FilterEnum;
-import fr.recia.mediacentre.api.model.resource.Ressource;
+
 import java.util.List;
 import java.util.Optional;
 
 
 public interface MediaCentreService {
-
     /***
      * Function that returns the list of current user's resources.
      * @param isMemberOf - a list of user's groups
@@ -51,5 +51,5 @@ public interface MediaCentreService {
      */
     List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException;
 
-    public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf);
+    List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf);
 }

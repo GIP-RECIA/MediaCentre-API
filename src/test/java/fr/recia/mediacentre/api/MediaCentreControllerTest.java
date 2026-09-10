@@ -20,13 +20,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.recia.mediacentre.api.configuration.bean.CorsProperties;
 import fr.recia.mediacentre.api.configuration.bean.MappingProperties;
 import fr.recia.mediacentre.api.dao.impl.MediaCentreResourceJacksonImpl;
-import fr.recia.mediacentre.api.web.rest.MediaCentreController;
-import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
-import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import fr.recia.mediacentre.api.model.filter.FilterEnum;
 import fr.recia.mediacentre.api.model.pojo.IsMemberOf;
 import fr.recia.mediacentre.api.model.resource.Ressource;
 import fr.recia.mediacentre.api.service.mediacentre.impl.MediaCentreServiceImpl;
+import fr.recia.mediacentre.api.web.rest.MediaCentreController;
+import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
+import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.HttpStatus;
@@ -45,6 +45,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -52,7 +53,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -62,10 +63,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @Slf4j
 @DirtiesContext
-@ActiveProfiles({ "test" })
+@ActiveProfiles({"test"})
 @WebMvcTest(MediaCentreController.class)
 class MediaCentreControllerTest {
-
   @Autowired
   private MockMvc mockMvc;
 
@@ -78,99 +78,102 @@ class MediaCentreControllerTest {
   @MockitoBean
   private CorsProperties corsProperties;
 
-    @MockitoBean
-    private MediaCentreResourceJacksonImpl mediaCentreResourceJackson;
+  @MockitoBean
+  private MediaCentreResourceJacksonImpl mediaCentreResourceJackson;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private List<Ressource> listeRessourcesMediaCentre;
-    private List<FilterEnum> lesFiltres;
-    private String isMemberOf;
+  private List<Ressource> listeRessourcesMediaCentre;
+  private List<FilterEnum> lesFiltres;
+  private String isMemberOf;
 
-    @NonNull
-    @Value("${path.resources}")
-    private String resourcesFilePath;
+  @NonNull
+  @Value("${path.resources}")
+  private String resourcesFilePath;
 
-    @NonNull
-    @Value("${path.filters}")
-    private String filtersFilePath;
+  @NonNull
+  @Value("${path.filters}")
+  private String filtersFilePath;
 
-    @NonNull
-    @Value("${path.isMemberOf}")
-    private String isMemberOfFilePath;
+  @NonNull
+  @Value("${path.isMemberOf}")
+  private String isMemberOfFilePath;
 
-    private IsMemberOf isMemberOfObject;
+  private IsMemberOf isMemberOfObject;
 
-    private static String GETRESOURCES_URI = "/api/resources";
-    private static String GETFILTERS_URI = "/api/resources/filters";
+  private static final String GETRESOURCES_URI = "/api/resources";
+  private static final String GETFILTERS_URI = "/api/resources/filters";
 
-    @BeforeEach
-    public void init() throws IOException {
-        listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath),new TypeReference<>(){});
-        lesFiltres = objectMapper.readValue(new File(filtersFilePath)
-                ,new TypeReference<>(){});
-        File isMemberOfFile = new File(isMemberOfFilePath);
-        isMemberOf = Files.readString(isMemberOfFile.toPath());
-        isMemberOfObject = objectMapper.readValue(isMemberOf, new TypeReference<>() {
-        });
-    }
+  @BeforeEach
+  public void init() throws IOException {
+    listeRessourcesMediaCentre = objectMapper.readValue(new File(resourcesFilePath), new TypeReference<>() {
+    });
+    lesFiltres = objectMapper.readValue(new File(filtersFilePath)
+      , new TypeReference<>() {
+      });
+    File isMemberOfFile = new File(isMemberOfFilePath);
+    isMemberOf = Files.readString(isMemberOfFile.toPath());
+    isMemberOfObject = objectMapper.readValue(isMemberOf, new TypeReference<>() {
+    });
+  }
 
-//     getResources() tests :
-    @Test
-    public void getResources_OK() throws Exception {
+  //     getResources() tests :
+  @Test
+  public void getResources_OK() throws Exception {
 
-      doReturn(listeRessourcesMediaCentre).when(mediaCentreResourceJackson).retrieveListRessource(any(),any());
-      doReturn(mediaCentreResourceJackson.retrieveListRessource("", new HashMap<>())).when(mediaCentreService).retrieveListRessource(isMemberOfObject.getIsMemberOf());
+    doReturn(listeRessourcesMediaCentre).when(mediaCentreResourceJackson).retrieveListRessource(any(), any());
+    doReturn(mediaCentreResourceJackson.retrieveListRessource("", new HashMap<>())).when(mediaCentreService).retrieveListRessource(isMemberOfObject.getIsMemberOf());
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8)
-                .content(isMemberOf);
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .characterEncoding(StandardCharsets.UTF_8)
+      .content(isMemberOf);
 
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
-        List<Ressource> retrievedResources = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
-        Assertions.assertEquals(listeRessourcesMediaCentre.size(), retrievedResources.size());
-      JSONAssert.assertEquals(objectMapper.writeValueAsString(listeRessourcesMediaCentre), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
-    }
-
-    @Test
-    public void getResources_When_No_resource_OK() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
-        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8)
-                .content(isMemberOf);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
-        Assertions.assertEquals(0, result.getResponse().getContentLength());
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(new ArrayList<>()), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
-    }
-
-    @Test
-    public void getResources_When_No_Yml_Properties_For_UrlRessources_KO() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
-        mediaCentreService.setUrlRessources("");
-        when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenThrow(new YmlPropertyNotFoundException("Message"));
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8)
-                .content(isMemberOf);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        Assertions.assertEquals(result.getResponse().getStatus(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
-        Assertions.assertEquals(0, result.getResponse().getContentLength());
-    }
+    MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+    Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
+    List<Ressource> retrievedResources = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+    });
+    Assertions.assertEquals(listeRessourcesMediaCentre.size(), retrievedResources.size());
+    JSONAssert.assertEquals(objectMapper.writeValueAsString(listeRessourcesMediaCentre), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
+  }
 
   @Test
-  public void getResources_When_A_400_Error_From_MediacentreWS_Occurs_KO() throws Exception, YmlPropertyNotFoundException, MediacentreWSException {
+  public void getResources_When_No_resource_OK() throws Exception {
+    when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenReturn(new ArrayList<>());
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .characterEncoding(StandardCharsets.UTF_8)
+      .content(isMemberOf);
+
+    MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+    Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
+    Assertions.assertEquals(0, result.getResponse().getContentLength());
+    JSONAssert.assertEquals(objectMapper.writeValueAsString(new ArrayList<>()), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
+  }
+
+  @Test
+  public void getResources_When_No_Yml_Properties_For_UrlRessources_KO() throws Exception {
+    mediaCentreService.setUrlRessources("");
+    when(mediaCentreService.retrieveListRessource(isMemberOfObject.getIsMemberOf())).thenThrow(new YmlPropertyNotFoundException("Message"));
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .characterEncoding(StandardCharsets.UTF_8)
+      .content(isMemberOf);
+
+    MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+    Assertions.assertEquals(result.getResponse().getStatus(), HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    Assertions.assertEquals(0, result.getResponse().getContentLength());
+  }
+
+  @Test
+  public void getResources_When_A_400_Error_From_MediacentreWS_Occurs_KO() throws Exception {
     doThrow(new MediacentreWSException("", resolve(HttpStatus.SC_BAD_REQUEST))).when(mediaCentreService).retrieveListRessource(any());
 
     RequestBuilder requestBuilder = MockMvcRequestBuilders.post(GETRESOURCES_URI)
@@ -184,38 +187,38 @@ class MediaCentreControllerTest {
     Assertions.assertEquals(0, result.getResponse().getContentLength());
   }
 
-//     getFilters() tests :
-    @Test
-    public void getFilters_OK() throws Exception, YmlPropertyNotFoundException {
+  //     getFilters() tests :
+  @Test
+  public void getFilters_OK() throws Exception {
 
-        when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
+    when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON);
 
-        MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andReturn();
+    MvcResult result = mockMvc.perform(requestBuilder).andDo(print()).andReturn();
 
-        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
+    Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
 
-        List<FilterEnum> retrievedFilters = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
-        Assertions.assertEquals(lesFiltres.size(), retrievedFilters.size());
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
-    }
+    List<FilterEnum> retrievedFilters = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+    });
+    Assertions.assertEquals(lesFiltres.size(), retrievedFilters.size());
+    JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
+  }
 
+  @Test
+  public void getFilters_When_No_Filters_OK() throws Exception {
+    when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
 
-    @Test
-    public void getFilters_When_No_Filters_OK() throws Exception, YmlPropertyNotFoundException {
-        when(mediaCentreService.retrieveFiltersList()).thenReturn(lesFiltres);
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(GETFILTERS_URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
+    MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
-        Assertions.assertEquals(0, result.getResponse().getContentLength());
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
-    }
+    Assertions.assertEquals(HttpStatus.SC_OK, result.getResponse().getStatus());
+    Assertions.assertEquals(0, result.getResponse().getContentLength());
+    JSONAssert.assertEquals(objectMapper.writeValueAsString(lesFiltres), result.getResponse().getContentAsString(StandardCharsets.UTF_8), false);
+  }
 }

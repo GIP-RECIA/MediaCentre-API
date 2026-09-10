@@ -1,227 +1,227 @@
 [
-{
-  "distributeurTech":"distributeur1",
-  "domaineEnseignement":[],
-  "idEditeur":"idEditeur1",
-  "idRessource":"idRessource1",
-  "idEtablissement":[
-    {
-      "id":"idEtablissement1",
-      "UAI":"UAIEtablissement1",
-      "nom":"nomEtablissement1"
-    }
-  ],
-  "idType":"type1",
-  "niveauEducatif":[
-    {
-      "nom":"nomNiveauEducatif1",
-      "uri":"uriNiveauEducatif1"
+  {
+    "distributeurTech": "distributeur1",
+    "domaineEnseignement": [],
+    "idEditeur": "idEditeur1",
+    "idRessource": "idRessource1",
+    "idEtablissement": [
+      {
+        "id": "idEtablissement1",
+        "UAI": "UAIEtablissement1",
+        "nom": "nomEtablissement1"
+      }
+    ],
+    "idType": "type1",
+    "niveauEducatif": [
+      {
+        "nom": "nomNiveauEducatif1",
+        "uri": "uriNiveauEducatif1"
+      },
+      {
+        "nom": "nomNiveauEducatif2",
+        "uri": "uriNiveauEducatif2"
+      },
+      {
+        "nom": "nomNiveauEducatif3",
+        "uri": "uriNiveauEducatif3"
+      },
+      {
+        "nom": "nomNiveauEducatif4",
+        "uri": "uriNiveauEducatif4"
+      }
+    ],
+    "nomEditeur": "nomEditeur1",
+    "nomRessource": "nomRessource1",
+    "sourceEtiquette": "sourceEtiquette1",
+    "typePedagogique": [
+      {
+        "nom": "nomTypePedagogique1",
+        "uri": "uriTypePedagogique1"
+      },
+      {
+        "nom": "nomTypePedagogique2",
+        "uri": "uriTypePedagogique2"
+      },
+      {
+        "nom": "nomTypePedagogique3",
+        "uri": "uriTypePedagogique3"
+      }
+    ],
+    "typePresentation": {
+      "code": "codeTypePresentation1",
+      "nom": "nomTypePresentation1"
     },
-    {
-      "nom":"nomNiveauEducatif2",
-      "uri":"uriNiveauEducatif2"
-    },
-    {
-      "nom":"nomNiveauEducatif3",
-      "uri":"uriNiveauEducatif3"
-    },
-    {
-      "nom":"nomNiveauEducatif4",
-      "uri":"uriNiveauEducatif4"
-    }
-  ],
-  "nomEditeur":"nomEditeur1",
-  "nomRessource":"nomRessource1",
-  "sourceEtiquette":"sourceEtiquette1",
-  "typePedagogique":[
-    {
-      "nom":"nomTypePedagogique1",
-      "uri":"uriTypePedagogique1"
-    },
-    {
-      "nom":"nomTypePedagogique2",
-      "uri":"uriTypePedagogique2"
-    },
-    {
-      "nom":"nomTypePedagogique3",
-      "uri":"uriTypePedagogique3"
-    }
-  ],
-  "typePresentation":{
-    "code":"codeTypePresentation1",
-    "nom":"nomTypePresentation1"
+    "typologieDocument": [
+      {
+        "nom": "nomTypologieDocument1",
+        "uri": "uriTypologieDocument1"
+      },
+      {
+        "nom": "nomTypologieDocument2",
+        "uri": "uriTypologieDocument2"
+      },
+      {
+        "nom": "nomTypologieDocument3",
+        "uri": "uriTypologieDocument3"
+      }
+    ],
+    "urlAccesRessource": "urlAccesRessource1",
+    "urlVignette": "urlVignette1",
+    "validateurTech": "validateurTech1"
   },
-  "typologieDocument":[
-    {
-      "nom":"nomTypologieDocument1",
-      "uri":"uriTypologieDocument1"
-    },
-    {
-      "nom":"nomTypologieDocument2",
-      "uri":"uriTypologieDocument2"
-    },
-    {
-      "nom":"nomTypologieDocument3",
-      "uri":"uriTypologieDocument3"
-    }
-  ],
-  "urlAccesRessource":"urlAccesRessource1",
-  "urlVignette":"urlVignette1",
-  "validateurTech":"validateurTech1"
-},
-{
-"distributeurTech":"distributeur2",
-"domaineEnseignement":[
   {
-    "nom":"nomDomaineEnseignement1",
-    "uri":"uriDomaineEnseignement1"
-  }
-],
-"idEditeur":"idEditeur2",
-"idRessource":"idRessource2",
-"idEtablissement":[
-{
-"id":"idEtablissement1",
-"UAI":"UAIEtablissement1",
-"nom":"nomEtablissement1"
-}
-],
-"idType":"type2",
-"niveauEducatif":[
-{
-"nom":"nomNiveauEducatif1",
-"uri":"uriNiveauEducatif1"
-},
-{
-"nom":"nomNiveauEducatif2",
-"uri":"uriNiveauEducatif2"
-},
-{
-"nom":"nomNiveauEducatif3",
-"uri":"uriNiveauEducatif3"
-},
-{
-"nom":"nomNiveauEducatif4",
-"uri":"uriNiveauEducatif4"
-}
-],
-"nomEditeur":"nomEditeur2",
-"nomRessource":"nomRessource2",
-"sourceEtiquette":"sourceEtiquette2",
-"typePedagogique":[
-{
-"nom":"nomTypePedagogique1",
-"uri":"uriTypePedagogique1"
-},
-{
-"nom":"nomTypePedagogique2",
-"uri":"uriTypePedagogique2"
-},
-{
-"nom":"nomTypePedagogique3",
-"uri":"uriTypePedagogique3"
-}
-],
-"typePresentation":{
-"code":"codeTypePresentation2",
-"nom":"nomTypePresentation2"
-},
-"typologieDocument":[
-{
-"nom":"nomTypologieDocument1",
-"uri":"uriTypologieDocument1"
-},
-{
-"nom":"nomTypologieDocument2",
-"uri":"uriTypologieDocument2"
-},
-{
-"nom":"nomTypologieDocument3",
-"uri":"uriTypologieDocument3"
-}
-],
-"urlAccesRessource":"urlAccesRessource2",
-"urlVignette":"urlVignette2",
-"validateurTech":"validateurTech2"
-},
-  {
-    "distributeurTech":"distributeur1",
-    "domaineEnseignement":[
+    "distributeurTech": "distributeur2",
+    "domaineEnseignement": [
       {
-        "nom":"nomDomaineEnseignement1",
-        "uri":"uriDomaineEnseignement1"
+        "nom": "nomDomaineEnseignement1",
+        "uri": "uriDomaineEnseignement1"
       }
     ],
-    "idEditeur":"idEditeur3",
-    "idRessource":"idRessource3",
-    "idEtablissement":[
+    "idEditeur": "idEditeur2",
+    "idRessource": "idRessource2",
+    "idEtablissement": [
       {
-        "id":"idEtablissement1",
-        "UAI":"UAIEtablissement1",
-        "nom":"nomEtablissement1"
-      },
-      {
-        "id":"idEtablissemen4",
-        "UAI":"UAIEtablissement4",
-        "nom":"nomEtablissement4"
+        "id": "idEtablissement1",
+        "UAI": "UAIEtablissement1",
+        "nom": "nomEtablissement1"
       }
     ],
-    "idType":"type3",
-    "niveauEducatif":[
+    "idType": "type2",
+    "niveauEducatif": [
       {
-        "nom":"nomNiveauEducatif1",
-        "uri":"uriNiveauEducatif1"
+        "nom": "nomNiveauEducatif1",
+        "uri": "uriNiveauEducatif1"
       },
       {
-        "nom":"nomNiveauEducatif2",
-        "uri":"uriNiveauEducatif3"
+        "nom": "nomNiveauEducatif2",
+        "uri": "uriNiveauEducatif2"
       },
       {
-        "nom":"nomNiveauEducatif2",
-        "uri":"uriNiveauEducatif3"
+        "nom": "nomNiveauEducatif3",
+        "uri": "uriNiveauEducatif3"
       },
       {
-        "nom":"nomNiveauEducatif4",
-        "uri":"uriNiveauEducatif4"
+        "nom": "nomNiveauEducatif4",
+        "uri": "uriNiveauEducatif4"
       }
     ],
-    "nomEditeur":"nomEditeur3",
-    "nomRessource":"nomRessource3",
-    "sourceEtiquette":"sourceEtiquette3",
-    "typePedagogique":[
+    "nomEditeur": "nomEditeur2",
+    "nomRessource": "nomRessource2",
+    "sourceEtiquette": "sourceEtiquette2",
+    "typePedagogique": [
       {
-        "nom":"nomTypePedagogique1",
-        "uri":"uriTypePedagogique1"
+        "nom": "nomTypePedagogique1",
+        "uri": "uriTypePedagogique1"
       },
       {
-        "nom":"nomTypePedagogique2",
-        "uri":"uriTypePedagogique2"
+        "nom": "nomTypePedagogique2",
+        "uri": "uriTypePedagogique2"
       },
       {
-        "nom":"nomTypePedagogique3",
-        "uri":"uriTypePedagogique3"
+        "nom": "nomTypePedagogique3",
+        "uri": "uriTypePedagogique3"
       }
     ],
-    "typePresentation":{
-      "code":"codeTypePresentation3",
-      "nom":"nomTypePresentation3"
+    "typePresentation": {
+      "code": "codeTypePresentation2",
+      "nom": "nomTypePresentation2"
     },
-    "typologieDocument":[
+    "typologieDocument": [
       {
-        "nom":"nomTypologieDocument1",
-        "uri":"uriTypologieDocument1"
+        "nom": "nomTypologieDocument1",
+        "uri": "uriTypologieDocument1"
       },
       {
-        "nom":"nomTypologieDocument3",
-        "uri":"uriTypologieDocument3"
+        "nom": "nomTypologieDocument2",
+        "uri": "uriTypologieDocument2"
       },
       {
-        "nom":"nomTypologieDocument3",
-        "uri":"uriTypologieDocument3"
+        "nom": "nomTypologieDocument3",
+        "uri": "uriTypologieDocument3"
       }
     ],
-    "urlAccesRessource":"urlAccesRessource3",
-    "urlVignette":"urlVignette3",
-    "validateurTech":"validateurTech3"
+    "urlAccesRessource": "urlAccesRessource2",
+    "urlVignette": "urlVignette2",
+    "validateurTech": "validateurTech2"
+  },
+  {
+    "distributeurTech": "distributeur1",
+    "domaineEnseignement": [
+      {
+        "nom": "nomDomaineEnseignement1",
+        "uri": "uriDomaineEnseignement1"
+      }
+    ],
+    "idEditeur": "idEditeur3",
+    "idRessource": "idRessource3",
+    "idEtablissement": [
+      {
+        "id": "idEtablissement1",
+        "UAI": "UAIEtablissement1",
+        "nom": "nomEtablissement1"
+      },
+      {
+        "id": "idEtablissemen4",
+        "UAI": "UAIEtablissement4",
+        "nom": "nomEtablissement4"
+      }
+    ],
+    "idType": "type3",
+    "niveauEducatif": [
+      {
+        "nom": "nomNiveauEducatif1",
+        "uri": "uriNiveauEducatif1"
+      },
+      {
+        "nom": "nomNiveauEducatif2",
+        "uri": "uriNiveauEducatif3"
+      },
+      {
+        "nom": "nomNiveauEducatif2",
+        "uri": "uriNiveauEducatif3"
+      },
+      {
+        "nom": "nomNiveauEducatif4",
+        "uri": "uriNiveauEducatif4"
+      }
+    ],
+    "nomEditeur": "nomEditeur3",
+    "nomRessource": "nomRessource3",
+    "sourceEtiquette": "sourceEtiquette3",
+    "typePedagogique": [
+      {
+        "nom": "nomTypePedagogique1",
+        "uri": "uriTypePedagogique1"
+      },
+      {
+        "nom": "nomTypePedagogique2",
+        "uri": "uriTypePedagogique2"
+      },
+      {
+        "nom": "nomTypePedagogique3",
+        "uri": "uriTypePedagogique3"
+      }
+    ],
+    "typePresentation": {
+      "code": "codeTypePresentation3",
+      "nom": "nomTypePresentation3"
+    },
+    "typologieDocument": [
+      {
+        "nom": "nomTypologieDocument1",
+        "uri": "uriTypologieDocument1"
+      },
+      {
+        "nom": "nomTypologieDocument3",
+        "uri": "uriTypologieDocument3"
+      },
+      {
+        "nom": "nomTypologieDocument3",
+        "uri": "uriTypologieDocument3"
+      }
+    ],
+    "urlAccesRessource": "urlAccesRessource3",
+    "urlVignette": "urlVignette3",
+    "validateurTech": "validateurTech3"
   }
-  ]
+]

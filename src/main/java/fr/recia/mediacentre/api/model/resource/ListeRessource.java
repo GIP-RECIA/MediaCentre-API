@@ -26,7 +26,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ListeRessource{
-
-	private List<Ressource> ressources;
+public class ListeRessource {
+    private List<Ressource> ressources;
 }

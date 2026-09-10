@@ -15,25 +15,21 @@
  */
 package fr.recia.mediacentre.api.model.pojo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
 public class GestionAffectationDTO {
+    public static GestionAffectationDTO fromGestionAffectation(GestionAffectation gestionAffectation) {
+        GestionAffectationDTO gestionAffectationDTO = new GestionAffectationDTO();
+        gestionAffectationDTO.id = gestionAffectation.getId();
+        gestionAffectationDTO.link = gestionAffectation.isLink();
+        gestionAffectationDTO.title = gestionAffectation.getTitle();
+        gestionAffectationDTO.description = gestionAffectation.getDescription();
+        return gestionAffectationDTO;
+    }
 
-  public static GestionAffectationDTO fromGestionAffectation(GestionAffectation gestionAffectation){
-    GestionAffectationDTO gestionAffectationDTO = new GestionAffectationDTO();
-    gestionAffectationDTO.id = gestionAffectation.getId();
-    gestionAffectationDTO.link = gestionAffectation.isLink();
-    gestionAffectationDTO.title = gestionAffectation.getTitle();
-    gestionAffectationDTO.description = gestionAffectation.getDescription();
-    return gestionAffectationDTO;
-  }
-
-
-  private String id;
-  private boolean link;
-  private String title;
-  private String description;
-
+    private String id;
+    private boolean link;
+    private String title;
+    private String description;
 }

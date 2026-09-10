@@ -36,24 +36,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
-    public SecurityConfiguration( SoffitProperties soffitProperties) {
-      this.jwtProperties = soffitProperties;
+    public SecurityConfiguration(SoffitProperties soffitProperties) {
+        this.jwtProperties = soffitProperties;
     }
 
-  private final SoffitProperties jwtProperties;
+    private final SoffitProperties jwtProperties;
 
+    @Bean
+    SoffitJwtValidator soffitJwtValidator() {
+        return new SoffitJwtValidator(jwtProperties.getSignatureKey());
+    }
 
-  @Bean
-  SoffitJwtValidator soffitJwtValidator() {
-    return new SoffitJwtValidator(jwtProperties.getSignatureKey());
-  }
-
-  @Bean
-  SoffitJwtAuthenticationFilter soffitJwtAuthenticationFilter(SoffitJwtValidator validator) {
-    return new SoffitJwtAuthenticationFilter(validator);
-  }
-
+    @Bean
+    SoffitJwtAuthenticationFilter soffitJwtAuthenticationFilter(SoffitJwtValidator validator) {
+        return new SoffitJwtAuthenticationFilter(validator);
+    }
 
     @Bean
     public AuthenticationManager authenticationManager() {
@@ -62,24 +59,21 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, SoffitJwtAuthenticationFilter filter) {
+        http
+            .csrf(AbstractHttpConfigurer::disable
+            );
 
+        http.authorizeHttpRequests(authz -> authz
+                .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                .requestMatchers("/health-check").permitAll()
+                .requestMatchers("/api/**").authenticated()
+                .anyRequest().denyAll()
+            )
+            .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+        ;
 
-    http
-      .csrf(AbstractHttpConfigurer::disable
-          );
+        http.sessionManagement(config -> config.sessionFixation().newSession());
 
-    http.authorizeHttpRequests(authz -> authz
-      .requestMatchers(HttpMethod.OPTIONS).permitAll()
-      .requestMatchers("/health-check").permitAll()
-      .requestMatchers("/api/**").authenticated()
-      .anyRequest().denyAll()
-  )
-      .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-    ;
-
-    http.sessionManagement(config -> config.sessionFixation().newSession());
-
-    return http.build();
-  }
-
+        return http.build();
+    }
 }

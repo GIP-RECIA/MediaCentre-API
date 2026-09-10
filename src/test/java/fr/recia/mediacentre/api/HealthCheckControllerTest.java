@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package fr.recia.mediacentre.api;
 
 import fr.recia.mediacentre.api.web.rest.HealthCheckController;
@@ -38,7 +37,6 @@ import static org.junit.Assert.assertEquals;
 @ActiveProfiles("test")
 @WebMvcTest
 public class HealthCheckControllerTest {
-
   private static final String HEALTHCHECK_URI = "/health-check";
 
   private MockMvc mockMvc;

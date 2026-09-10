@@ -29,7 +29,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NiveauEducatif {
-
     @JsonProperty("nom")
     private String nom;
 

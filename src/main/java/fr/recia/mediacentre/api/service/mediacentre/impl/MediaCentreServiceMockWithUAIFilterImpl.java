@@ -43,82 +43,82 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MediaCentreServiceMockWithUAIFilterImpl extends MediaCentreServiceAbstractImpl {
-  @NonNull
-  @Value("${mock.mockedDataLocation:}")
-  @Setter
-  private String urlRessources;
+    @NonNull
+    @Value("${mock.mockedDataLocation:}")
+    @Setter
+    private String urlRessources;
 
-  @NonNull
-  @Value("${mock.mockedDTOLocation:}")
-  @Setter
-  private String urlDTOS;
+    @NonNull
+    @Value("${mock.mockedDTOLocation:}")
+    @Setter
+    private String urlDTOS;
 
+    private final CategoriesByProfilesProperties categoriesByFilters;
 
-  private final CategoriesByProfilesProperties categoriesByFilters;
+    public MediaCentreServiceMockWithUAIFilterImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties, CategoriesByProfilesProperties categoriesByProfilesProperties) {
+        super(soffitHolder, mappingProperties);
+        this.categoriesByFilters = categoriesByProfilesProperties;
+    }
 
-  public MediaCentreServiceMockWithUAIFilterImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties, CategoriesByProfilesProperties categoriesByProfilesProperties)
-  {
-    super(soffitHolder, mappingProperties);
-    this.categoriesByFilters = categoriesByProfilesProperties;
-  }
-
-  @Override
-  public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      URL resource = MediaCentreServiceMockImpl.class.getResource(urlRessources);
-      assert resource != null;
-      File file = Paths.get(resource.toURI()).toFile();
-      List<Ressource> ressourceList = objectMapper.readValue(file, new TypeReference<>() {});
-      Predicate<Ressource> atLeastOneEtabInUserEtabs = (i) ->{
-        if(i.getIdEtablissement().isEmpty()){
-          return true;
+    @Override
+    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            URL resource = MediaCentreServiceMockImpl.class.getResource(urlRessources);
+            assert resource != null;
+            File file = Paths.get(resource.toURI()).toFile();
+            List<Ressource> ressourceList = objectMapper.readValue(file, new TypeReference<>() {
+            });
+            Predicate<Ressource> atLeastOneEtabInUserEtabs = (i) -> {
+                if (i.getIdEtablissement().isEmpty()) {
+                    return true;
+                }
+                for (IdEtablissement idEtablissement : i.getIdEtablissement()) {
+                    if (getSoffitHolder().getUaiList().contains(idEtablissement.getUai())) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            return ressourceList.stream().filter(atLeastOneEtabInUserEtabs).collect(Collectors.toList());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        for (IdEtablissement idEtablissement: i.getIdEtablissement()){
-          if(getSoffitHolder().getUaiList().contains(idEtablissement.getUai())){
-            return true;
-          }
+    }
+
+    @Override
+    public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
+        List<String> userProfile = getSoffitHolder().getProfiles();
+        return getFiltersByProfile(userProfile);
+    }
+
+    @Override
+    public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            URL resource = MediaCentreServiceMockImpl.class.getResource(urlDTOS);
+            assert resource != null;
+            File file = Paths.get(resource.toURI()).toFile();
+            return objectMapper.readValue(file, new TypeReference<>() {
+            });
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        return false;
-      };
-      return  ressourceList.stream().filter(atLeastOneEtabInUserEtabs).collect(Collectors.toList());
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
     }
-  }
 
-  @Override
-  public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-    List<String> userProfile = getSoffitHolder().getProfiles();
-    return getFiltersByProfile(userProfile);
-  }
-
-  @Override
-  public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf) {
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      URL resource = MediaCentreServiceMockImpl.class.getResource(urlDTOS);
-      assert resource != null;
-      File file = Paths.get(resource.toURI()).toFile();
-      return objectMapper.readValue(file, new TypeReference<>() {});
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private List<FilterEnum> getFiltersByProfile(List<String> profiles) throws YmlPropertyNotFoundException {
-    List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
-    Set<FilterEnum> filterEnumSet = new HashSet<>();
-    if (profilesMapList.isEmpty()) {
-      throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
-    }
-    for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
-      for(String profile : profiles){
-        if (item.getProfiles().contains(profile)) {
-          filterEnumSet.addAll(item.getFilters());
+    private List<FilterEnum> getFiltersByProfile(List<String> profiles) throws YmlPropertyNotFoundException {
+        List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
+        Set<FilterEnum> filterEnumSet = new HashSet<>();
+        if (profilesMapList.isEmpty()) {
+            throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
         }
-      }
+        for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
+            for (String profile : profiles) {
+                if (item.getProfiles().contains(profile)) {
+                    filterEnumSet.addAll(item.getFilters());
+                }
+            }
+        }
+        return new ArrayList<>(filterEnumSet);
     }
-    return new ArrayList<>(filterEnumSet);
-  }
 }

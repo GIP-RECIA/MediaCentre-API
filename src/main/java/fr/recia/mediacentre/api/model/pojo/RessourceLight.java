@@ -24,9 +24,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class RessourceLight {
-
-  private String idRessource;
-  private String nomRessource;
-  private TypePresentation typePresentation;
-
+    private String idRessource;
+    private String nomRessource;
+    private TypePresentation typePresentation;
 }

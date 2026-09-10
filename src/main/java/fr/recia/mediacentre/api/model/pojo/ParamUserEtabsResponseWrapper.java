@@ -31,22 +31,17 @@ import java.util.Map;
 @Setter
 @Slf4j
 public class ParamUserEtabsResponseWrapper {
+    @JsonFormat(shape = JsonFormat.Shape.ANY)
+    Map<String, JsonNode> map = new HashMap<>();
 
-  @JsonFormat(shape = JsonFormat.Shape.ANY)
-  Map<String, JsonNode> map = new HashMap<>();
+    @Override
+    public String toString() {
+        return String.join(",", map.keySet());
+    }
 
-  @Override
-  public String toString(){
-    return  String.join(",", map.keySet()) ;
-  }
-
-
-
-  @JsonAnySetter
-  void setDetail(String key, JsonNode value) {
-    log.info("received {} and {} ", key, value);
-    map.put(key, value);
-  }
-
-
+    @JsonAnySetter
+    void setDetail(String key, JsonNode value) {
+        log.info("received {} and {} ", key, value);
+        map.put(key, value);
+    }
 }

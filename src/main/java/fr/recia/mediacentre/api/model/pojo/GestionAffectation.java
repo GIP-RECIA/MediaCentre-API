@@ -19,38 +19,32 @@ import lombok.Data;
 
 @Data
 public class GestionAffectation {
+    private String id;
+    private boolean link;
+    private String title;
+    private String description;
+    private String regexp;
 
-  private String id;
-  private boolean link;
-  private String title;
-  private String description;
-  private String regexp;
+    @Override
+    public String toString() {
 
-  @Override
-  public String toString(){
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("id: ");
-    stringBuilder.append(id);
-    stringBuilder.append(",\n");
-
-    stringBuilder.append("link: ");
-    stringBuilder.append(link);
-    stringBuilder.append(",\n");
-
-    stringBuilder.append("title: ");
-    stringBuilder.append(title);
-    stringBuilder.append(",\n");
-
-    stringBuilder.append("description: ");
-    stringBuilder.append(description);
-    stringBuilder.append(",\n");
-
-    stringBuilder.append("regexp: ");
-    stringBuilder.append(regexp);
-    stringBuilder.append("\n");
+        String stringBuilder = "id: " +
+            id +
+            ",\n" +
+            "link: " +
+            link +
+            ",\n" +
+            "title: " +
+            title +
+            ",\n" +
+            "description: " +
+            description +
+            ",\n" +
+            "regexp: " +
+            regexp +
+            "\n";
 
 
-    return stringBuilder.toString();
-  }
-
+        return stringBuilder;
+    }
 }

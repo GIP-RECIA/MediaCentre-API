@@ -15,8 +15,6 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -28,6 +26,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,94 +40,87 @@ import java.util.function.BiPredicate;
 @Validated
 @ConfigurationProperties(prefix = "mapping")
 public class MappingProperties {
+    @Autowired
+    private ApplicationContext ctx;
 
+    @NotNull
+    private String uaiList;
+    @NotNull
+    private String uaiCurrent;
+    @NotNull
+    private String garId;
+    @NotNull
+    private String profiles;
+    @NotNull
+    private String groups;
+    @NotNull
+    private List<String> otherUserInfoAttributes;
+    @NotNull
+    private String payloadFavorites = "favorites";
+    @NotNull
+    private String payloadIsMemberOf = "isMemberOf";
 
-  @Autowired
-  private ApplicationContext ctx;
+    @PostConstruct
+    private void init() {
+        List<String> tempListForAdditionalValidation = new ArrayList<>(otherUserInfoAttributes);
+        tempListForAdditionalValidation.add(uaiList);
+        tempListForAdditionalValidation.add(uaiCurrent);
+        tempListForAdditionalValidation.add(garId);
+        tempListForAdditionalValidation.add(profiles);
+        tempListForAdditionalValidation.add(groups);
 
-  @NotNull
-  private String uaiList;
-  @NotNull
-  private String uaiCurrent;
-  @NotNull
-  private String garId;
-  @NotNull
-  private String profiles;
-  @NotNull
-  private String groups;
-  @NotNull
-  private List<String> otherUserInfoAttributes;
-  @NotNull
-  private String payloadFavorites = "favorites";
-  @NotNull
-  private String payloadIsMemberOf = "isMemberOf";
+        BiPredicate<String, String> stringBiPredicate = new BiPredicate<String, String>() {
+            @Override
+            public boolean test(String s, String s2) {
+                return Objects.equals(s, s2);
+            }
+        };
 
+        for (int i = 0; i < tempListForAdditionalValidation.size(); i++) {
 
-  @PostConstruct
-  private void init() {
-
-
-    List<String> tempListForAdditionalValidation = new ArrayList<>(otherUserInfoAttributes);
-    tempListForAdditionalValidation.add(uaiList);
-    tempListForAdditionalValidation.add(uaiCurrent);
-    tempListForAdditionalValidation.add(garId);
-    tempListForAdditionalValidation.add(profiles);
-    tempListForAdditionalValidation.add(groups);
-
-    BiPredicate<String, String> stringBiPredicate = new BiPredicate<String, String>() {
-      @Override
-      public boolean test(String s, String s2) {
-        return Objects.equals(s, s2);
-      }
-    };
-
-    for (int i = 0; i < tempListForAdditionalValidation.size(); i++) {
-
-      String key = tempListForAdditionalValidation.get(i);
-      long occurrencesKey = tempListForAdditionalValidation.stream().filter(x -> Objects.equals(x, key)).count();
-      Assert.isTrue( occurrencesKey == 1, String.format("Key %s is present more than one time.", key));
+            String key = tempListForAdditionalValidation.get(i);
+            long occurrencesKey = tempListForAdditionalValidation.stream().filter(x -> Objects.equals(x, key)).count();
+            Assert.isTrue(occurrencesKey == 1, String.format("Key %s is present more than one time.", key));
+        }
+        log.info("Loaded properties: {}", this);
     }
-    log.info("Loaded properties: {}", this);
-  }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Mapping properties: {\n");
 
-  @Override
-  public String toString() {
+        stringBuilder.append("\t\"groups\": ");
+        stringBuilder.append(groups);
+        stringBuilder.append(",\n");
 
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("Mapping properties: {\n");
+        stringBuilder.append("\t\"profiles\": ");
+        stringBuilder.append(profiles);
+        stringBuilder.append(",\n");
 
-    stringBuilder.append("\t\"groups\": ");
-    stringBuilder.append(groups.toString());
-    stringBuilder.append(",\n");
+        stringBuilder.append("\t\"gar id\": ");
+        stringBuilder.append(garId);
+        stringBuilder.append(",\n");
 
-    stringBuilder.append("\t\"profiles\": ");
-    stringBuilder.append(profiles.toString());
-    stringBuilder.append(",\n");
+        stringBuilder.append("\t\"uai current\": ");
+        stringBuilder.append(uaiCurrent);
+        stringBuilder.append(",\n");
 
-    stringBuilder.append("\t\"gar id\": ");
-    stringBuilder.append(garId.toString());
-    stringBuilder.append(",\n");
+        stringBuilder.append("\t\"uai list\": ");
+        stringBuilder.append(uaiList);
+        stringBuilder.append(",\n");
 
-    stringBuilder.append("\t\"uai current\": ");
-    stringBuilder.append(uaiCurrent.toString());
-    stringBuilder.append(",\n");
+        stringBuilder.append("\t\"otherAttributes\": { \n");
+        for (String userInfoAttribute : otherUserInfoAttributes) {
+            stringBuilder.append("\t\t\"");
+            stringBuilder.append(userInfoAttribute);
+            stringBuilder.append("\",\n");
+        }
+        stringBuilder.append("\t}");
+        stringBuilder.append("\n}");
 
-    stringBuilder.append("\t\"uai list\": ");
-    stringBuilder.append(uaiList.toString());
-    stringBuilder.append(",\n");
-
-    stringBuilder.append("\t\"otherAttributes\": { \n");
-    for(String userInfoAttribute : otherUserInfoAttributes){
-      stringBuilder.append("\t\t\"");
-      stringBuilder.append(userInfoAttribute);
-      stringBuilder.append("\",\n");
+        return stringBuilder.toString();
     }
-    stringBuilder.append( "\t}");
-    stringBuilder.append( "\n}");
-
-    return stringBuilder.toString();
-  }
 }
 
 

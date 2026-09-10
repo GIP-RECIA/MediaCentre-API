@@ -16,16 +16,15 @@
 package fr.recia.mediacentre.api.configuration.bean;
 
 import fr.recia.mediacentre.api.model.pojo.GestionAffectation;
-import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
@@ -34,29 +33,28 @@ import java.util.List;
 @Data
 @Validated
 public class GestionAffectationsProperties {
-  @NotNull
-  @NotEmpty
-  private List<GestionAffectation> objects;
+    @NotNull
+    @NotEmpty
+    private List<GestionAffectation> objects;
 
-  @PostConstruct
-  private void init() {
-    log.info("Loaded properties: {}", this);
-  }
-
-  @Override
-  public String toString(){
-
-    StringBuilder stringBuilder = new StringBuilder();
-
-    stringBuilder.append("\"Gestion Affectations properties: {\n");
-    for(GestionAffectation gestionAffectation : objects){
-      stringBuilder.append("\t{\n");
-      stringBuilder.append(gestionAffectation.toString());
-      stringBuilder.append("\t},\n");
+    @PostConstruct
+    private void init() {
+        log.info("Loaded properties: {}", this);
     }
 
-    stringBuilder.append("}");
-    return stringBuilder.toString();
+    @Override
+    public String toString() {
 
-  }
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("\"Gestion Affectations properties: {\n");
+        for (GestionAffectation gestionAffectation : objects) {
+            stringBuilder.append("\t{\n");
+            stringBuilder.append(gestionAffectation.toString());
+            stringBuilder.append("\t},\n");
+        }
+
+        stringBuilder.append("}");
+        return stringBuilder.toString();
+    }
 }

@@ -31,26 +31,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Profile("!test")
 @Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
+    @Autowired
+    MappingProperties mappingProperties;
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(soffitInterceptor());
+    }
 
-  @Autowired
-  MappingProperties mappingProperties;
+    @Bean
+    public SoffitInterceptor soffitInterceptor() {
+        return new SoffitInterceptor(soffitHolder(), mappingProperties);
+    }
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(soffitInterceptor());
-  }
-
-  @Bean
-  public SoffitInterceptor soffitInterceptor() {
-    return new SoffitInterceptor(soffitHolder(), mappingProperties);
-  }
-
-  @Bean
-  @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
-  public SoffitHolder soffitHolder() {
-    return new SoffitHolder();
-  }
-
+    @Bean
+    @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public SoffitHolder soffitHolder() {
+        return new SoffitHolder();
+    }
 }
 

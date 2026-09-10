@@ -36,31 +36,30 @@ import java.util.Objects;
 @RestController
 @RequestMapping(path = "api/config")
 public class ConfigController {
+    @Autowired
+    private ConfigService configService;
 
-  @Autowired
-  private ConfigService configService;
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<Config> getConfig(@RequestBody(required = false) Uais uais) {
+        if (Objects.isNull(uais)) {
+            uais = new Uais();
+        }
 
-  @PostMapping(consumes = "application/json")
-  public ResponseEntity<Config> getConfig(@RequestBody(required = false) Uais uais) {
-    if(Objects.isNull(uais)){
-      uais = new Uais();
+        Config config = new Config();
+
+        List<ConfigElement> groupList = configService.getGroups();
+        if (Objects.nonNull(groupList) && !groupList.isEmpty()) {
+            config.getConfigListMap().put("groups", groupList);
+        }
+
+        List<ConfigElement> etabNameList = configService.getEtabsNames(uais.getUais());
+        if (Objects.nonNull(etabNameList) && !etabNameList.isEmpty()) {
+            config.getConfigListMap().put("etabsNames", etabNameList);
+        }
+        if (config.getConfigListMap().isEmpty()) {
+            return new ResponseEntity<>(new HttpHeaders(), HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(config, HttpStatus.OK);
+        }
     }
-
-    Config config = new Config();
-
-    List<ConfigElement> groupList = configService.getGroups();
-    if(Objects.nonNull(groupList) && !groupList.isEmpty()){
-      config.getConfigListMap().put("groups", groupList);
-    }
-
-    List<ConfigElement> etabNameList = configService.getEtabsNames(uais.getUais());
-    if(Objects.nonNull(etabNameList) && !etabNameList.isEmpty()){
-      config.getConfigListMap().put("etabsNames", etabNameList);
-    }
-    if(config.getConfigListMap().isEmpty()){
-      return new ResponseEntity<>(new HttpHeaders(), HttpStatus.NOT_FOUND);
-    }else{
-      return new ResponseEntity<>(config, HttpStatus.OK);
-    }
-  }
 }

@@ -17,7 +17,6 @@ package fr.recia.mediacentre.api;
 
 import fr.recia.mediacentre.api.interceptor.bean.SoffitHolder;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -25,12 +24,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @SpringBootTest
 @ActiveProfiles("test")
 class MediacentreApplicationTest {
-
   @MockitoBean
   SoffitHolder soffitHolder;
 
-	@Test
-	void contextLoads() {
-	}
-
+  @Test
+  void contextLoads() {
+  }
 }

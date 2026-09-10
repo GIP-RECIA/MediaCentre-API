@@ -38,28 +38,28 @@ spring:
         "classpath:ehcache.xml"
 app:
   cors:
-      enable: true
-      allow-credentials: true
-      allowed-origins:
-        - http://full.address.domain.ext
-        - https://*.domain.ext
-      exposed-headers:
-        - x-auth-token
-        - x-requested-with
-        - x-xsrf-token
-      allowed-headers:
-        - content-type
-        - authorization
-        - x-com-persist
-        - X-Auth-Token
-        - x-auth-token
-        - x-requested-with
-        - x-xsrf-token
-      allowed-methods:
-        - GET
-        - PUT
-        - POST
-        - DELETE
+    enable: true
+    allow-credentials: true
+    allowed-origins:
+      - http://full.address.domain.ext
+      - https://*.domain.ext
+    exposed-headers:
+      - x-auth-token
+      - x-requested-with
+      - x-xsrf-token
+    allowed-headers:
+      - content-type
+      - authorization
+      - x-com-persist
+      - X-Auth-Token
+      - x-auth-token
+      - x-requested-with
+      - x-xsrf-token
+    allowed-methods:
+      - GET
+      - PUT
+      - POST
+      - DELETE
   soffit:
     signatureKey: 'aJwtSignatureKey'
 

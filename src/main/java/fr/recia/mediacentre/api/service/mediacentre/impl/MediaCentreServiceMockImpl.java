@@ -44,71 +44,70 @@ import java.util.Set;
 @Slf4j
 @Service
 public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
+    @NonNull
+    @Value("${mock.mockedDataLocation:}")
+    @Setter
+    private String urlRessources;
 
-  @NonNull
-  @Value("${mock.mockedDataLocation:}")
-  @Setter
-  private String urlRessources;
+    @NonNull
+    @Value("${mock.mockedDTOLocation:}")
+    @Setter
+    private String urlDTOS;
 
-  @NonNull
-  @Value("${mock.mockedDTOLocation:}")
-  @Setter
-  private String urlDTOS;
+    private final CategoriesByProfilesProperties categoriesByFilters;
 
-
-  private CategoriesByProfilesProperties categoriesByFilters;
-
-  public MediaCentreServiceMockImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties,CategoriesByProfilesProperties categoriesByProfilesProperties)
-  {
-    super(soffitHolder, mappingProperties);
-    this.categoriesByFilters = categoriesByProfilesProperties;
-  }
-
-  @Override
-  public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      URL resource = MediaCentreServiceMockImpl.class.getResource(urlRessources);
-      assert resource != null;
-      File file = Paths.get(resource.toURI()).toFile();
-      return objectMapper.readValue(file, new TypeReference<>() {});
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
+    public MediaCentreServiceMockImpl(SoffitHolder soffitHolder, MappingProperties mappingProperties, CategoriesByProfilesProperties categoriesByProfilesProperties) {
+        super(soffitHolder, mappingProperties);
+        this.categoriesByFilters = categoriesByProfilesProperties;
     }
-  }
 
-  @Override
-  public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
-    List<String> userProfile = getSoffitHolder().getProfiles();
-    return getFiltersByProfile(userProfile);
-  }
-
-  @Override
-  public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf) {
-    try {
-      ObjectMapper objectMapper = new ObjectMapper();
-      URL resource = MediaCentreServiceMockImpl.class.getResource(urlDTOS);
-      assert resource != null;
-      File file = Paths.get(resource.toURI()).toFile();
-      return objectMapper.readValue(file, new TypeReference<>() {});
-    } catch (URISyntaxException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private List<FilterEnum> getFiltersByProfile(List<String> profiles) throws YmlPropertyNotFoundException {
-    List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
-    Set<FilterEnum> filterEnumSet = new HashSet<>();
-    if (profilesMapList.isEmpty()) {
-      throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
-    }
-    for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
-      for(String profile : profiles){
-        if (item.getProfiles().contains(profile)) {
-          filterEnumSet.addAll(item.getFilters());
+    @Override
+    public List<Ressource> retrieveListRessource(List<String> isMemberOf) throws YmlPropertyNotFoundException, MediacentreWSException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            URL resource = MediaCentreServiceMockImpl.class.getResource(urlRessources);
+            assert resource != null;
+            File file = Paths.get(resource.toURI()).toFile();
+            return objectMapper.readValue(file, new TypeReference<>() {
+            });
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-      }
     }
-    return new ArrayList<>(filterEnumSet);
-  }
+
+    @Override
+    public List<FilterEnum> retrieveFiltersList() throws YmlPropertyNotFoundException {
+        List<String> userProfile = getSoffitHolder().getProfiles();
+        return getFiltersByProfile(userProfile);
+    }
+
+    @Override
+    public List<GestionAffectationDTO> getGestionAffectationDTOs(List<String> isMemberOf) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            URL resource = MediaCentreServiceMockImpl.class.getResource(urlDTOS);
+            assert resource != null;
+            File file = Paths.get(resource.toURI()).toFile();
+            return objectMapper.readValue(file, new TypeReference<>() {
+            });
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<FilterEnum> getFiltersByProfile(List<String> profiles) throws YmlPropertyNotFoundException {
+        List<CategoriesByProfilesProperties.ProfilesMap> profilesMapList = categoriesByFilters.getCategoriesByProfiles();
+        Set<FilterEnum> filterEnumSet = new HashSet<>();
+        if (profilesMapList.isEmpty()) {
+            throw new YmlPropertyNotFoundException("ProfilesMap list of filters.categoriesByProfiles is empty");
+        }
+        for (CategoriesByProfilesProperties.ProfilesMap item : profilesMapList) {
+            for (String profile : profiles) {
+                if (item.getProfiles().contains(profile)) {
+                    filterEnumSet.addAll(item.getFilters());
+                }
+            }
+        }
+        return new ArrayList<>(filterEnumSet);
+    }
 }

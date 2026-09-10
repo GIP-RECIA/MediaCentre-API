@@ -26,10 +26,9 @@ import java.util.List;
 @Getter
 @Setter
 public class Uais {
+    private List<String> uais;
 
-  private List<String> uais;
-  public Uais(){
-    uais = new ArrayList<>();
-  }
-
+    public Uais() {
+        uais = new ArrayList<>();
+    }
 }

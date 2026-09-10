@@ -19,23 +19,15 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static fr.recia.mediacentre.api.configuration.Constants.PROPERTIES_TO_JSON_DELIMITER;
-import static fr.recia.mediacentre.api.configuration.Constants.PROPERTIES_TO_JSON_PREFIX;
-import static fr.recia.mediacentre.api.configuration.Constants.PROPERTIES_TO_JSON_SUFFIX;
-
 
 @Data
 @ConfigurationProperties(prefix = "app.cors", ignoreUnknownFields = true)
 public class CorsProperties {
-
-  private boolean enable;
-  private boolean allowCredentials;
-  private List<String> allowedOrigins;
-  private List<String> exposedHeaders;
-  private List<String> allowedHeaders;
-  private List<String> allowedMethods;
-
+    private boolean enable;
+    private boolean allowCredentials;
+    private List<String> allowedOrigins;
+    private List<String> exposedHeaders;
+    private List<String> allowedHeaders;
+    private List<String> allowedMethods;
 }
 

@@ -16,8 +16,6 @@
 package fr.recia.mediacentre.api.web.rest;
 
 
-import fr.recia.mediacentre.api.web.rest.exception.MediacentreWSException;
-import fr.recia.mediacentre.api.web.rest.exception.YmlPropertyNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,16 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.io.UncheckedIOException;
-
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class MediaCentreExceptionHandler {
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<Object> handleException(Exception ex) {
-    log.error("MediacentreException: ",ex);
-    return ResponseEntity.internalServerError().build();
-  }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleException(Exception ex) {
+        log.error("MediacentreException: ", ex);
+        return ResponseEntity.internalServerError().build();
+    }
 }

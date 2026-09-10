@@ -29,7 +29,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TypePresentation {
-
     @JsonProperty("code")
     private String code;
 

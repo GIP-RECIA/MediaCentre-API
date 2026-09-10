@@ -21,10 +21,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @ExcludeFromJacocoGeneratedReport
 public class ServletInitializer extends SpringBootServletInitializer {
-
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(MediacentreApplication.class);
-	}
-
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(MediacentreApplication.class);
+    }
 }

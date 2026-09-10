@@ -15,7 +15,6 @@
  */
 package fr.recia.mediacentre.api.model.pojo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,5 +27,5 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class Config {
-  private Map<String, List<ConfigElement>> configListMap = new HashMap<>();
+    private Map<String, List<ConfigElement>> configListMap = new HashMap<>();
 }

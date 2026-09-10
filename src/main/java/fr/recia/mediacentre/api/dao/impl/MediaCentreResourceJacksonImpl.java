@@ -50,7 +50,6 @@ import java.util.Objects;
 @Slf4j
 @Service
 public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
-
     @Autowired
     private CacheManager cacheManager;
 
@@ -63,28 +62,27 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
     @Autowired
     private MappingProperties mappingProperties;
 
-
-    public List<Ressource> retrieveListRessource(String mediaUrl,Map<String, List<String>> userInfos) throws MediacentreWSException{
-        return this.getServiceMediaCentre(mediaUrl,userInfos, userInfos.get(mappingProperties.getGarId()).get(0));
+    public List<Ressource> retrieveListRessource(String mediaUrl, Map<String, List<String>> userInfos) throws MediacentreWSException {
+        return this.getServiceMediaCentre(mediaUrl, userInfos, userInfos.get(mappingProperties.getGarId()).get(0));
     }
 
-  @Cacheable(cacheNames = "userResourcesCache", key = "#userId")
-    private List<Ressource> getServiceMediaCentre(String url,Map<String, List<String>> userInfos, String userId) throws MediacentreWSException {
+    @Cacheable(cacheNames = "userResourcesCache", key = "#userId")
+    private List<Ressource> getServiceMediaCentre(String url, Map<String, List<String>> userInfos, String userId) throws MediacentreWSException {
         if (log.isDebugEnabled()) {
-        log.debug("Requesting mediacentre on URL {}", url );
-    }
+            log.debug("Requesting mediacentre on URL {}", url);
+        }
         List<Ressource> listRessourceMediaCentre = null;
         ObjectMapper objectMapper = new ObjectMapper();
 
         Cache cache = cacheManager.getCache("userResourcesCache");
 
-        try{
-          List<Ressource> userResources = (List<Ressource>) cache.get(soffitHolder.getSub(), List.class);
-          if(!Objects.isNull(userResources)){
-            return userResources;
-          }
-        }catch (Exception ignored){
-          log.warn("Unable to read cache");
+        try {
+            List<Ressource> userResources = (List<Ressource>) cache.get(soffitHolder.getSub(), List.class);
+            if (!Objects.isNull(userResources)) {
+                return userResources;
+            }
+        } catch (Exception ignored) {
+            log.warn("Unable to read cache");
         }
 
         try {
@@ -94,15 +92,15 @@ public class MediaCentreResourceJacksonImpl implements MediaCentreResource {
             ResponseEntity<Ressource[]> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Ressource[].class);
             listRessourceMediaCentre = Lists.newArrayList(response.getBody());
 
-          try {
-            cache.putIfAbsent(soffitHolder.getSub(),listRessourceMediaCentre);
-          } catch (Exception e) {
-            log.warn("Unable to write cache");
-          }
+            try {
+                cache.putIfAbsent(soffitHolder.getSub(), listRessourceMediaCentre);
+            } catch (Exception e) {
+                log.warn("Unable to write cache");
+            }
 
         } catch (HttpClientErrorException e) {
             // providing the error stacktrace only on debug as the custom logged error should be suffisant.
-            log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(),e);
+            log.warn("Error client request on URL {}, returned status {}, with response {}", url, e.getStatusCode(), e.getResponseBodyAsString(), e);
             throw new MediacentreWSException(e.getMessage(), (HttpStatus) e.getStatusCode());
         } catch (RestClientException ex) {
             log.warn("Error getting MediaCentre from url '{}'", url, ex.getLocalizedMessage(), ex);

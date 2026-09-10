@@ -20,10 +20,10 @@ import org.ehcache.event.CacheEvent;
 import org.ehcache.event.CacheEventListener;
 
 @Slf4j
-public class CacheEventLogger implements CacheEventListener<Object,Object> {
+public class CacheEventLogger implements CacheEventListener<Object, Object> {
     @Override
     public void onEvent(CacheEvent<?, ?> cacheEvent) {
         log.info("CacheEvent = {} , Key = {} , OldValue = {} , NewValue = {}", cacheEvent.getType(),
-                cacheEvent.getKey(), cacheEvent.getOldValue(), cacheEvent.getNewValue());
+            cacheEvent.getKey(), cacheEvent.getOldValue(), cacheEvent.getNewValue());
     }
 }

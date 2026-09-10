@@ -31,13 +31,11 @@ import org.springframework.web.context.WebApplicationContext;
 @TestConfiguration
 @EnableConfigurationProperties(ConfigProperties.class)
 public class ConfigurationTest {
-
   @Primary
   @Bean(name = "mockTestMediaCentreRessource")
-  public MediaCentreResource mediaCentreResource(){
+  public MediaCentreResource mediaCentreResource() {
     return Mockito.mock(MediaCentreResourceJacksonImpl.class);
   }
-
 
   @Bean
   @Scope(
@@ -47,5 +45,4 @@ public class ConfigurationTest {
   public SoffitHolder soffitHolder() {
     return new SoffitHolder();
   }
-
 }

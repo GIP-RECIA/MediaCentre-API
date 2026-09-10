@@ -29,12 +29,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DomaineEnseignement {
-
     @JsonProperty("nom")
     private String nom;
 
     @JsonProperty("uri")
     private String uri;
-
 }
 

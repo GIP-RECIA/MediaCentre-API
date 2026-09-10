@@ -15,18 +15,16 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
-
-import java.util.List;
-
 import org.springframework.validation.annotation.Validated;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 @Slf4j
 @ConfigurationProperties(prefix = "config")
@@ -34,28 +32,29 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Validated
 public class ConfigProperties {
+    @NotNull
+    @NotEmpty
+    private List<String> groups;
 
-  @NotNull @NotEmpty
-  private List<String> groups;
+    @NotNull
+    @NotEmpty
+    private String paramUserEtabsURl;
 
-  @NotNull
-  @NotEmpty
-  private String paramUserEtabsURl;
+    @NotNull
+    @NotEmpty
+    private String paramUserEtabsDisplayNameKey;
 
-  @NotNull @NotEmpty
-  private String paramUserEtabsDisplayNameKey;
+    @PostConstruct
+    private void init() {
+        log.info("Loaded properties: {}", this);
+    }
 
-  @PostConstruct
-  private void init() {
-    log.info("Loaded properties: {}", this);
-  }
-
-  @Override
-  public String toString(){
-      String joinedGroups = String.join("\", \"", groups);
-    return "\"Config properties\": {" +
-      "\n\t\"groups\": \"" + joinedGroups + "\"" +
-      "\n\t\"paramUserEtabsURl\": \"" + paramUserEtabsURl + "\"" +
-      "\n}";
-  }
+    @Override
+    public String toString() {
+        String joinedGroups = String.join("\", \"", groups);
+        return "\"Config properties\": {" +
+            "\n\t\"groups\": \"" + joinedGroups + "\"" +
+            "\n\t\"paramUserEtabsURl\": \"" + paramUserEtabsURl + "\"" +
+            "\n}";
+    }
 }

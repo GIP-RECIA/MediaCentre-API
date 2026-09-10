@@ -19,12 +19,11 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 public class MediacentreWSException extends RuntimeException {
+    @Getter
+    private final HttpStatus statusCode;
 
-  @Getter
-  private HttpStatus statusCode;
-
-  public MediacentreWSException(String message, HttpStatus statusCode) {
-    super(message);
-    this.statusCode = statusCode;
-  }
+    public MediacentreWSException(String message, HttpStatus statusCode) {
+        super(message);
+        this.statusCode = statusCode;
+    }
 }

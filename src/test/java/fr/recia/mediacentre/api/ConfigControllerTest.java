@@ -47,14 +47,13 @@ import static org.mockito.Mockito.doReturn;
 
 @Slf4j
 @Import(ConfigProperties.class)
-@ActiveProfiles({ "test" })
+@ActiveProfiles({"test"})
 @WebMvcTest(ConfigController.class)
 class ConfigControllerTest {
-
   @Autowired
   private MockMvc mockMvc;
 
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Autowired
   ConfigProperties configProperties;
@@ -68,13 +67,13 @@ class ConfigControllerTest {
   @MockitoBean
   private SoffitHolder soffitHolder;
 
-  private static String GETCONFIG_URI = "/api/config";
+  private static final String GETCONFIG_URI = "/api/config";
 
   @Test
   public void Config_OK() throws Exception {
 
     List<ConfigElement> configElementList = new ArrayList<>();
-    for (String group : configProperties.getGroups()){
+    for (String group : configProperties.getGroups()) {
       configElementList.add(new ConfigElement("groups", group));
     }
 
@@ -98,13 +97,13 @@ class ConfigControllerTest {
     List<String> regexesFromConfigProperties = configProperties.getGroups();
 
     // check that the number of Configs retrieved match the number of regexes in the bean
-   // assertEquals(retrievedConfigs.size(), regexesFromConfigProperties.size());
+    // assertEquals(retrievedConfigs.size(), regexesFromConfigProperties.size());
 
     //no use of stream to not change Java language level
     List<String> retrievedConfigsValues = new ArrayList<>(retrievedGroupList.size());
 
     for (ConfigElement configElement : retrievedGroupList) {
-      if(configElement.getKey().equals("groups")){
+      if (configElement.getKey().equals("groups")) {
         // add the value of each config to the list for next asserts
         retrievedConfigsValues.add(configElement.getValue());
       }

@@ -15,28 +15,28 @@
  */
 package fr.recia.mediacentre.api.configuration.bean;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import jakarta.annotation.PostConstruct;
 
 
 @Data
 @Slf4j
 @ConfigurationProperties(prefix = "app.soffit", ignoreUnknownFields = true)
 public class SoffitProperties {
+    private String signatureKey;
 
-     private String signatureKey;
+    @PostConstruct
+    public void init() {
+        log.info(this.toString());
+    }
 
-     @PostConstruct
-     public void init(){
-       log.info(this.toString());
-     }
-
-  @Override
-  public String toString() {
-    return "\"SoffitProperties\": {" +
-      "\n\t\"signatureKey\": \"" + signatureKey + "\"" +
-      "\n}";
-  }
+    @Override
+    public String toString() {
+        return "\"SoffitProperties\": {" +
+            "\n\t\"signatureKey\": \"" + signatureKey + "\"" +
+            "\n}";
+    }
 }
