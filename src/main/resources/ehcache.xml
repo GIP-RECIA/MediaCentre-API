@@ -39,7 +39,7 @@
       </listener>
     </listeners>
     <resources>
-      <heap unit="entries">1000</heap>
+      <heap unit="entries">1000000</heap>
     </resources>
   </cache>
 
