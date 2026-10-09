@@ -120,12 +120,14 @@ This project includes:
   spring-boot-actuator-autoconfigure under Apache License, Version 2.0
   spring-boot-autoconfigure under Apache License, Version 2.0
   spring-boot-cache under Apache License, Version 2.0
+  spring-boot-configuration-metadata under Apache License, Version 2.0
   spring-boot-devtools under Apache License, Version 2.0
   spring-boot-health under Apache License, Version 2.0
   spring-boot-http-converter under Apache License, Version 2.0
   spring-boot-jackson under Apache License, Version 2.0
   spring-boot-micrometer-metrics under Apache License, Version 2.0
   spring-boot-micrometer-observation under Apache License, Version 2.0
+  spring-boot-properties-migrator under Apache License, Version 2.0
   spring-boot-resttestclient under Apache License, Version 2.0
   spring-boot-security under Apache License, Version 2.0
   spring-boot-servlet under Apache License, Version 2.0

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>4.1.0</version>
-        <relativePath />
-        <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
+
     <groupId>fr.recia.mediacentre.api</groupId>
     <artifactId>esco-mediacentre</artifactId>
     <version>1.0.3-SNAPSHOT</version>
@@ -21,6 +22,7 @@
         <tag>HEAD</tag>
         <url>https://github.com/GIP-RECIA/MediaCentre-API</url>
     </scm>
+
     <distributionManagement>
         <repository>
             <id>esco-releases</id>
@@ -38,7 +40,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -50,7 +51,6 @@
             <version>4.12.0</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -62,7 +62,6 @@
             <artifactId>soffit-java-client</artifactId>
             <version>0.0.3</version>
         </dependency>
-
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
@@ -74,37 +73,31 @@
             <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.14</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>5.6.4</version>
         </dependency>
-
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
             <version>3.8.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.jasig.portal</groupId>
             <artifactId>uPortal-soffit-renderer</artifactId>
             <version>5.13.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -129,7 +122,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -234,7 +226,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>com.github.ekryd.sortpom</groupId>
                 <artifactId>sortpom-maven-plugin</artifactId>
@@ -259,33 +250,21 @@
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>2.11</version>
+                <version>4.6</version>
                 <configuration>
-                    <header>etc/header.template</header>
-                    <properties>
-                        <owner>GIP-RECIA</owner>
-                        <website>https://www.recia.fr/</website>
-                    </properties>
-                    <includes>
-                        <include>**/*.java</include>
-                        <include>src/**/*.xml</include>
-                        <include>**/*.properties</include>
-                        <include>src/test/**</include>
-                        <include>**/*.js</include>
-                        <include>**/*.css</include>
-                    </includes>
-                    <excludes>
-                        <exclude>src/test/resources/json/**</exclude>
-                        <exclude>.mvn/**</exclude>
-                    </excludes>
+                    <strictCheck>true</strictCheck>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>etc/header.template</header>
+                            <includes>
+                                <include>src/**/*.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/dist/**</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -330,15 +309,15 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <packagingExcludes>**/tomcat-*.jar,
-                      **/*yml,
-                      **/logback-*.xml,
-                      **/application*.example,
-                      **/*mock*.json,
-                      **/json,
-                      **/*Test.class,</packagingExcludes>
+            **/*yml,
+            **/logback-*.xml,
+            **/application*.example,
+            **/*mock*.json,
+            **/json,
+            **/*Test.class,</packagingExcludes>
                     <warSourceExcludes>src/,
-                        public/,
-                        tests/</warSourceExcludes>
+            public/,
+            tests/</warSourceExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -399,48 +378,6 @@
 
     <profiles>
         <profile>
-            <id>prod</id>
-            <properties>
-                <spring.profiles.active>prod</spring.profiles.active>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-validation</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>org.apache.tomcat.embed</groupId>
-                            <artifactId>tomcat-embed-el</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-starter-tomcat</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>org.apache.tomcat.embed</groupId>
-                            <artifactId>tomcat-embed-el</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-starter-tomcat</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -448,12 +385,30 @@
             <properties>
                 <spring.profiles.active>dev</spring.profiles.active>
             </properties>
-        </profile>
-        <profile>
-            <id>ci</id>
-            <properties>
-                <spring.profiles.active>test</spring.profiles.active>
-            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-properties-migrator</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <version>${project.parent.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArguments>-Djava.rmi.server.hostname=localhost -Xdebug -Duser.timezone="Europe/Paris"
+                -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Xms2G -Xmx3G</jvmArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>test</id>
@@ -477,7 +432,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.14</version>
+                        <version>0.8.15</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -492,6 +447,88 @@
                                 <phase>test</phase>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArguments>-Djava.rmi.server.hostname=localhost -Xdebug -Duser.timezone="Europe/Paris"
+                -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Xms2G -Xmx3G</jvmArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <version>${project.parent.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.15.4</version>
+                        <executions>
+                            <execution>
+                                <id>install node and yarn</id>
+                                <goals>
+                                    <goal>install-node-and-yarn</goal>
+                                </goals>
+                                <configuration>
+                                    <nodeVersion>v24.15.0</nodeVersion>
+                                    <yarnVersion>v1.22.22</yarnVersion>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>yarn install</id>
+                                <goals>
+                                    <goal>yarn</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>install --immutable</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>yarn build</id>
+                                <goals>
+                                    <goal>yarn</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>build</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>src/main/webapp/dist</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>.tmp</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>node_modules</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>node</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

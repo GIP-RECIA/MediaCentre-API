@@ -65,7 +65,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers("/health-check").permitAll()
+                .requestMatchers("/health-check", "/", "/ui/**").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().denyAll()
             )
