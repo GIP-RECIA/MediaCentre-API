@@ -11,7 +11,7 @@
 
     <groupId>fr.recia.mediacentre.api</groupId>
     <artifactId>esco-mediacentre</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>mediacentre</name>
     <inceptionYear>2017</inceptionYear>
