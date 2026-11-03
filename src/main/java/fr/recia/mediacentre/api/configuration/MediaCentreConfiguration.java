@@ -65,7 +65,7 @@ public class MediaCentreConfiguration {
         return new MediaCentreServiceMockImpl(soffitHolder, mappingProperties, categoriesByProfilesProperties);
     }
 
-    @ConditionalOnMissingBean(type = "MediaCentreService")
+    @ConditionalOnMissingBean(value = MediaCentreService.class)
     @Bean(name = "mediaCentreService")
     public MediaCentreService httpGetImpl() {
         return new MediaCentreServiceImpl(soffitHolder, mappingProperties, userInfosBuilder, mediaCentreResource, gestionAffectationsProperties, categoriesByProfilesProperties);
