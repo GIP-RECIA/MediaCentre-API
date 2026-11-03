@@ -28,7 +28,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
@@ -42,7 +41,6 @@ import java.util.List;
 import java.util.Set;
 
 @Slf4j
-@Service
 public class MediaCentreServiceMockImpl extends MediaCentreServiceAbstractImpl {
     @NonNull
     @Value("${mock.mockedDataLocation:}")

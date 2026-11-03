@@ -32,7 +32,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ import java.util.Set;
  * Created by jgribonvald on 06/06/17.
  */
 @Slf4j
-@Service
 public class MediaCentreServiceImpl extends MediaCentreServiceAbstractImpl {
     private final UserInfosBuilder userInfosBuilder;
 
