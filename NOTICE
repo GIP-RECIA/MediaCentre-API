@@ -16,7 +16,6 @@ specific language governing permissions and limitations
 under the License.
 
 This project includes:
-  Angus Activation Registries under EDL 1.0
   Apache Commons Codec under Apache-2.0
   Apache Commons Lang under Apache-2.0
   Apache Commons Logging under Apache-2.0
@@ -29,7 +28,6 @@ This project includes:
   ASM based accessors helper used by json-smart under The Apache Software License, Version 2.0
   AssertJ Core under Apache-2.0
   Awaitility under Apache 2.0
-  Bouncy Castle Provider under Bouncy Castle Licence
   Byte Buddy (without dependencies) under Apache License, Version 2.0
   Byte Buddy agent under Apache License, Version 2.0
   ClassMate under Apache License, Version 2.0
@@ -48,6 +46,7 @@ This project includes:
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0
+  Jakarta Activation under EDL 1.0
   Jakarta Activation API under EDL 1.0
   Jakarta Annotations API under EPL 2.0 or GPL2 w/ CPE
   Jakarta Servlet under EPL 2.0 or GPL2 w/ CPE
@@ -55,7 +54,6 @@ This project includes:
   Jakarta XML Binding API under Eclipse Distribution License - v 1.0
   JASYPT: Java Simplified Encryption under The Apache Software License, Version 2.0
   javax.annotation API under CDDL + GPLv2 with classpath exception
-  JAXB Core under Eclipse Distribution License - v 1.0
   JAXB Runtime under Eclipse Distribution License - v 1.0
   JBoss Logging 3 under Apache License 2.0
   JJWT :: API under Apache License, Version 2.0
@@ -67,6 +65,7 @@ This project includes:
   json-path under The Apache Software License, Version 2.0
   JSONassert under The Apache Software License, Version 2.0
   JSpecify annotations under The Apache License, Version 2.0
+  JSR107 API and SPI under Apache License, Version 2.0
   JUL to SLF4J bridge under MIT
   JUnit under Eclipse Public License 1.0
   JUnit Jupiter (Aggregator) under Eclipse Public License v2.0
