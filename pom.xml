@@ -303,6 +303,7 @@
                     <tagNameFormat>@{project.version}</tagNameFormat>
                     <arguments>-Dmaven.javadoc.skip=true -Dmaven.test.skip=true</arguments>
                     <pushChanges>true</pushChanges>
+                    <scmCommentPrefix>chore(release): </scmCommentPrefix>
                 </configuration>
             </plugin>
             <plugin>
