@@ -1,0 +1,16 @@
+[
+  {
+    "idRessource": "RES-MOCK-1",
+    "nomRessource": "Ressource mock 1",
+    "description": "Ressource de test",
+    "idEtablissement": [],
+    "urlAccesRessource": "https://example.org/ressource-mock-1"
+  },
+  {
+    "idRessource": "RES-MOCK-2",
+    "nomRessource": "Ressource mock 2",
+    "description": "Deuxième ressource de test",
+    "idEtablissement": [],
+    "urlAccesRessource": "https://example.org/ressource-mock-2"
+  }
+]
